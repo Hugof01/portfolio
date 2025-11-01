@@ -245,7 +245,7 @@
     display: block;
     z-index: 0;              /* visible au-dessus du fond, sous le contenu */
     pointer-events: none;
-    opacity: 0.18;           /* effet feutré */
+    opacity: 0.1;           /* effet feutré */
   }
   
   /* le contenu passe au-dessus */
