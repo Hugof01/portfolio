@@ -76,3 +76,19 @@ body{
   .header-inner{flex-direction:column;align-items:flex-start}
   .about-grid{grid-template-columns:1fr}
 }
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;          /* Derrière le contenu */
+    pointer-events: none; /* Empêche tout clic dessus */
+    opacity: 0.15;        /* Effet feutré */
+  }
+  
+  body, h1, h2, h3, p, a {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+  }
