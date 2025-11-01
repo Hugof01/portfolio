@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hugo FRANÇOIS — Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Portfolio de Hugo François — Étudiant en cybersécurité. Projets : Antares, C-grid, detect-malicious-URL, assistant Linux, outils crypto, etc.">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="me">
+        <!-- Remplace image/avatar.png par ton image dans /assets/images/ -->
+        <img src="assets/images/avatar.png" alt="Photo de Hugo François" class="avatar" onerror="this.style.display='none'"/>
+      </div>
+      <div class="hero-text">
+        <h1>Hugo FRANÇOIS</h1>
+        <p class="subtitle">Étudiant en Cybersécurité — CentraleSupélec | ESME Sudria | UCLA</p>
+        <p class="lead">
+          Passionné par la cryptographie, la sécurité offensive et l'ingénierie logicielle. 
+          À côté : astronomie, magie, sport.
+        </p>
+        <nav class="header-cta">
+          <a class="btn" href="#projects">Voir mes projets ↓</a>
+          <a class="btn ghost" href="#contact">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ABOUT -->
+    <section id="about" class="section container">
+      <h2>À propos</h2>
+      <div class="about-grid">
+        <div>
+          <h3>Études</h3>
+          <p>
+            Actuellement en cycle ingénieur (ESME Sudria) et en double-parcours/échanges à
+            CentraleSupélec. Semestre à UCLA (cours : Cybersecurity, TCP/IP, Management).
+            Certifications : Stanford Applied Cryptography, diverses learning paths TryHackMe.
+          </p>
+        </div>
+
+        <div>
+          <h3>Centres d'intérêt</h3>
+          <ul>
+            <li>Astronomie — observation, quiz et applications mobiles</li>
+            <li>Magie — mentalisme et présentation</li>
+            <li>Sport — badminton et course</li>
+            <li>Développement & R&D en cryptographie</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS SUMMARY GRID -->
+    <section id="projects" class="section container">
+      <h2>Projets — Aperçu</h2>
+      <p class="muted">Tous les projets ci-dessous ont une page descriptive — certains repos sont privés (code non publié).</p>
+
+      <div class="projects-grid">
+        <!-- Project cards: public / private badges -->
+        <article class="project-card">
+          <h3>Antares — Logiciel de chiffrement macOS</h3>
+          <p>Application macOS pour chiffrer des dossiers, intégration Touch ID / Secure Enclave, multi-niveaux de chiffrement.</p>
+          <div class="card-actions">
+            <!-- Remplace par ton image / lien vidéo -->
+            <a class="btn" href="#antasres-detail">Détails</a>
+            <a class="btn ghost" href="mailto:hugo.francois@student-cs.fr?subject=Accès%20Antares">Accès privé (code)</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>C-grid — Projet de Fin d'Études (PFE)</h3>
+          <p>Algorithme de chiffrement symétrique fondé sur des grilles de bigrammes multidimensionnelles (recherche & prototype).</p>
+          <div class="card-actions">
+            <a class="btn" href="#cgrid-detail">Détails</a>
+            <a class="btn ghost" href="assets/images/c-grid-screenshot.png" target="_blank">Screenshot</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>detect-malicious-url</h3>
+          <p>Site/outil d'analyse d'URL combinant détection stéganographique et heuristiques pour repérer les URL malveillantes.</p>
+          <div class="card-actions">
+            <a class="btn" href="#detect-detail">Détails</a>
+            <a class="btn ghost" href="#" onclick="alert('Démo vidéo à venir')">Démo vidéo</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>Assistant Linux</h3>
+          <p>Assistant en ligne de commande pour initier les débutants à Linux — commandes, scripts d’installation, tutoriels automatisés.</p>
+          <div class="card-actions">
+            <a class="btn" href="#assistant-detail">Détails</a>
+            <a class="btn ghost" href="mailto:hugo.francois@student-cs.fr?subject=Accès%20Assistant%20Linux">Accès privé</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>Moteurs polymorphiques & PRNG</h3>
+          <p>Expérimentations sur pseudo-aléatoire et moteurs polymorphiques (recherche historique — code expérimental).</p>
+          <div class="card-actions">
+            <a class="btn" href="#poly-detail">Détails</a>
+            <a class="btn ghost" href="#">Extraits (screenshots)</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>Image → ASCII</h3>
+          <p>Script transformant une image en art ASCII (plusieurs niveaux de gris, palettes personnalisées).</p>
+          <div class="card-actions">
+            <a class="btn" href="#ascii-detail">Détails</a>
+            <a class="btn ghost" href="assets/images/ascii-sample.png" target="_blank">Voir exemple</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>Collection : Codes cryptographiques</h3>
+          <p>Expérimentations et tutoriels — AES/DES toy implementations, visualiseurs, dérivations de clé, attaques pédagogiques.</p>
+          <div class="card-actions">
+            <a class="btn" href="#crypto-detail">Détails</a>
+            <a class="btn ghost" href="#">Liste (beaucoup)</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <h3>Archives (darkweb)</h3>
+          <p>Captures & explications sur des archives que j'avais explorées — je n’y publie pas de liens directs vers des services illicites.</p>
+          <div class="card-actions">
+            <a class="btn" href="#dark-detail">Détails</a>
+            <a class="btn ghost" href="#">Screenshots</a>
+          </div>
+        </article>
+      </div>
+
+      <!-- Detailed project descriptions (anchor targets) -->
+      <div class="project-details">
+        <!-- Antares detail -->
+        <section id="antasres-detail" class="detail">
+          <h3>Antares — Logiciel de chiffrement macOS</h3>
+          <p>
+            Description : application desktop (Go + Fyne) pour chiffrer/déchiffrer des dossiers. 
+            Fonctionnalités principales :
+          </p>
+          <ul>
+            <li>Argon2id pour dérivation de clé, AES-128/256 selectable</li>
+            <li>Header de fichier contenant niveau de chiffrement, IV, tag d’intégrité</li>
+            <li>Intégration Touch ID / Secure Enclave pour déverrouillage</li>
+            <li>Mode debug sécurisé (logs chiffrés)</li>
+          </ul>
+          <!-- Image placeholder: upload assets/images/antares-ui.png -->
+          <figure class="project-media">
+            <img src="assets/images/antares-ui.png" alt="Screenshot Antares" onerror="this.style.display='none'"/>
+            <figcaption>Screenshot de l'UI Antares (remplacer par ta capture).</figcaption>
+          </figure>
+          <p class="muted">Code : <strong>privé</strong> — contact par mail si accès demandé.</p>
+        </section>
+
+        <!-- C-grid detail -->
+        <section id="cgrid-detail" class="detail">
+          <h3>C-grid — PFE</h3>
+          <p>
+            Résumé : Conception d’un algorithme symétrique basé sur l’analyse fréquentielle des bigrammes disposés dans des grilles multidimensionnelles. 
+            Objectifs : résistance à l'analyse statistique, vectorisation et optimisation performance.
+          </p>
+          <p>
+            Livrables : rapport PFE (PDF), slides, code prototype (privé/public selon version), benchmarks comparatifs AES vs C-grid (petits textes).
+          </p>
+          <p>Ressources : screenshot, diagramme d’architecture et lien vers le PDF (si tu veux l’héberger dans /assets/docs/).</p>
+        </section>
+
+        <!-- detect-malicious-url detail -->
+        <section id="detect-detail" class="detail">
+          <h3>detect-malicious-url</h3>
+          <p>
+            Outil web (frontend + backend) exécutant plusieurs analyses sur une URL soumise :
+            <ul>
+              <li>Vérification heuristique (domain age, hosting)</li>
+              <li>Analyse statique du contenu (patterns stéganographiques connus)</li>
+              <li>Sandboxing / preview (capture d’écran) — si disponible</li>
+            </ul>
+          </p>
+          <p>
+            Démo vidéo / screenshots à ajouter ici. Le service public n’expose pas d’API de suppression/scan automatique (sécurité et éthique).
+          </p>
+        </section>
+
+        <!-- Assistant Linux -->
+        <section id="assistant-detail" class="detail">
+          <h3>Assistant Linux</h3>
+          <p>
+            Petit outil CLI pour débutants : installation automatisée d’outils (git, python, docker), tutoriels interactifs, scripts d’exemples.
+            Idée : rendre l’onboarding Linux plus simple pour des non-ingénieurs.
+          </p>
+        </section>
+
+        <!-- Polymorphic engines -->
+        <section id="poly-detail" class="detail">
+          <h3>Moteurs polymorphiques & PRNG</h3>
+          <p>
+            Expérimentations historiques : génération d'obfuscatons, transformations polymorphes sur des payloads d'entraînement (usage éthique pour recherche), PRNG custom pour tests statistiques.
+          </p>
+          <p class="muted">Remarque : code expérimental. Je ne publie pas d'outils malveillants — uniquement des notes de recherche et captures.</p>
+        </section>
+
+        <!-- ASCII -->
+        <section id="ascii-detail" class="detail">
+          <h3>Convertisseur Image → ASCII</h3>
+          <p>
+            Script Python capable de convertir une image en ASCII art (options : largeur, palette, hauteur, caractères personnalisés).
+          </p>
+          <figure class="project-media">
+            <img src="assets/images/ascii-sample.png" alt="ASCII sample" onerror="this.style.display='none'"/>
+            <figcaption>Exemple généré (remplace par ta propre image).</figcaption>
+          </figure>
+        </section>
+
+        <!-- Crypto collection -->
+        <section id="crypto-detail" class="detail">
+          <h3>Collection de codes cryptographiques</h3>
+          <p>
+            Beaucoup de petits scripts pédagogiques — toy-AES, visualiseurs SubBytes/ShiftRows, expérimentation padding/attaque, scripts d'analyse PRNG. 
+            J’indique ici les objectifs pédagogiques et les résultats (pas de dépôt public unique pour tout).
+          </p>
+        </section>
+
+        <!-- Dark archives -->
+        <section id="dark-detail" class="detail">
+          <h3>Archives / darkweb (captured screenshots)</h3>
+          <p>
+            Screenshots et résumé méthodologique — comment j’ai exploré / archivé de manière responsable (only research notes). Aucune redirection vers services actifs n’est fournie.
+          </p>
+        </section>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section container">
+      <h2>Contact</h2>
+      <p>Pour demander l'accès au code privé, une démo ou un échange :</p>
+      <p>📧 <a href="mailto:hugo.francois@student-cs.fr">hugo.francois@student-cs.fr</a></p>
+      <p>🔗 <a href="https://www.linkedin.com/in/hugo-fran%C3%A7ois-63b141222/" target="_blank">LinkedIn</a> • 💻 <a href="https://github.com/HugoFrancois" target="_blank">GitHub</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 Hugo François — Certains repos sont privés. Site hébergé via GitHub Pages.</p>
+    </div>
+  </footer>
+
+  <!-- Optionnel: petit script smooth scroll -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+  </script>
+</body>
+</html>
