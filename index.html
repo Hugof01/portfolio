@@ -4,16 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hugo FRANÇOIS — Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
   <meta name="description" content="Portfolio de Hugo François — Étudiant en cybersécurité. Projets : Antares, C-grid, detect-malicious-URL, assistant Linux, outils crypto, etc.">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <canvas id="canvas2"></canvas>
+  <!-- ===== Effet Matrix en arrière-plan ===== -->
+  <canvas id="canvas">Votre navigateur ne supporte pas Canvas.</canvas>
+  <canvas id="canvas2">Votre navigateur ne supporte pas Canvas.</canvas>
+  <!-- ======================================= -->
+
   <header class="site-header">
     <div class="container header-inner">
       <div class="me">
-        <!-- Remplace image/avatar.png par ton image dans /assets/images/ -->
         <img src="assets/images/avatar.png" alt="Photo de Hugo François" class="avatar" onerror="this.style.display='none'"/>
       </div>
       <div class="hero-text">
@@ -32,7 +34,7 @@
   </header>
 
   <main>
-    <!-- ABOUT -->
+    <!-- À PROPOS -->
     <section id="about" class="section container">
       <h2>À propos</h2>
       <div class="about-grid">
@@ -57,19 +59,17 @@
       </div>
     </section>
 
-    <!-- PROJECTS SUMMARY GRID -->
+    <!-- PROJETS -->
     <section id="projects" class="section container">
       <h2>Projets — Aperçu</h2>
       <p class="muted">Tous les projets ci-dessous ont une page descriptive — certains repos sont privés (code non publié).</p>
 
       <div class="projects-grid">
-        <!-- Project cards: public / private badges -->
         <article class="project-card">
           <h3>Antares — Logiciel de chiffrement macOS</h3>
           <p>Application macOS pour chiffrer des dossiers, intégration Touch ID / Secure Enclave, multi-niveaux de chiffrement.</p>
           <div class="card-actions">
-            <!-- Remplace par ton image / lien vidéo -->
-            <a class="btn" href="#antasres-detail">Détails</a>
+            <a class="btn" href="#antares-detail">Détails</a>
             <a class="btn ghost" href="mailto:hugo.francois@student-cs.fr?subject=Accès%20Antares">Accès privé (code)</a>
           </div>
         </article>
@@ -85,7 +85,7 @@
 
         <article class="project-card">
           <h3>detect-malicious-url</h3>
-          <p>Site/outil d'analyse d'URL combinant détection stéganographique et heuristiques pour repérer les URL malveillantes.</p>
+          <p>Outil d'analyse d'URL combinant détection stéganographique et heuristiques pour repérer les URL malveillantes.</p>
           <div class="card-actions">
             <a class="btn" href="#detect-detail">Détails</a>
             <a class="btn ghost" href="#" onclick="alert('Démo vidéo à venir')">Démo vidéo</a>
@@ -94,7 +94,7 @@
 
         <article class="project-card">
           <h3>Assistant Linux</h3>
-          <p>Assistant en ligne de commande pour initier les débutants à Linux — commandes, scripts d’installation, tutoriels automatisés.</p>
+          <p>Assistant CLI pour débutants : installation d’outils, tutoriels interactifs, scripts d’exemples.</p>
           <div class="card-actions">
             <a class="btn" href="#assistant-detail">Détails</a>
             <a class="btn ghost" href="mailto:hugo.francois@student-cs.fr?subject=Accès%20Assistant%20Linux">Accès privé</a>
@@ -103,7 +103,7 @@
 
         <article class="project-card">
           <h3>Moteurs polymorphiques & PRNG</h3>
-          <p>Expérimentations sur pseudo-aléatoire et moteurs polymorphiques (recherche historique — code expérimental).</p>
+          <p>Expérimentations pseudo-aléatoires et transformations polymorphes (codes de recherche).</p>
           <div class="card-actions">
             <a class="btn" href="#poly-detail">Détails</a>
             <a class="btn ghost" href="#">Extraits (screenshots)</a>
@@ -112,7 +112,7 @@
 
         <article class="project-card">
           <h3>Image → ASCII</h3>
-          <p>Script transformant une image en art ASCII (plusieurs niveaux de gris, palettes personnalisées).</p>
+          <p>Script transformant une image en art ASCII (niveaux de gris, palettes personnalisées).</p>
           <div class="card-actions">
             <a class="btn" href="#ascii-detail">Détails</a>
             <a class="btn ghost" href="assets/images/ascii-sample.png" target="_blank">Voir exemple</a>
@@ -121,16 +121,16 @@
 
         <article class="project-card">
           <h3>Collection : Codes cryptographiques</h3>
-          <p>Expérimentations et tutoriels — AES/DES toy implementations, visualiseurs, dérivations de clé, attaques pédagogiques.</p>
+          <p>Beaucoup de scripts pédagogiques — toy-AES/DES, visualiseurs, dérivation de clé, attaques éducatives.</p>
           <div class="card-actions">
             <a class="btn" href="#crypto-detail">Détails</a>
-            <a class="btn ghost" href="#">Liste (beaucoup)</a>
+            <a class="btn ghost" href="#">Liste (nombreux)</a>
           </div>
         </article>
 
         <article class="project-card">
           <h3>Archives (darkweb)</h3>
-          <p>Captures & explications sur des archives que j'avais explorées — je n’y publie pas de liens directs vers des services illicites.</p>
+          <p>Captures et explications méthodologiques — aucune redirection vers des services actifs.</p>
           <div class="card-actions">
             <a class="btn" href="#dark-detail">Détails</a>
             <a class="btn ghost" href="#">Screenshots</a>
@@ -138,103 +138,68 @@
         </article>
       </div>
 
-      <!-- Detailed project descriptions (anchor targets) -->
+      <!-- Détails des projets -->
       <div class="project-details">
-        <!-- Antares detail -->
-        <section id="antasres-detail" class="detail">
+        <section id="antares-detail" class="detail">
           <h3>Antares — Logiciel de chiffrement macOS</h3>
-          <p>
-            Description : application desktop (Go + Fyne) pour chiffrer/déchiffrer des dossiers. 
-            Fonctionnalités principales :
-          </p>
+          <p>Application desktop (Go + Fyne) pour chiffrer/déchiffrer des dossiers.</p>
           <ul>
-            <li>Argon2id pour dérivation de clé, AES-128/256 selectable</li>
-            <li>Header de fichier contenant niveau de chiffrement, IV, tag d’intégrité</li>
-            <li>Intégration Touch ID / Secure Enclave pour déverrouillage</li>
+            <li>Argon2id pour dérivation de clé, AES-128/256 sélectionnable</li>
+            <li>Header fichier : niveau de chiffrement, IV, tag d’intégrité</li>
+            <li>Touch ID / Secure Enclave pour déverrouillage</li>
             <li>Mode debug sécurisé (logs chiffrés)</li>
           </ul>
-          <!-- Image placeholder: upload assets/images/antares-ui.png -->
           <figure class="project-media">
             <img src="assets/images/antares-ui.png" alt="Screenshot Antares" onerror="this.style.display='none'"/>
-            <figcaption>Screenshot de l'UI Antares (remplacer par ta capture).</figcaption>
+            <figcaption>Screenshot de l’UI Antares (remplacer par ta capture).</figcaption>
           </figure>
           <p class="muted">Code : <strong>privé</strong> — contact par mail si accès demandé.</p>
         </section>
 
-        <!-- C-grid detail -->
         <section id="cgrid-detail" class="detail">
           <h3>C-grid — PFE</h3>
-          <p>
-            Résumé : Conception d’un algorithme symétrique basé sur l’analyse fréquentielle des bigrammes disposés dans des grilles multidimensionnelles. 
-            Objectifs : résistance à l'analyse statistique, vectorisation et optimisation performance.
-          </p>
-          <p>
-            Livrables : rapport PFE (PDF), slides, code prototype (privé/public selon version), benchmarks comparatifs AES vs C-grid (petits textes).
-          </p>
-          <p>Ressources : screenshot, diagramme d’architecture et lien vers le PDF (si tu veux l’héberger dans /assets/docs/).</p>
+          <p>Algorithme symétrique basé sur des grilles de bigrammes multidimensionnelles, visant robustesse statistique et performance.</p>
+          <p>Livrables : rapport PFE, slides, prototype (privé/public selon version), micro-benchmarks.</p>
         </section>
 
-        <!-- detect-malicious-url detail -->
         <section id="detect-detail" class="detail">
           <h3>detect-malicious-url</h3>
-          <p>
-            Outil web (frontend + backend) exécutant plusieurs analyses sur une URL soumise :
-            <ul>
-              <li>Vérification heuristique (domain age, hosting)</li>
-              <li>Analyse statique du contenu (patterns stéganographiques connus)</li>
-              <li>Sandboxing / preview (capture d’écran) — si disponible</li>
-            </ul>
-          </p>
-          <p>
-            Démo vidéo / screenshots à ajouter ici. Le service public n’expose pas d’API de suppression/scan automatique (sécurité et éthique).
-          </p>
+          <ul>
+            <li>Heuristiques (âge du domaine, hébergeur, réputation)</li>
+            <li>Analyse statique (patterns stéganographiques connus)</li>
+            <li>Sandbox/preview (si dispo)</li>
+          </ul>
+          <p>Démo vidéo / screenshots à ajouter.</p>
         </section>
 
-        <!-- Assistant Linux -->
         <section id="assistant-detail" class="detail">
           <h3>Assistant Linux</h3>
-          <p>
-            Petit outil CLI pour débutants : installation automatisée d’outils (git, python, docker), tutoriels interactifs, scripts d’exemples.
-            Idée : rendre l’onboarding Linux plus simple pour des non-ingénieurs.
-          </p>
+          <p>Onboarding Linux : installation d’outils (git, python, docker), tutos pas-à-pas, scripts interactifs.</p>
         </section>
 
-        <!-- Polymorphic engines -->
         <section id="poly-detail" class="detail">
           <h3>Moteurs polymorphiques & PRNG</h3>
-          <p>
-            Expérimentations historiques : génération d'obfuscatons, transformations polymorphes sur des payloads d'entraînement (usage éthique pour recherche), PRNG custom pour tests statistiques.
-          </p>
-          <p class="muted">Remarque : code expérimental. Je ne publie pas d'outils malveillants — uniquement des notes de recherche et captures.</p>
+          <p>Expériences historiques de R&D : obfuscations, payloads polymorphes d’entraînement (usage éthique), PRNG custom pour tests.</p>
+          <p class="muted">Code expérimental uniquement — pas d’outils malveillants publiés.</p>
         </section>
 
-        <!-- ASCII -->
         <section id="ascii-detail" class="detail">
           <h3>Convertisseur Image → ASCII</h3>
-          <p>
-            Script Python capable de convertir une image en ASCII art (options : largeur, palette, hauteur, caractères personnalisés).
-          </p>
+          <p>Conversion d’images en art ASCII (largeur, palette, caractères personnalisables).</p>
           <figure class="project-media">
             <img src="assets/images/ascii-sample.png" alt="ASCII sample" onerror="this.style.display='none'"/>
-            <figcaption>Exemple généré (remplace par ta propre image).</figcaption>
+            <figcaption>Exemple (remplacer par ton image).</figcaption>
           </figure>
         </section>
 
-        <!-- Crypto collection -->
         <section id="crypto-detail" class="detail">
           <h3>Collection de codes cryptographiques</h3>
-          <p>
-            Beaucoup de petits scripts pédagogiques — toy-AES, visualiseurs SubBytes/ShiftRows, expérimentation padding/attaque, scripts d'analyse PRNG. 
-            J’indique ici les objectifs pédagogiques et les résultats (pas de dépôt public unique pour tout).
-          </p>
+          <p>Toy-AES/DES, visualiseurs SubBytes/ShiftRows, padding/attaques, scripts d’analyse PRNG — objectifs pédagogiques et résultats.</p>
         </section>
 
-        <!-- Dark archives -->
         <section id="dark-detail" class="detail">
-          <h3>Archives / darkweb (captured screenshots)</h3>
-          <p>
-            Screenshots et résumé méthodologique — comment j’ai exploré / archivé de manière responsable (only research notes). Aucune redirection vers services actifs n’est fournie.
-          </p>
+          <h3>Archives / darkweb (captures)</h3>
+          <p>Notes d’exploration responsable et captures. Aucune redirection vers services illicites/actifs.</p>
         </section>
       </div>
     </section>
@@ -254,7 +219,7 @@
     </div>
   </footer>
 
-  <!-- Optionnel: petit script smooth scroll -->
+  <!-- Smooth scroll -->
   <script>
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', function(e){
@@ -263,6 +228,8 @@
       });
     });
   </script>
+
+  <!-- Effet Matrix -->
   <script src="background.js"></script>
 </body>
 </html>
