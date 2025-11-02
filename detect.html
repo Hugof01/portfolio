@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>detect-malicious-url | Hugo François</title>
+  <meta name="description" content="Application web de détection d'URL malveillantes et d'attaques stéganographiques.">
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <header class="site-header"><div class="container header-inner"><h1>detect-malicious-url</h1><p class="subtitle">Détection d’attaques stéganographiques dans les URL</p></div></header>
+
+  <main class="container section">
+    <h2>Présentation</h2>
+    <p>
+      Cette application web analyse des URL pour identifier les patterns suspects liés à la stéganographie et aux redirections cachées.  
+      Le projet combine analyse heuristique, extraction d’entropie et vérification de réputation de domaine.
+    </p>
+
+    <h3>Fonctionnalités</h3>
+    <ul>
+      <li>Analyse du contenu HTML et des métadonnées d’image</li>
+      <li>Détection de patterns stéganographiques connus</li>
+      <li>Scan de domaine (age, DNS, ASN, réputation)</li>
+      <li>Score de confiance calculé en temps réel</li>
+    </ul>
+
+    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Projet detect-malicious-url</p></div></footer>
+  <script src="../background.js"></script>
+</body>
+</html>

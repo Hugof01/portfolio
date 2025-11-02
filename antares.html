@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Antares — Logiciel de chiffrement macOS | Hugo François</title>
+  <meta name="description" content="Antares est un logiciel macOS de chiffrement de dossiers utilisant Touch ID et la Secure Enclave.">
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="hero-text">
+        <h1>Antares</h1>
+        <p class="subtitle">Logiciel de chiffrement macOS sécurisé (Touch ID / Secure Enclave)</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section">
+    <h2>Présentation</h2>
+    <p>
+      Antares est un logiciel macOS développé en Go avec le framework Fyne.  
+      Il permet de chiffrer et déchiffrer des dossiers via un système modulaire et sécurisé, intégrant
+      Touch ID et la Secure Enclave d’Apple.
+    </p>
+
+    <h3>Fonctionnalités principales</h3>
+    <ul>
+      <li>Dérivation de clé via Argon2id (remplace SHA-256 classique)</li>
+      <li>Chiffrement AES-128 ou AES-256 selon le niveau choisi</li>
+      <li>Header sécurisé : IV, tag d’intégrité, version du format</li>
+      <li>Intégration Touch ID / Secure Enclave</li>
+      <li>Mode Debug sécurisé (logs chiffrés et signés)</li>
+    </ul>
+
+    <figure class="project-media">
+      <img src="../assets/images/antares-ui.png" alt="Interface Antares" onerror="this.style.display='none'">
+      <figcaption>Interface principale d’Antares (exemple d’intégration macOS).</figcaption>
+    </figure>
+
+    <p class="muted">Code source : privé. Contactez-moi si vous souhaitez en discuter.</p>
+    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><p>© 2025 Hugo François — Projet Antares</p></div>
+  </footer>
+  <script src="../background.js"></script>
+</body>
+</html>
