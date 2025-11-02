@@ -16,6 +16,8 @@
       border-radius: 8px;
       overflow-x: auto;
       max-height: 600px;
+      font-size: 10px;
+      line-height: 8px;
     }
     input[type="file"] {
       margin: 12px 0;
@@ -75,9 +77,10 @@
       const pyodide = await loadPyodide();
       await pyodide.loadPackage("pillow");
 
+      // Code Python chargé dans Pyodide
       const pythonCode = `
 from PIL import Image
-import io, base64
+import io
 
 ASCII_CHARS = "Ñ@#W$9876543210?!abc;:+=-,._' "
 
@@ -92,28 +95,25 @@ def image_to_ascii(image_bytes):
     ascii_img = '\\n'.join(ascii_str[i:i+new_width] for i in range(0, len(ascii_str), new_width))
     return ascii_img
       `;
-
       await pyodide.runPythonAsync(pythonCode);
 
+      // Gestion du fichier uploadé
       const input = document.getElementById("imageInput");
       const output = document.getElementById("ascii-output");
 
       input.addEventListener("change", async () => {
         const file = input.files[0];
         if (!file) return;
-        const arrayBuffer = await file.arrayBuffer();
-        const pythonBytes = pyodide.toPy(new Uint8Array(arrayBuffer));
-        const ascii_art = await pyodide.runPythonAsync(`image_to_ascii(bytes(${arrayBuffer.byteLength}))`, { locals: { image_bytes: pythonBytes }});
-      });
-
-      input.addEventListener("change", async () => {
-        const file = input.files[0];
-        if (!file) return;
         output.textContent = "⏳ Conversion en cours...";
-        const bytes = new Uint8Array(await file.arrayBuffer());
-        pyodide.globals.set("image_bytes", bytes);
-        const ascii_art = await pyodide.runPythonAsync("image_to_ascii(image_bytes)");
-        output.textContent = ascii_art;
+        try {
+          const buffer = await file.arrayBuffer();
+          const uint8 = new Uint8Array(buffer);
+          pyodide.globals.set("image_bytes", uint8);
+          const result = await pyodide.runPythonAsync("image_to_ascii(image_bytes)");
+          output.textContent = result;
+        } catch (err) {
+          output.textContent = "❌ Erreur : " + err.message;
+        }
       });
     }
 
