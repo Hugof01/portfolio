@@ -88,12 +88,35 @@
       <figcaption>Grille déchiffrée : le message « ALGO DE HUGO » réapparaît après application de la clé correcte.</figcaption>
     </figure>
 
+    <!-- ========================================= -->
+    <!-- SECTION PERFORMANCE -->
+    <!-- ========================================= -->
+    <h2>Performance :</h2>
+    <p>
+      Un test de performance a été réalisé pour comparer <strong>C-grid</strong> (implémenté en Python) avec les algorithmes standards de chiffrement symétrique 
+      <strong>AES</strong> dans ses différents modes : ECB, CBC, CTR et GCM.  
+      Le test a été effectué sur un texte d’exemple <code>"ALGO DE HUGO"</code>.
+    </p>
+
+    <figure class="project-media">
+      <img src="../assets/images/cgrid_comp.png" alt="Comparaison des performances C-grid vs AES" onerror="this.style.display='none'">
+      <figcaption>Comparaison des temps de chiffrement : C-grid est en moyenne 31x plus rapide qu’AES-ECB dans sa version Python, 
+      tout en restant d’un ordre de grandeur similaire aux autres modes AES.</figcaption>
+    </figure>
+
+    <p>
+      Ces résultats mettent en évidence la rapidité du procédé : 
+      la méthode de C-grid se limite à des permutations de lignes et de colonnes, 
+      là où AES nécessite plusieurs tours de substitutions et de transformations.  
+      Ce gain de performance peut devenir significatif dans des contextes à forte volumétrie ou nécessitant des opérations répétées.
+    </p>
+
     <h2>Conclusion :</h2>
     <p>
       Cet algorithme propose une approche originale du chiffrement : le message est porté par la répartition des bigrammes
       dans une grille et par les formes qu’ils dessinent, plutôt que par le texte en clair.
       La clé de réarrangement garantit la confidentialité, tandis que les tests statistiques visent à confirmer sa résistance.  
-      Enfin, la comparaison avec AES permettra de situer ses performances face à une référence standard.
+      Enfin, la comparaison avec AES permet de situer ses performances face à une référence standard.
     </p>
 
     <div style="margin-top:30px;">
