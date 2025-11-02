@@ -198,29 +198,42 @@
     color: var(--accent);
   }
   
+  /* ===============================
+     IMAGES PROJETS
+     =============================== */
   .project-media {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 2.5em 0;
+    justify-content: center;
+    margin: 3em 0;
+    text-align: center;
   }
   
   .project-media img {
-    width: 60%;           
-    max-width: 600px;     
+    width: 55%;                 /* 🔹 Taille contrôlée ici */
+    max-width: 550px;           /* 🔹 Taille max pour grand écran */
+    min-width: 280px;           /* 🔹 Minimum pour petit écran */
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); /* effet léger type "Matrix" */
-    margin-bottom: 0.5em;
+    box-shadow: 0 0 25px rgba(102, 252, 241, 0.25);
+    margin-bottom: 0.8em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .project-media img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 35px rgba(102, 252, 241, 0.4);
   }
   
   .project-media figcaption {
     text-align: center;
-    color: #bbb;
+    color: #b8c3c6;
     font-style: italic;
-    max-width: 70%;
+    font-size: 0.95em;
+    max-width: 80%;
+    margin-top: 0.4em;
   }
-  
   
   /* ===============================
      FOOTER
@@ -246,6 +259,10 @@
     .about-grid {
       grid-template-columns: 1fr;
     }
+    .project-media img {
+      width: 85%;
+      max-width: none;
+    }
   }
   
   /* ===============================
@@ -257,12 +274,11 @@
     width: 100%;
     height: 100%;
     display: block;
-    z-index: 0;              /* visible au-dessus du fond, sous le contenu */
+    z-index: 0;
     pointer-events: none;
-    opacity: 0.1;           /* effet feutré */
+    opacity: 0.1;
   }
   
-  /* le contenu passe au-dessus */
   header, main, footer {
     position: relative;
     z-index: 1;
@@ -271,13 +287,5 @@
   /* légère ombre pour la lisibilité */
   body, h1, h2, h3, p, a, li {
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-  }
-  
-
-  @media (max-width: 768px) {
-    .project-media img {
-      width: 90%;
-      max-width: none;
-    }
   }
   
