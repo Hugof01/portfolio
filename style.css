@@ -207,6 +207,30 @@
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.04);
   }
+
+  .project-media {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2.5em 0;
+  }
+  
+  .project-media img {
+    width: 60%;           
+    max-width: 600px;     
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); /* effet léger type "Matrix" */
+    margin-bottom: 0.5em;
+  }
+  
+  .project-media figcaption {
+    text-align: center;
+    color: #bbb;
+    font-style: italic;
+    max-width: 70%;
+  }
+  
   
   /* ===============================
      FOOTER
@@ -257,5 +281,13 @@
   /* légère ombre pour la lisibilité */
   body, h1, h2, h3, p, a, li {
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+  }
+  
+
+  @media (max-width: 768px) {
+    .project-media img {
+      width: 90%;
+      max-width: none;
+    }
   }
   
