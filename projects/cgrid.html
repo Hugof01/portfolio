@@ -4,37 +4,107 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>C-grid — Projet de Fin d’Études (PFE) | Hugo François</title>
-  <meta name="description" content="C-grid est un algorithme de chiffrement symétrique fondé sur des grilles multidimensionnelles de bigrammes.">
+  <meta name="description" content="C-grid : algorithme de chiffrement fondé sur des grilles de bigrammes et un réarrangement statistique des lettres.">
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>C-grid</h1><p class="subtitle">Projet de Fin d’Études — algorithme de chiffrement symétrique expérimental</p></div></header>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="hero-text">
+        <h1>C-grid</h1>
+        <p class="subtitle">Projet personnel continué en projet de fin d’études — Conception d'un algorithme
+          de chiffrement symétrique fondé sur
+          des analyses fréquentielles de
+          bigrammes dans des grilles
+          multidimensionnelles</p>
+      </div>
+    </div>
+  </header>
 
   <main class="container section">
-    <h2>Présentation</h2>
+
+    <h2>Présentation du projet</h2>
     <p>
-      C-grid est un projet de recherche en cryptographie appliquée visant à concevoir un algorithme
-      symétrique basé sur des grilles de bigrammes multidimensionnelles.  
-      L’objectif est d’obtenir un système combinant robustesse statistique et performance.
+      Le projet consiste à concevoir un algorithme de chiffrement reposant sur l’utilisation de bigrammes (ou trigrammes)
+      et sur la construction d’une <strong>grille de fréquences</strong>.  
+      L’idée est de transmettre un message non pas par le texte envoyé lui-même, mais par la <em>répartition statistique des enchaînements de lettres</em> dans cette grille.
     </p>
 
-    <h3>Points techniques</h3>
-    <ul>
-      <li>Représentation matricielle des bigrammes</li>
-      <li>Propagation des clés sur plusieurs dimensions</li>
-      <li>Optimisation vectorielle et support multi-thread</li>
-      <li>Comparaison avec AES sur des textes courts</li>
-    </ul>
+    <h2>Principe de fonctionnement :</h2>
+    <p>
+      Le texte transmis est une suite artificielle de bigrammes ou de trigrammes.  
+      Ces enchaînements sont comptabilisés dans une matrice de fréquences, dont les lignes et colonnes correspondent à un alphabet donné.
+      En remplissant cette grille, on fait apparaître visuellement une lettre ou une forme.
+    </p>
+
+    <p>
+      Par exemple, pour transmettre la lettre <strong>i</strong>, on peut envoyer le texte suivant : <code>ac, cc, dc, ec</code>.  
+      Lorsque ces bigrammes sont reportés dans la matrice (lignes et colonnes allant de <em>a</em> à <em>e</em>), les cases correspondantes se remplissent et dessinent la lettre <strong>i</strong>.  
+      Ce procédé est répété pour chaque caractère du message, de manière à former l’ensemble du texte voulu.
+    </p>
+
+    <p>
+      Ainsi, l’information n’est pas directement contenue dans le texte, mais dans <strong>l’empreinte laissée par la distribution statistique des bigrammes</strong>.
+    </p>
+
+    <h2>Ajout d’une clé de chiffrement</h2>
+    <p>
+      Pour renforcer la sécurité, une clé est introduite sous la forme d’un <strong>réarrangement des lignes et colonnes</strong> de la grille.  
+      Ce réordonnancement brouille les formes initiales : la lettre devient méconnaissable, et seule la clé permet de retrouver l’ordre correct pour la lire.  
+      Sans cette clé, le message reste illisible.
+    </p>
+
+    <h2>Résistance aux attaques :</h2>
+    <p>
+      L’espace de clé est extrêmement vaste, puisqu’il n’existe en théorie aucune limite et que l’algorithme fonctionne avec toutes les tailles d’alphabet.  
+      Une attaque par force brute devient donc irréaliste.  
+      La seule approche possible pour un attaquant serait une <em>analyse statistique</em>.  
+      L’objectif est de s’assurer que, même après application de la clé, la répartition des cases actives reste aussi uniforme que possible afin d’éliminer tout motif exploitable.
+    </p>
+
+    <h2>Étapes du projet :</h2>
+    <ol>
+      <li><strong>Définition des formes des lettres & calculs statistiques :</strong>  
+          concevoir des représentations graphiques dans la grille pour chaque caractère, tout en vérifiant leur résistance aux patterns visibles après chiffrement.</li>
+      <li><strong>Implémentation de l’algorithme :</strong>  
+          développer les fonctions de chiffrement/déchiffrement, de génération de clé, et de transposition de la grille.</li>
+      <li><strong>Comparaison avec AES :</strong>  
+          évaluer la rapidité et l’efficacité.  
+          Le ratio d’information utile est faible, mais le chiffrement est instantané (réarrangement de lignes et colonnes), contrairement aux multiples tours d’AES.</li>
+    </ol>
+
+    <h2>Illustrations :</h2>
 
     <figure class="project-media">
-      <img src="../assets/images/c-grid-screenshot.png" alt="Visualisation C-grid" onerror="this.style.display='none'">
-      <figcaption>Visualisation du chiffrement dans C-grid.</figcaption>
+      <img src="../assets/images/crypted.png" alt="Grille chiffrée" onerror="this.style.display='none'">
+      <figcaption>Visualisation d’une grille chiffrée (motif brouillé après permutation de clé).</figcaption>
     </figure>
 
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    <figure class="project-media">
+      <img src="../assets/images/decrypted.png" alt="Grille déchiffrée" onerror="this.style.display='none'">
+      <figcaption>Grille déchiffrée : le message « HUGO » réapparaît après application de la clé correcte.</figcaption>
+    </figure>
+
+    <h2>Conclusion :</h2>
+    <p>
+      Cet algorithme propose une approche originale du chiffrement : le message est porté par la répartition des bigrammes
+      dans une grille et par les formes qu’ils dessinent, plutôt que par le texte en clair.
+      La clé de réarrangement garantit la confidentialité, tandis que les tests statistiques visent à confirmer sa résistance.  
+      Enfin, la comparaison avec AES permettra de situer ses performances face à une référence standard.
+    </p>
+
+    <div style="margin-top:30px;">
+      <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Projet C-grid</p></div></footer>
+
+  <footer class="site-footer">
+    <div class="container"><p>© 2025 Hugo François — Projet C-grid</p></div>
+  </footer>
+
   <script src="../background.js"></script>
 </body>
 </html>
