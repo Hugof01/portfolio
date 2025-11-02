@@ -6,26 +6,123 @@
   <title>Image → ASCII | Hugo François</title>
   <meta name="description" content="Convertisseur d’images en art ASCII avec palettes et niveaux de gris.">
   <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+
+  <style>
+    #output {
+      background: #111;
+      color: #00ffbf;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      min-height: 150px;
+      white-space: pre-wrap;
+      box-shadow: 0 0 12px rgba(102,252,241,0.1);
+    }
+
+    .demo-images img {
+      width: 70%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(102,252,241,0.2);
+      margin-bottom: 1.5em;
+    }
+
+    .demo-images {
+      text-align: center;
+      margin-top: 2em;
+    }
+  </style>
 </head>
+
 <body>
   <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>Image → ASCII</h1><p class="subtitle">Convertisseur d’images en art ASCII</p></div></header>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Image → ASCII</h1>
+      <p class="subtitle">Convertisseur d’images en art ASCII</p>
+    </div>
+  </header>
 
   <main class="container section">
-    <h2>Présentation</h2>
+    <!-- Présentation -->
+    <h2>Présentation du projet</h2>
     <p>
-      Ce script Python transforme des images en représentations ASCII artistiques.  
-      Il gère plusieurs palettes de caractères et niveaux de gris.
+      Ce projet est un <strong>convertisseur d’images en art ASCII</strong> développé en Python.  
+      Il analyse chaque pixel d’une image et le transforme en caractère selon sa luminosité.
+      Le but : transformer n’importe quelle image en une œuvre ASCII directement exécutable dans un terminal.
     </p>
 
-    <figure class="project-media">
-      <img src="../assets/images/ascii-sample.png" alt="Exemple ASCII" onerror="this.style.display='none'">
-      <figcaption>Exemple généré (chaque caractère correspond à un niveau de luminosité).</figcaption>
-    </figure>
+    <!-- Démo -->
+    <h2>Démo</h2>
+    <div class="demo-images">
+      <figure class="project-media">
+        <img src="../assets/images/ascii_usa_img.png" alt="Image originale">
+        <figcaption>Image originale utilisée comme entrée.</figcaption>
+      </figure>
 
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+      <figure class="project-media">
+        <img src="../assets/images/ascii_usa.png" alt="Résultat ASCII">
+        <figcaption>Résultat ASCII généré par le script Python.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Section interactive -->
+    <h2>Tester la version Python (exécution locale)</h2>
+    <p>
+      Vous pouvez tester ici le fonctionnement du script sans accéder à son contenu.  
+      Le code est exécuté directement dans votre navigateur via <strong>Pyodide</strong>.
+    </p>
+
+    <div style="margin: 1em 0;">
+      <button id="run-btn" class="btn">▶️ Lancer la démo</button>
+      <button id="clear-btn" class="btn ghost">🧹 Effacer la console</button>
+    </div>
+
+    <pre id="output">Console prête.</pre>
+
+    <div style="margin-top:30px;">
+      <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Image → ASCII</p></div></footer>
+
+  <footer class="site-footer">
+    <div class="container"><p>© 2025 Hugo François — Projet Image → ASCII</p></div>
+  </footer>
+
+  <script>
+    let pyodide;
+    let scriptCode = "";
+
+    async function initPyodide() {
+      const output = document.getElementById("output");
+      output.textContent = "⏳ Chargement de l'interpréteur Python...";
+      pyodide = await loadPyodide();
+      output.textContent = "✅ Environnement Python prêt.";
+      const response = await fetch("../assets/scripts/ascii.py");
+      scriptCode = await response.text();
+    }
+
+    initPyodide();
+
+    document.getElementById("run-btn").addEventListener("click", async () => {
+      const output = document.getElementById("output");
+      output.textContent = "▶️ Exécution du script...\n";
+      try {
+        const result = await pyodide.runPythonAsync(scriptCode);
+        if (result !== undefined) output.textContent += "\n" + result;
+      } catch (err) {
+        output.textContent = "❌ Erreur : " + err;
+      }
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", () => {
+      document.getElementById("output").textContent = "Console nettoyée.";
+    });
+  </script>
+
   <script src="../background.js"></script>
 </body>
 </html>
