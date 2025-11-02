@@ -199,16 +199,6 @@
   }
   
   .project-media {
-    margin: 12px 0;
-  }
-  
-  .project-media img {
-    max-width: 100%;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .project-media {
     display: flex;
     flex-direction: column;
     align-items: center;
