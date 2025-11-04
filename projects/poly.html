@@ -4,30 +4,110 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Moteurs polymorphiques & PRNG | Hugo François</title>
-  <meta name="description" content="Recherche expérimentale sur les moteurs polymorphiques et générateurs pseudo-aléatoires.">
+  <meta name="description" content="Étude expérimentale sur les moteurs polymorphiques et générateurs pseudo-aléatoires — visualisation et modélisation 3D.">
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    video {
+      display: block;
+      width: 70%;
+      margin: 20px auto;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(102,252,241,0.2);
+    }
+    figcaption {
+      text-align: center;
+      color: #aaa;
+      font-style: italic;
+      margin-top: -8px;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>Moteurs polymorphiques & PRNG</h1><p class="subtitle">Études sur l’obfuscation et la génération pseudo-aléatoire</p></div></header>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Moteurs polymorphiques & PRNG</h1>
+      <p class="subtitle">Exploration visuelle d’un moteur polymorphique et d’un générateur pseudo-aléatoire</p>
+    </div>
+  </header>
 
   <main class="container section">
-    <h2>Résumé</h2>
+
+    <h2>Présentation du concept</h2>
     <p>
-      Projet de recherche exploratoire sur la génération pseudo-aléatoire et les moteurs polymorphiques, mené dans un cadre éthique et éducatif.
+      L’objectif de ce projet était de <strong>modéliser un moteur polymorphique</strong> pouvant servir de base à un 
+      <strong>générateur pseudo-aléatoire (PRNG)</strong> expérimental.  
+      L’idée repose sur une visualisation géométrique : chaque lettre ou caractère généré correspond à un <em>sommet</em> d’un graphe 
+      ou d’une structure tridimensionnelle.  
+    </p>
+    <p>
+      En combinant des mouvements, des déformations et des rotations, la position des sommets devient une variable aléatoire 
+      utilisée pour produire des séquences de texte uniques et imprévisibles.
     </p>
 
-    <h3>Axes étudiés</h3>
-    <ul>
-      <li>Transformation dynamique du code machine</li>
-      <li>PRNG maison (analyse statistique et tests d’entropie)</li>
-      <li>Applications en chiffrement expérimental</li>
-    </ul>
+    <h2>1. Modélisation du moteur polymorphique</h2>
+    <p>
+      La première étape consistait à modéliser un <strong>réseau polymorphique</strong> de lignes et de sommets connectés.  
+      Ce modèle abstrait permet d’observer le comportement du moteur lorsqu’il génère des motifs évolutifs.
+    </p>
+    <video controls src="../assets/videos/video_moteur_poly.mp4"></video>
+    <figcaption>Visualisation du moteur polymorphique : un réseau dynamique de points interconnectés.</figcaption>
 
-    <p class="muted">Code non public (recherche expérimentale).</p>
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    <h2>2. Transformation en sphère</h2>
+    <p>
+      Le moteur a ensuite été encapsulé dans une <strong>structure sphérique</strong>.  
+      Chaque sommet représente désormais un point sur la surface, où la génération de caractères dépend de la 
+      <em>position spatiale</em> du sommet.
+    </p>
+    <video controls src="../assets/videos/video_sphere_anim.mp4"></video>
+    <figcaption>Première version sphérique du moteur — structure stable, non animée.</figcaption>
+
+    <h2>3. Ajout de la rotation et de l’aléatoire</h2>
+    <p>
+      La sphère peut maintenant <strong>tourner sur elle-même</strong>, ce qui fait évoluer les positions relatives 
+      des sommets dans l’espace.  
+      À chaque frame, les coordonnées sont réévaluées et les valeurs associées sont incrémentées pour créer un flux pseudo-aléatoire.
+    </p>
+    <video controls src="../assets/videos/video_sphere_tournante.mp4"></video>
+    <figcaption>Rotation continue de la sphère — génération pseudo-aléatoire liée aux positions des sommets.</figcaption>
+
+    <h2>4. Déformation dynamique</h2>
+    <p>
+      Pour introduire une dimension supplémentaire d’aléa, la sphère devient <strong>déformable</strong>.  
+      Les sommets peuvent s’éloigner du centre, provoquant une variation de densité et d’amplitude, 
+      rendant la distribution encore plus imprévisible.
+    </p>
+    <video controls src="../assets/videos/video_sphere_anim_tournante.mp4"></video>
+    <figcaption>Sphère animée et tournante — les sommets s’éloignent et se rapprochent, simulant un flux d’entropie.</figcaption>
+
+    <h2>5. Version finale : sphère polymorphique textuelle</h2>
+    <p>
+      Le moteur final combine <strong>rotation</strong>, <strong>déformation</strong> et <strong>génération textuelle</strong>.  
+      Les lettres apparaissent aux sommets selon leur position et leur évolution dans le temps.
+      Cette approche ouvre la voie à des formes originales de génération pseudo-aléatoire pour des applications cryptographiques ou visuelles.
+    </p>
+    <video controls src="../assets/videos/video_sphere_finale_texte.mp4"></video>
+    <figcaption>Version finale : sphère polymorphique générant du texte pseudo-aléatoire.</figcaption>
+
+    <h2>Conclusion</h2>
+    <p>
+      Ce travail relie <strong>géométrie</strong>, <strong>entropie</strong> et <strong>génération aléatoire</strong>.  
+      Le moteur polymorphique se comporte comme un PRNG visuel, dont la sortie dépend d’un espace de variables
+      physiques (position, vitesse, amplitude).  
+      Bien que purement expérimental, il illustre la capacité à créer de l’aléa à partir d’un système déterministe évolutif.
+    </p>
+
+    <div style="margin-top:30px;">
+      <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Moteurs polymorphiques & PRNG</p></div></footer>
+
+  <footer class="site-footer">
+    <div class="container"><p>© 2025 Hugo François — Moteurs polymorphiques & PRNG</p></div>
+  </footer>
+
   <script src="../background.js"></script>
 </body>
 </html>
