@@ -4,23 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Moteurs polymorphiques & PRNG | Hugo François</title>
-  <meta name="description" content="Étude expérimentale sur les moteurs polymorphiques et générateurs pseudo-aléatoires — visualisation et modélisation 3D.">
+  <meta name="description" content="Recherche expérimentale sur les moteurs polymorphiques et générateurs pseudo-aléatoires.">
   <link rel="stylesheet" href="../style.css" />
-  <style>
-    video {
-      display: block;
-      width: 70%;
-      margin: 20px auto;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(102,252,241,0.2);
-    }
-    figcaption {
-      text-align: center;
-      color: #aaa;
-      font-style: italic;
-      margin-top: -8px;
-    }
-  </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
@@ -29,74 +14,116 @@
   <header class="site-header">
     <div class="container header-inner">
       <h1>Moteurs polymorphiques & PRNG</h1>
-      <p class="subtitle">Exploration visuelle d’un moteur polymorphique et d’un générateur pseudo-aléatoire</p>
+      <p class="subtitle">Étude expérimentale d’un moteur polymorphique appliqué à la génération pseudo-aléatoire</p>
     </div>
   </header>
 
   <main class="container section">
-
-    <h2>Présentation du concept</h2>
+    <h2>Introduction</h2>
     <p>
-      L’objectif de ce projet était de <strong>modéliser un moteur polymorphique</strong> pouvant servir de base à un 
-      <strong>générateur pseudo-aléatoire (PRNG)</strong> expérimental.  
-      L’idée repose sur une visualisation géométrique : chaque lettre ou caractère généré correspond à un <em>sommet</em> d’un graphe 
-      ou d’une structure tridimensionnelle.  
-    </p>
-    <p>
-      En combinant des mouvements, des déformations et des rotations, la position des sommets devient une variable aléatoire 
-      utilisée pour produire des séquences de texte uniques et imprévisibles.
+      Ce projet est né d’une idée assez simple : et si l’on pouvait représenter visuellement le comportement d’un moteur polymorphique,
+      c’est-à-dire un système capable de changer continuellement sa forme tout en gardant une logique interne, et l’utiliser comme base
+      d’un générateur pseudo-aléatoire ?  
+      Mon objectif n’était pas de créer un générateur de nombres aléatoires classique, mais d’explorer une approche plus organique et géométrique
+      du concept d’« entropie » en cryptographie.
     </p>
 
     <h2>1. Modélisation du moteur polymorphique</h2>
     <p>
-      La première étape consistait à modéliser un <strong>réseau polymorphique</strong> de lignes et de sommets connectés.  
-      Ce modèle abstrait permet d’observer le comportement du moteur lorsqu’il génère des motifs évolutifs.
+      J’ai commencé par représenter ce moteur sous la forme d’un réseau polymorphique. Chaque sommet représente un point du système,
+      et les arêtes traduisent les interactions entre ces points.  
+      Le moteur se construit donc comme un graphe dynamique capable d’évoluer en fonction des paramètres d’entrée.
     </p>
-    <video controls src="../assets/videos/video_moteur_poly.mp4"></video>
-    <figcaption>Visualisation du moteur polymorphique : un réseau dynamique de points interconnectés.</figcaption>
 
-    <h2>2. Transformation en sphère</h2>
+    <figure class="project-media">
+      <video controls width="70%">
+        <source src="../assets/videos/video_moteur_poly.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>Visualisation du moteur polymorphique sous forme de réseau dynamique.</figcaption>
+    </figure>
+
+    <h2>2. Transformation en sphère déformable</h2>
     <p>
-      Le moteur a ensuite été encapsulé dans une <strong>structure sphérique</strong>.  
-      Chaque sommet représente désormais un point sur la surface, où la génération de caractères dépend de la 
-      <em>position spatiale</em> du sommet.
+      Dans une seconde étape, j’ai voulu donner une forme plus cohérente et lisible au moteur : une <strong>sphère</strong>.
+      Chaque sommet du graphe devient alors un point sur la surface, et l’ensemble forme une structure continue.  
+      Cette sphère peut se déformer légèrement — certains points s’éloignent ou se rapprochent du centre — ce qui introduit une première forme
+      d’aléa géométrique.  
+      Ce comportement a des conséquences directes sur la génération du texte : selon la position des points,
+      les lettres associées changent de manière subtile mais non répétitive.
     </p>
-    <video controls src="../assets/videos/video_sphere_anim.mp4"></video>
-    <figcaption>Première version sphérique du moteur — structure stable, non animée.</figcaption>
 
-    <h2>3. Ajout de la rotation et de l’aléatoire</h2>
+    <figure class="project-media">
+      <video controls width="70%">
+        <source src="../assets/videos/video_sphere_anim.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>La sphère se déforme : les sommets varient autour de leur position moyenne, introduisant une entropie spatiale.</figcaption>
+    </figure>
+
+    <h2>3. Ajout de la rotation</h2>
     <p>
-      La sphère peut maintenant <strong>tourner sur elle-même</strong>, ce qui fait évoluer les positions relatives 
-      des sommets dans l’espace.  
-      À chaque frame, les coordonnées sont réévaluées et les valeurs associées sont incrémentées pour créer un flux pseudo-aléatoire.
+      Pour augmenter la complexité du système, j’ai ajouté une <strong>rotation</strong> continue de la sphère sur elle-même.
+      Cette nouvelle variable ajoute une source d’aléatoire temporelle : non seulement la sphère change de forme,
+      mais elle évolue aussi dans le temps selon son axe de rotation.  
+      Chaque sommet suit alors une trajectoire dans l’espace, et ces déplacements influencent directement les caractères générés.
     </p>
-    <video controls src="../assets/videos/video_sphere_tournante.mp4"></video>
-    <figcaption>Rotation continue de la sphère — génération pseudo-aléatoire liée aux positions des sommets.</figcaption>
 
-    <h2>4. Déformation dynamique</h2>
+    <figure class="project-media">
+      <video controls width="70%">
+        <source src="../assets/videos/video_sphere_tournante.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>La sphère tourne sur elle-même, ajoutant une dimension temporelle à la génération aléatoire.</figcaption>
+    </figure>
+
+    <h2>4. Combinaison des deux formes d’aléatoire</h2>
     <p>
-      Pour introduire une dimension supplémentaire d’aléa, la sphère devient <strong>déformable</strong>.  
-      Les sommets peuvent s’éloigner du centre, provoquant une variation de densité et d’amplitude, 
-      rendant la distribution encore plus imprévisible.
+      Dans cette version, j’ai fusionné les deux phénomènes : la déformation et la rotation.
+      La sphère devient alors véritablement polymorphe, car son état spatial évolue de manière non linéaire.
+      Le moteur combine la position des sommets, leurs vitesses, leurs directions et leur distance au centre pour déterminer
+      la prochaine valeur textuelle.
     </p>
-    <video controls src="../assets/videos/video_sphere_anim_tournante.mp4"></video>
-    <figcaption>Sphère animée et tournante — les sommets s’éloignent et se rapprochent, simulant un flux d’entropie.</figcaption>
 
-    <h2>5. Version finale : sphère polymorphique textuelle</h2>
+    <figure class="project-media">
+      <video controls width="70%">
+        <source src="../assets/videos/video_sphere_anim_tournante.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>La combinaison des deux sources d’aléatoire renforce la complexité du moteur polymorphique.</figcaption>
+    </figure>
+
+    <h2>5. Application expérimentale — Génération de texte</h2>
     <p>
-      Le moteur final combine <strong>rotation</strong>, <strong>déformation</strong> et <strong>génération textuelle</strong>.  
-      Les lettres apparaissent aux sommets selon leur position et leur évolution dans le temps.
-      Cette approche ouvre la voie à des formes originales de génération pseudo-aléatoire pour des applications cryptographiques ou visuelles.
+      La dernière vidéo montre l’application concrète de ce moteur : la génération d’un texte pseudo-aléatoire.
+      Chaque lettre dépend de l’état instantané du moteur, c’est-à-dire de la position et de la déformation de la sphère.
+      Le résultat n’est pas purement aléatoire, mais émergent : il découle d’une dynamique interne complexe.
     </p>
-    <video controls src="../assets/videos/video_sphere_finale_texte.mp4"></video>
-    <figcaption>Version finale : sphère polymorphique générant du texte pseudo-aléatoire.</figcaption>
 
-    <h2>Conclusion</h2>
+    <figure class="project-media">
+      <video controls width="70%">
+        <source src="../assets/videos/video_sphere_finale_texte.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>Le texte généré évolue selon les transformations du moteur polymorphique.</figcaption>
+    </figure>
+
+    <h2>Conclusion & perspectives</h2>
     <p>
-      Ce travail relie <strong>géométrie</strong>, <strong>entropie</strong> et <strong>génération aléatoire</strong>.  
-      Le moteur polymorphique se comporte comme un PRNG visuel, dont la sortie dépend d’un espace de variables
-      physiques (position, vitesse, amplitude).  
-      Bien que purement expérimental, il illustre la capacité à créer de l’aléa à partir d’un système déterministe évolutif.
+      Ce projet m’a permis d’explorer une approche très visuelle et intuitive de la génération pseudo-aléatoire.
+      Plutôt que de m’appuyer sur des formules statistiques classiques, j’ai cherché à modéliser le hasard
+      comme une conséquence de l’instabilité d’un système géométrique en mouvement.
+    </p>
+    <p>
+      De nombreuses questions restent ouvertes :  
+      comment définir précisément le moment où un changement spatial implique un changement de caractère ?  
+      Comment ajuster la vitesse de rotation ou d’élongation pour équilibrer la distribution des lettres ?  
+      Peut-on adapter le moteur pour qu’il apprenne à générer des séquences « contrôlées » selon un objectif cryptographique précis ?
+    </p>
+    <p>
+      À ce stade, je considère ce moteur comme une expérience plus artistique que mathématique.  
+      Mais je crois que ce genre d’approches, à la frontière entre la géométrie, la physique et la cryptographie,
+      peut ouvrir de nouvelles perspectives dans la compréhension du chaos calculatoire et des générateurs polymorphiques.
     </p>
 
     <div style="margin-top:30px;">
@@ -105,7 +132,9 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container"><p>© 2025 Hugo François — Moteurs polymorphiques & PRNG</p></div>
+    <div class="container">
+      <p>© 2025 Hugo François — Moteurs polymorphiques & PRNG</p>
+    </div>
   </footer>
 
   <script src="../background.js"></script>
