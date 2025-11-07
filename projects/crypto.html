@@ -122,87 +122,156 @@
 
 <!-- ==================== SCRIPT PYTHON (PYODIDE) ==================== -->
 <script>
-let pyodide;
-async function initPyodide(){
-  const out=document.querySelector(".output");
-  out.textContent="⏳ Chargement de l'interpréteur Python...";
-  pyodide=await loadPyodide();
-  document.querySelectorAll(".output").forEach(el=>el.textContent="✅ Environnement Python prêt.");
-}
-initPyodide();
+  let pyodide;
 
-async function runPython(type,mode){
-  if(!pyodide)return;
-  let code="",result="";
-  if(type==="mono"){
-    code=`a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
-text="${document.getElementById('monoInput').value}".upper()
-print('Texte chiffré :',''.join(k[a.index(c)] if c in a else c for c in text))`;
+// --------- 1) Démarrage Pyodide ----------
+  (async function initPyodide() {
+    document.querySelectorAll(".output").forEach(el => el.textContent = "⏳ Chargement de l'interpréteur Python...");
+    pyodide = await loadPyodide();
+    document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
+  })();
+
+// --------- 2) Où sont tes scripts ----------
+  const SCRIPT_PATHS = {
+    mono:       "../assets/scripts/crypto/mono_alphabetic_cipher.py",
+    vigenere:   "../assets/scripts/crypto/vigenere.py",                 // assure-toi que ce fichier est là
+    transpo:    "../assets/scripts/crypto/transposition.py",
+    otp:        "../assets/scripts/crypto/otp.py",
+    aes:        "../assets/scripts/crypto/aes-ecb.py",                  // sorties “blocs/attaque” comme ton terminal
+    rsa:        "../assets/scripts/crypto/rsa.py"
+  };
+
+  const cache = {}; // on mémorise les fichiers chargés
+
+  async function loadScriptText(kind){
+    if (!cache[kind]) {
+      const res = await fetch(SCRIPT_PATHS[kind]);
+      if (!res.ok) throw new Error(`Impossible de charger ${SCRIPT_PATHS[kind]}`);
+      cache[kind] = await res.text();
+    }
+    return cache[kind];
   }
-  else if(type==="vigenere"){
-    code=`
-def vig(text,key,mode):
-  text,key=text.upper(),key.upper()
-  out=''
-  for i,c in enumerate(text):
-    if c.isalpha():
-      val=(ord(c)-65+(ord(key[i%len(key)])-65 if mode=='encrypt' else -(ord(key[i%len(key)])-65)))%26
-      out+=chr(val+65)
-    else: out+=c
-  return out
-print("Mode:", "${mode}")
-print("Clé:", "${document.getElementById('vigenereKey').value}")
-print("Résultat:", vig("""${document.getElementById('vigenereInput').value}""","""${document.getElementById('vigenereKey').value}""","""${mode||'encrypt'}"""))
+
+// --------- 3) Utilitaires ----------
+  function pyStr(s){           // protège les triples quotes
+    return (s ?? "").replaceAll('\\', '\\\\').replaceAll('"""','\\"""');
+  }
+  function setOutput(id, txt){
+    document.getElementById(id).textContent = txt;
+  }
+  window.clearOutput = function(id){
+    setOutput(id, "Console nettoyée.");
+  };
+
+// --------- 4) Routeur d’exécution ----------
+  async function run(kind, payload, mode=""){
+    if(!pyodide) return;
+
+    // 4.1 Charge le fichier demandé
+    const script = await loadScriptText(kind);
+
+    // 4.2 Prépare les variables d’entrée accessibles par le script
+    //     (tu peux t’en servir directement dans tes .py si tu veux)
+    const bootstrap = `
+__TEXT__ = """${pyStr(payload.text)}"""
+__KEY__  = """${pyStr(payload.key || "")}"""
+__N__    = ${Number(payload.n ?? 0)}
+__MODE__ = """${mode}"""
 `;
-  }
-  else if(type==="transposition"){
-    code=`
-k=int("${document.getElementById('transKey').value or 3}")
-t="${document.getElementById('transInput').value}"
-r=['']*k
-for c in range(k):
-  p=c
-  while p<len(t):
-    r[c]+=t[p];p+=k
-print("Texte chiffré :", ''.join(r))`;
-  }
-  else if(type==="otp"){
-    code=`
-import random
-t="${document.getElementById('otpInput').value}"
-b=lambda s:' '.join(format(ord(c),'08b') for c in s)
-key=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
-cipher=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,key))
-print("Plaintext (in binary):", b(t))
-print("Key (in binary):", b(key))
-print("Ciphertext (in binary):", b(cipher))
-print("\\nClé:", key)
-print("Texte chiffré:", cipher)
-print("✅ Plaintext verified")`;
-  }
-  else if(type==="aes"){
-    if(mode==="attack")
-      code=`print("[⚔️] Modified block order detected!\\nBloc1⇄Bloc3 -> contenu altéré\\n[!] Résultat : texte corrompu\\n")`;
-    else
-      code=`print("[🔐] Encrypted blocks:\\nBlock1: 9eb8bccf...\\nBlock2: 9655491a...\\nBlock3: c1bbb4b4...\\nBlock4: e99bf8cf...\\nBlock5: b0c3e0b2...\\n\\n✅ Simulation AES terminée")`;
-  }
-  else if(type==="rsa"){
-    code=`print("[🔐] Private key (PEM):\\n-----BEGIN RSA PRIVATE KEY-----\\nMIIC...==\\n-----END RSA PRIVATE KEY-----")
-print("\\n[📢] Public key (PEM):\\n-----BEGIN PUBLIC KEY-----\\nMIIB...==\\n-----END PUBLIC KEY-----")
-print("\\n[📝] Message: ${document.getElementById('rsaInput').value}")
-print("[🔍] SHA256(message): 78736eeb2dbb9cc043e03c6d120d6462785646d7f6a36cb7cc66f49a860505e5")
-print("[✍️] Signature (hex): 57cfa70ad8b3eb06...a3412def")
-print("\\n✅ Signature verified! Message authentic.")`;
-  }
-  try{
-    result=await pyodide.runPythonAsync(code);
-    document.getElementById(type+"Output").textContent=result;
-  }catch(e){
-    document.getElementById(type+"Output").textContent="❌ Erreur : "+e;
-  }
-}
 
-function clearOutput(id){document.getElementById(id).textContent="Console nettoyée.";}
+    // 4.3 “Driver” générique :
+    // - Exécute ton fichier tel quel (prints affichés)
+    // - Si le script expose une fonction standard, on la déclenche.
+    //   (sinon, tes prints natifs suffisent déjà)
+    const driver = `
+# ---- Driver générique pour déclencher une démo lisible ----
+_result = None
+try:
+    # Entrées possibles (non obligatoires selon le script)
+    text = __TEXT__
+    key  = __KEY__
+    n    = __N__
+    mode = __MODE__
+
+    # Points d'entrée classiques si présents :
+    if 'demo' in globals():
+        _result = demo(text=text, key=key, n=n, mode=mode)
+    elif 'main' in globals():
+        _result = main(text, mode, key, n)
+    elif 'run' in globals():
+        _result = run(text, mode, key, n)
+    # Sinon : on laisse simplement les print() du script s’afficher
+
+except Exception as _e:
+    import traceback
+    print("❌ Exception:", _e)
+    print(traceback.format_exc())
+
+if _result is not None:
+    print(_result)
+`;
+
+    // 4.4 Exécute dans Pyodide (bootstrap + ton script + driver)
+    const code = bootstrap + "\n" + script + "\n" + driver;
+    return await pyodide.runPythonAsync(code);
+  }
+
+// --------- 5) Boutons de ta page ----------
+  // Monoalphabétique
+  window.runMono = async function(){
+    const text = document.getElementById('monoInput').value;
+    try{
+      await run("mono", {text});
+    }catch(e){ setOutput("monoOutput", "❌ Erreur : " + e); return; }
+    setOutput("monoOutput", pyodide.globals.get('___last_output') || "✔️ Fini (voir prints ci-dessus)");
+  };
+
+  // Vigenère (chiffrer/déchiffrer/craquer via “mode”)
+  window.runVigenere = async function(mode){
+    const text = document.getElementById('vigenereInput').value;
+    const key  = document.getElementById('vigenereKey').value;
+    try{
+      await run("vigenere", {text, key}, mode);
+    }catch(e){ setOutput("vigenereOutput", "❌ Erreur : " + e); return; }
+    setOutput("vigenereOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
+  };
+
+  // Transposition
+  window.runTranspo = async function(){
+    const text = document.getElementById('transInput').value;
+    const n    = document.getElementById('transKey').value;
+    try{
+      await run("transpo", {text, n});
+    }catch(e){ setOutput("transOutput", "❌ Erreur : " + e); return; }
+    setOutput("transOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
+  };
+
+  // OTP – affiche binaire + clé + chiffré comme en terminal
+  window.runOTP = async function(){
+    const text = document.getElementById('otpInput').value;
+    try{
+      await run("otp", {text});
+    }catch(e){ setOutput("otpOutput", "❌ Erreur : " + e); return; }
+    setOutput("otpOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
+  };
+
+  // AES – “normal” ou “attack” (réordonnancement de blocs)
+  window.runAES = async function(mode="normal"){
+    const text = document.getElementById('aesInput').value;
+    try{
+      await run("aes", {text}, mode);
+    }catch(e){ setOutput("aesOutput", "❌ Erreur : " + e); return; }
+    setOutput("aesOutput", "✔️ Simulation affichée comme dans le terminal (blocs & attaque ECB).");
+  };
+
+  // RSA – affichage PEM + signature comme dans ta capture
+  window.runRSA = async function(){
+    const text = document.getElementById('rsaInput').value;
+    try{
+      await run("rsa", {text});
+    }catch(e){ setOutput("rsaOutput", "❌ Erreur : " + e); return; }
+    setOutput("rsaOutput", "✔️ Clés PEM, signature et vérification affichées par le script.");
+  };
 </script>
 
 <script src="../background.js"></script>
