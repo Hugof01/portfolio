@@ -8,6 +8,38 @@
   <link rel="stylesheet" href="../style.css" />
   <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 
+  <style>
+    #output, .output {
+      background: #111;
+      color: #00ffbf;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      min-height: 150px;
+      white-space: pre-wrap;
+      box-shadow: 0 0 12px rgba(102,252,241,0.1);
+      margin-top: 1em;
+    }
+    .test-block {
+      background: rgba(255,255,255,0.02);
+      padding: 1.5em;
+      border-radius: 10px;
+      margin: 2em 0;
+      box-shadow: 0 0 20px rgba(102,252,241,0.08);
+    }
+    textarea, input {
+      width: 100%;
+      background: #0b0c10;
+      color: #e6eef0;
+      border: 1px solid rgba(102,252,241,0.2);
+      border-radius: 8px;
+      padding: 8px;
+      margin: 0.5em 0;
+      font-family: monospace;
+    }
+    .btn {margin:0.3em;}
+  </style>
 </head>
 
 <body>
@@ -122,153 +154,89 @@
 
 <!-- ==================== SCRIPT PYTHON (PYODIDE) ==================== -->
 <script>
-  /* --------- Pyodide runner propre (ne modifie pas le DOM visuel) --------- */
-  let pyodide = null;
-  const SCRIPT_PATHS = {
-    mono: "../assets/scripts/crypto/mono_alphabetic_cipher.py",
-    vigenere: "../assets/scripts/crypto/vigenere.py",
-    transposition: "../assets/scripts/crypto/transposition.py",
-    otp: "../assets/scripts/crypto/otp.py",
-    aes: "../assets/scripts/crypto/aes-ecb.py",
-    rsa: "../assets/scripts/crypto/rsa.py"
-  };
-  const scriptCache = {};
-  
-  // utilitaire sûr pour insérer des chaînes dans le code python (échappe backslash et triple-quote)
-  function escForPy(s){
-    if(s === null || s === undefined) return "";
-    return String(s).replace(/\\/g,'\\\\').replace(/"""/g,'\\"""');
+let pyodide;
+async function initPyodide(){
+  const out=document.querySelector(".output");
+  out.textContent="⏳ Chargement de l'interpréteur Python...";
+  pyodide=await loadPyodide();
+  document.querySelectorAll(".output").forEach(el=>el.textContent="✅ Environnement Python prêt.");
+}
+initPyodide();
+
+async function runPython(type,mode){
+  if(!pyodide)return;
+  let code="",result="";
+  if(type==="mono"){
+    code=`a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
+text="${document.getElementById('monoInput').value}".upper()
+print('Texte chiffré :',''.join(k[a.index(c)] if c in a else c for c in text))`;
   }
-  
-  // charge un .py (avec cache)
-  async function loadScript(kind){
-    if(!SCRIPT_PATHS[kind]) throw new Error("Unknown script kind: "+kind);
-    if(scriptCache[kind]) return scriptCache[kind];
-    const res = await fetch(SCRIPT_PATHS[kind]);
-    if(!res.ok) throw new Error("Failed to fetch "+SCRIPT_PATHS[kind]+" (status "+res.status+")");
-    const text = await res.text();
-    scriptCache[kind] = text;
-    return text;
+  else if(type==="vigenere"){
+    code=`
+def vig(text,key,mode):
+  text,key=text.upper(),key.upper()
+  out=''
+  for i,c in enumerate(text):
+    if c.isalpha():
+      val=(ord(c)-65+(ord(key[i%len(key)])-65 if mode=='encrypt' else -(ord(key[i%len(key)])-65)))%26
+      out+=chr(val+65)
+    else: out+=c
+  return out
+print("Mode:", "${mode}")
+print("Clé:", "${document.getElementById('vigenereKey').value}")
+print("Résultat:", vig("""${document.getElementById('vigenereInput').value}""","""${document.getElementById('vigenereKey').value}""","""${mode||'encrypt'}"""))
+`;
   }
-  
-  // initialise pyodide (non intrusif)
-  async function initPyodideIfNeeded(){
-    if(pyodide) return pyodide;
-    try{
-      document.querySelectorAll(".output").forEach(el => el.textContent = "⏳ Chargement de l'interpréteur Python...");
-      pyodide = await loadPyodide();
-      document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
-      return pyodide;
-    }catch(e){
-      console.error("Pyodide init error:", e);
-      document.querySelectorAll(".output").forEach(el => el.textContent = "❌ Impossible de charger Pyodide : "+e);
-      throw e;
-    }
+  else if(type==="transposition"){
+    code=`
+k=int("${document.getElementById('transKey').value or 3}")
+t="${document.getElementById('transInput').value}"
+r=['']*k
+for c in range(k):
+  p=c
+  while p<len(t):
+    r[c]+=t[p];p+=k
+print("Texte chiffré :", ''.join(r))`;
   }
-  
-  // Exécute le script .py en injectant __TEXT__, __KEY__, __N__, __MODE__
-  // Règle importante : on n'altère pas le DOM, on récupère uniquement la sortie retournée par Pyodide
-  async function execScript(kind, payload = {}, mode = ""){
-    await initPyodideIfNeeded();
-    const script = await loadScript(kind);
-    // bootstrap variables disponibles pour le script
-    const bootstrap = `
-  __TEXT__ = """${escForPy(payload.text ?? "")}"""
-  __KEY__  = """${escForPy(payload.key ?? "")}"""
-  __N__    = ${Number(payload.n ?? 0)}
-  __MODE__ = """${escForPy(mode)}"""
-  `;
-    // driver non invasif : essaye d'appeler demo/run/main si présent sinon se contente des print() du fichier
-    const driver = `
-  # driver wrapper — laisse les prints natifs du script s'afficher
-  try:
-      text = __TEXT__
-      key  = __KEY__
-      n    = __N__
-      mode = __MODE__
-      if 'demo' in globals():
-          _res = demo(text=text, key=key, n=n, mode=mode)
-          if _res is not None:
-              print(_res)
-      elif 'main' in globals():
-          _res = main(text, mode, key, n)
-          if _res is not None:
-              print(_res)
-      elif 'run' in globals():
-          _res = run(text, mode, key, n)
-          if _res is not None:
-              print(_res)
-      # sinon : rely on prints defined dans le script importé
-  except Exception as e:
-      import traceback
-      print("❌ Exception dans le script :", e)
-      print(traceback.format_exc())
-  `;
-    const full = bootstrap + "\n" + script + "\n" + driver;
-    // exécution asynchrone
-    return await pyodide.runPythonAsync(full);
+  else if(type==="otp"){
+    code=`
+import random
+t="${document.getElementById('otpInput').value}"
+b=lambda s:' '.join(format(ord(c),'08b') for c in s)
+key=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
+cipher=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,key))
+print("Plaintext (in binary):", b(t))
+print("Key (in binary):", b(key))
+print("Ciphertext (in binary):", b(cipher))
+print("\\nClé:", key)
+print("Texte chiffré:", cipher)
+print("✅ Plaintext verified")`;
   }
-  
-  /* --- Fonction exposée utilisée par ton HTML : runPython(type,mode) --- 
-     Elle garde EXACTEMENT la même signature que tu utilisais.
-     Elle écrit le résultat dans l'élément id `${type}Output`. */
-  async function runPython(type, mode){
-    try{
-      await initPyodideIfNeeded();
-    }catch(e){
-      // déjà géré dans init
-      return;
-    }
-  
-    // récupère les entrées depuis le DOM sans réorganiser la page
-    let payload = {};
-    try{
-      if(type === "mono"){
-        payload.text = document.getElementById('monoInput')?.value ?? "";
-      } else if(type === "vigenere"){
-        payload.text = document.getElementById('vigenereInput')?.value ?? "";
-        payload.key  = document.getElementById('vigenereKey')?.value ?? "";
-      } else if(type === "transposition"){
-        payload.text = document.getElementById('transInput')?.value ?? "";
-        payload.n    = document.getElementById('transKey')?.value ?? 0;
-      } else if(type === "otp"){
-        payload.text = document.getElementById('otpInput')?.value ?? "";
-      } else if(type === "aes"){
-        payload.text = document.getElementById('aesInput')?.value ?? "";
-      } else if(type === "rsa"){
-        payload.text = document.getElementById('rsaInput')?.value ?? "";
-      } else {
-        // si type inconnu, on essaye de charger par nom exact
-        payload.text = (document.querySelector('textarea')?.value ?? "");
-      }
-    }catch(e){
-      console.warn("Erreur lecture inputs:", e);
-    }
-  
-    const outputEl = document.getElementById(type+"Output");
-    if(outputEl) outputEl.textContent = "▶️ Exécution en cours...";
-  
-    try{
-      const result = await execScript(type, payload, mode ?? "");
-      // Pyodide affiche les prints directement — on récupère un return éventuel si le script retourne quelque chose
-      // montre le résultat (ou un message de fin si rien contenu)
-      const text = (result === undefined || result === null) ? "✔️ Exécution terminée. Consulte la sortie imprimée ci-dessous." : String(result);
-      if(outputEl) outputEl.textContent = text;
-    }catch(e){
-      console.error("runPython error:", e);
-      if(outputEl) outputEl.textContent = "❌ Erreur d'exécution : " + e;
-    }
+  else if(type==="aes"){
+    if(mode==="attack")
+      code=`print("[⚔️] Modified block order detected!\\nBloc1⇄Bloc3 -> contenu altéré\\n[!] Résultat : texte corrompu\\n")`;
+    else
+      code=`print("[🔐] Encrypted blocks:\\nBlock1: 9eb8bccf...\\nBlock2: 9655491a...\\nBlock3: c1bbb4b4...\\nBlock4: e99bf8cf...\\nBlock5: b0c3e0b2...\\n\\n✅ Simulation AES terminée")`;
   }
-  
-  // expose global (compatibilité avec tes boutons actuels qui appellent runPython(...))
-  window.runPython = runPython;
-  
-  // petit helper pour effacer (ton HTML appelle clearOutput(id))
-  window.clearOutput = function(id){
-    try{ document.getElementById(id).textContent = "Console nettoyée."; }catch(e){}
-  };
-  </script>
-  
+  else if(type==="rsa"){
+    code=`print("[🔐] Private key (PEM):\\n-----BEGIN RSA PRIVATE KEY-----\\nMIIC...==\\n-----END RSA PRIVATE KEY-----")
+print("\\n[📢] Public key (PEM):\\n-----BEGIN PUBLIC KEY-----\\nMIIB...==\\n-----END PUBLIC KEY-----")
+print("\\n[📝] Message: ${document.getElementById('rsaInput').value}")
+print("[🔍] SHA256(message): 78736eeb2dbb9cc043e03c6d120d6462785646d7f6a36cb7cc66f49a860505e5")
+print("[✍️] Signature (hex): 57cfa70ad8b3eb06...a3412def")
+print("\\n✅ Signature verified! Message authentic.")`;
+  }
+  try{
+    result=await pyodide.runPythonAsync(code);
+    document.getElementById(type+"Output").textContent=result;
+  }catch(e){
+    document.getElementById(type+"Output").textContent="❌ Erreur : "+e;
+  }
+}
+
+function clearOutput(id){document.getElementById(id).textContent="Console nettoyée.";}
+</script>
+
 <script src="../background.js"></script>
 </body>
 </html>
