@@ -4,10 +4,49 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Collection de codes cryptographiques | Hugo François</title>
-  <meta name="description" content="Collection d’expériences cryptographiques : AES, RSA, Vigenère, OTP, Transposition et autres.">
+  <meta name="description" content="Collection d’expériences cryptographiques : AES, RSA, Vigenère, OTP, Transposition, etc.">
   <link rel="stylesheet" href="../style.css" />
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+
+  <style>
+    #output, .output {
+      background: #111;
+      color: #00ffbf;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      min-height: 150px;
+      white-space: pre-wrap;
+      box-shadow: 0 0 12px rgba(102,252,241,0.1);
+      margin-top: 1em;
+    }
+
+    .test-block {
+      background: rgba(255,255,255,0.02);
+      padding: 1.5em;
+      border-radius: 10px;
+      margin: 2em 0;
+      box-shadow: 0 0 20px rgba(102,252,241,0.08);
+    }
+
+    .test-block button {
+      margin: 0.3em;
+    }
+
+    textarea, input {
+      width: 100%;
+      background: #0b0c10;
+      color: #e6eef0;
+      border: 1px solid rgba(102,252,241,0.2);
+      border-radius: 8px;
+      padding: 8px;
+      margin: 0.5em 0;
+      font-family: monospace;
+    }
+  </style>
 </head>
+
 <body>
   <canvas id="canvas"></canvas>
   <canvas id="canvas2"></canvas>
@@ -15,221 +54,197 @@
   <header class="site-header">
     <div class="container header-inner">
       <h1>Collection de codes cryptographiques</h1>
-      <p class="subtitle">Expérimentations, implémentations et visualisations en Python</p>
+      <p class="subtitle">Exploration personnelle de la cryptographie en Python</p>
     </div>
   </header>
 
   <main class="container section">
     <h2>Introduction</h2>
     <p>
-      Depuis mes premières expériences en sécurité, j’ai toujours aimé comprendre comment les algorithmes de chiffrement fonctionnent “de l’intérieur”.
-      J’ai donc pris le temps de réécrire certains d’entre eux en Python, non pas pour la performance, mais pour apprendre leur logique, leur beauté mathématique et leurs limites.
-      Cette page regroupe mes principaux travaux, classés par ordre chronologique.
+      J’ai commencé à m’intéresser à la cryptographie pour en comprendre la logique mathématique et la beauté conceptuelle.
+      Mon objectif n’était pas de réinventer AES ou RSA, mais de <strong>comprendre</strong> leur mécanique interne en les réécrivant moi-même.
+      Cette page regroupe mes codes, du plus simple au plus structuré, accompagnés de démonstrations locales.
     </p>
 
-    <!-- ==================== MONOALPHABETIC CIPHER ==================== -->
-    <section>
+    <!-- ==================== MONOALPHABETIC ==================== -->
+    <section class="test-block">
       <h2>1. Chiffrement monoalphabétique</h2>
       <p>
-        C’est le tout premier code que j’ai écrit en cryptographie. Il repose sur une substitution simple : chaque lettre claire est remplacée par une autre selon un alphabet fixe.
-        Ce type de chiffrement, bien que fondamental historiquement, se casse facilement par analyse de fréquence. Mais il m’a permis de comprendre le lien entre structure et faiblesse d’un code.
+        Premier pas dans la cryptographie : chaque lettre est remplacée par une autre selon un alphabet fixe.
+        Simple mais formateur, ce chiffrement m’a fait découvrir la faiblesse des systèmes purement déterministes.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <textarea id="monoInput" rows="3" placeholder="Texte à chiffrer..."></textarea><br>
-        <button onclick="runPython('mono')">Chiffrer</button>
-        <pre id="monoOutput"></pre>
-      </div>
+      <textarea id="monoInput" rows="3" placeholder="Texte à chiffrer..."></textarea>
+      <button class="btn" onclick="runPython('mono')">▶️ Lancer le test</button>
+      <button class="btn ghost" onclick="clearOutput('monoOutput')">🧹 Effacer</button>
+      <pre id="monoOutput" class="output">Console prête.</pre>
     </section>
 
     <!-- ==================== VIGENERE ==================== -->
-    <section>
+    <section class="test-block">
       <h2>2. Chiffrement de Vigenère</h2>
       <p>
-        Ce chiffrement repose sur une clé répétée qui décale les lettres selon une table modulaire. 
-        Il est plus résistant que le monoalphabétique, mais reste vulnérable à une analyse statistique si la clé est courte.
-        J’ai aimé le coder car il introduit la notion de clé et montre les limites du déterminisme dans le chiffrement.
+        Variante plus évoluée, il introduit la notion de clé répétée. 
+        Chaque lettre est décalée selon une clé : plus la clé est longue, plus le code résiste aux analyses.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <input id="vigenereKey" placeholder="Clé" /><br>
-        <textarea id="vigenereInput" rows="3" placeholder="Texte à chiffrer..."></textarea><br>
-        <button onclick="runPython('vigenere')">Chiffrer</button>
-        <pre id="vigenereOutput"></pre>
-      </div>
+      <input id="vigenereKey" placeholder="Clé (ex : SECURITE)" />
+      <textarea id="vigenereInput" rows="3" placeholder="Texte à chiffrer..."></textarea>
+      <button class="btn" onclick="runPython('vigenere')">▶️ Lancer le test</button>
+      <button class="btn ghost" onclick="clearOutput('vigenereOutput')">🧹 Effacer</button>
+      <pre id="vigenereOutput" class="output">Console prête.</pre>
     </section>
 
     <!-- ==================== TRANSPOSITION ==================== -->
-    <section>
+    <section class="test-block">
       <h2>3. Chiffrement par transposition</h2>
       <p>
-        Cette fois, je ne change plus les lettres, mais leur position. 
-        Le texte est écrit dans une grille, puis relu selon un ordre déterminé par une clé numérique.
-        C’est un algorithme simple, mais très intéressant pour comprendre l’importance de la permutation et de la structure.
+        Plutôt que de changer les lettres, on modifie leur ordre.
+        Ce système repose sur un simple réarrangement, mais montre déjà la puissance des permutations dans la sécurité.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <input id="transKey" type="number" placeholder="Clé (ex: 3)" /><br>
-        <textarea id="transInput" rows="3" placeholder="Texte à chiffrer..."></textarea><br>
-        <button onclick="runPython('transposition')">Chiffrer</button>
-        <pre id="transOutput"></pre>
-      </div>
+      <input id="transKey" type="number" placeholder="Clé (ex : 3)" />
+      <textarea id="transInput" rows="3" placeholder="Texte à chiffrer..."></textarea>
+      <button class="btn" onclick="runPython('transposition')">▶️ Lancer le test</button>
+      <button class="btn ghost" onclick="clearOutput('transOutput')">🧹 Effacer</button>
+      <pre id="transOutput" class="output">Console prête.</pre>
     </section>
 
-    <!-- ==================== ONE TIME PAD ==================== -->
-    <section>
+    <!-- ==================== OTP ==================== -->
+    <section class="test-block">
       <h2>4. One-Time Pad (OTP)</h2>
       <p>
-        Ce code repose sur une clé aléatoire de la même longueur que le message. 
-        Chaque caractère est combiné à la clé via un XOR. 
-        C’est le seul chiffrement théoriquement incassable, mais aussi le plus impraticable, car il nécessite une clé unique à chaque échange.
+        C’est l’algorithme parfait : chaque caractère est combiné à une clé aléatoire unique.
+        Incassable en théorie, inutilisable en pratique sans gestion de clé parfaite. 
+        Ce script m’a appris le rôle fondamental du hasard dans la sécurité.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <textarea id="otpInput" rows="3" placeholder="Texte à chiffrer..."></textarea><br>
-        <button onclick="runPython('otp')">Générer clé + chiffrer</button>
-        <pre id="otpOutput"></pre>
-      </div>
+      <textarea id="otpInput" rows="3" placeholder="Texte à chiffrer..."></textarea>
+      <button class="btn" onclick="runPython('otp')">▶️ Lancer le test</button>
+      <button class="btn ghost" onclick="clearOutput('otpOutput')">🧹 Effacer</button>
+      <pre id="otpOutput" class="output">Console prête.</pre>
     </section>
 
     <!-- ==================== AES ==================== -->
-    <section>
+    <section class="test-block">
       <h2>5. AES (ECB / CBC)</h2>
       <p>
-        Après avoir exploré les anciens algorithmes, je me suis attaqué à AES, le standard moderne.
-        J’ai reproduit une version logicielle simplifiée du chiffrement par blocs, d’abord en mode ECB puis en CBC.
-        Le but n’était pas la performance, mais la compréhension : SubBytes, ShiftRows et MixColumns deviennent beaucoup plus clairs lorsqu’on les code soi-même.
+        Après les systèmes classiques, je me suis intéressé à AES, le standard moderne. 
+        J’en ai codé une version simplifiée pour comprendre SubBytes, ShiftRows et MixColumns.
+        L’objectif était d’observer la diffusion et la confusion, pas de rivaliser avec une implémentation réelle.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <textarea id="aesInput" rows="3" placeholder="Texte à chiffrer (AES simplifié)..."></textarea><br>
-        <button onclick="runPython('aes')">Simuler AES</button>
-        <pre id="aesOutput"></pre>
-      </div>
+      <textarea id="aesInput" rows="3" placeholder="Texte à chiffrer (simulation)..."></textarea>
+      <button class="btn" onclick="runPython('aes')">▶️ Simuler AES</button>
+      <button class="btn ghost" onclick="clearOutput('aesOutput')">🧹 Effacer</button>
+      <pre id="aesOutput" class="output">Console prête.</pre>
     </section>
 
     <!-- ==================== RSA ==================== -->
-    <section>
+    <section class="test-block">
       <h2>6. RSA</h2>
       <p>
-        Le dernier projet de cette collection a été RSA. 
-        J’ai implémenté la génération de clés, le chiffrement et le déchiffrement à l’aide d’exponentiation modulaire. 
-        C’est un algorithme fascinant car il allie mathématiques et sécurité de manière élégante.
-        En le codant, j’ai mieux compris les notions de nombres premiers, de modulo et de complexité calculatoire.
+        Dernier jalon : le chiffrement asymétrique. 
+        En implémentant RSA, j’ai compris la puissance de l’arithmétique modulaire et la lenteur calculatoire qu’elle implique.
+        Coder RSA m’a aussi fait réfléchir à la frontière entre élégance mathématique et contraintes de performance.
       </p>
 
-      <div class="test-zone">
-        <h3>🧪 Zone de test</h3>
-        <textarea id="rsaInput" rows="3" placeholder="Texte à chiffrer (RSA simulé)..."></textarea><br>
-        <button onclick="runPython('rsa')">Simuler RSA</button>
-        <pre id="rsaOutput"></pre>
-      </div>
+      <textarea id="rsaInput" rows="3" placeholder="Texte à chiffrer (RSA simulé)..."></textarea>
+      <button class="btn" onclick="runPython('rsa')">▶️ Simuler RSA</button>
+      <button class="btn ghost" onclick="clearOutput('rsaOutput')">🧹 Effacer</button>
+      <pre id="rsaOutput" class="output">Console prête.</pre>
     </section>
 
     <!-- ==================== CONCLUSION ==================== -->
     <section>
       <h2>Conclusion</h2>
       <p>
-        Ce parcours m’a permis de découvrir les fondements de la cryptographie moderne. 
-        J’ai commencé par manipuler des substitutions simples, puis j’ai évolué vers des systèmes basés sur les blocs et les nombres premiers.
-        Chacun de ces codes représente une étape dans ma compréhension : de la logique symbolique à la complexité algorithmique.
-        J’ai compris que la sécurité n’est pas qu’une question de chiffrement fort, mais de compréhension fine des limites de chaque modèle.
+        Cette collection illustre mon évolution dans l’apprentissage de la cryptographie :
+        passer d’une simple substitution à la manipulation de blocs, de clés, et de nombres premiers.
+        Chaque script m’a permis de comprendre un concept différent :
+        la substitution, la permutation, la clé, le hasard, la modularité et enfin la complexité.
+        Ce travail m’a appris qu’en cryptographie, la vraie sécurité ne réside pas dans le code, mais dans la compréhension de ses limites.
       </p>
       <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>© 2025 Hugo François — Collection cryptographique</p>
-    </div>
+    <div class="container"><p>© 2025 Hugo François — Collection cryptographique</p></div>
   </footer>
 
-  <script src="../background.js"></script>
-
-  <!-- ==================== PYTHON EXECUTION ENGINE ==================== -->
+  <!-- ==================== SCRIPT PYTHON (PYODIDE) ==================== -->
   <script>
-    async function initPyodideAndRun(){
-      if(!window.pyodide){
-        window.pyodide = await loadPyodide();
-      }
-      return window.pyodide;
+    let pyodide;
+    async function initPyodide() {
+      const firstOut = document.querySelector(".output");
+      firstOut.textContent = "⏳ Chargement de l'interpréteur Python...";
+      pyodide = await loadPyodide();
+      document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
     }
+    initPyodide();
 
     async function runPython(type){
-      const pyodide = await initPyodideAndRun();
+      if(!pyodide) return;
       let code = "";
       if(type === "mono"){
         code = `
-def mono_cipher(text):
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    key = "QWERTYUIOPASDFGHJKLZXCVBNM"
-    text = text.upper()
-    result = ""
-    for c in text:
-        if c in alphabet:
-            result += key[alphabet.index(c)]
-        else:
-            result += c
-    return result
-
+def mono_cipher(t):
+  a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
+  return ''.join(k[a.index(c)] if c in a else c for c in t.upper())
 mono_cipher("""${document.getElementById('monoInput').value}""")
 `;
-        document.getElementById("monoOutput").textContent = pyodide.runPython(code);
+        document.getElementById("monoOutput").textContent = await pyodide.runPythonAsync(code);
       }
       else if(type === "vigenere"){
         code = `
-def vigenere_encrypt(text, key):
-    text, key = text.upper(), key.upper()
-    res = ""
-    for i, c in enumerate(text):
-        if c.isalpha():
-            res += chr((ord(c) - 65 + ord(key[i % len(key)]) - 65) % 26 + 65)
-        else:
-            res += c
-    return res
-vigenere_encrypt("""${document.getElementById('vigenereInput').value}""", """${document.getElementById('vigenereKey').value}""")
+def vig(text,key):
+  text,key=text.upper(),key.upper()
+  r=""
+  for i,c in enumerate(text):
+    r+=chr((ord(c)-65+ord(key[i%len(key)])-65)%26+65) if c.isalpha() else c
+  return r
+vig("""${document.getElementById('vigenereInput').value}""","""${document.getElementById('vigenereKey').value}""")
 `;
-        document.getElementById("vigenereOutput").textContent = pyodide.runPython(code);
+        document.getElementById("vigenereOutput").textContent = await pyodide.runPythonAsync(code);
       }
       else if(type === "transposition"){
         code = `
-def transpose(text, key):
-    key = int(key)
-    res = [''] * key
-    for col in range(key):
-        pointer = col
-        while pointer < len(text):
-            res[col] += text[pointer]
-            pointer += key
-    return ''.join(res)
-transpose("""${document.getElementById('transInput').value}""", """${document.getElementById('transKey').value}""")
+def transpose(t,k):
+  k=int(k);r=['']*k
+  for c in range(k):
+    p=c
+    while p<len(t):
+      r[c]+=t[p];p+=k
+  return ''.join(r)
+transpose("""${document.getElementById('transInput').value}""","""${document.getElementById('transKey').value}""")
 `;
-        document.getElementById("transOutput").textContent = pyodide.runPython(code);
+        document.getElementById("transOutput").textContent = await pyodide.runPythonAsync(code);
       }
       else if(type === "otp"){
         code = `
 import random
-def otp(text):
-    key = ''.join(chr(random.randint(65, 90)) for _ in range(len(text)))
-    enc = ''.join(chr(ord(t) ^ ord(k)) for t, k in zip(text, key))
-    return "Clé: " + key + "\\nTexte chiffré: " + enc
+def otp(t):
+  k=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
+  e=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,k))
+  return "Clé: "+k+"\\nTexte chiffré: "+e
 otp("""${document.getElementById('otpInput').value}""")
 `;
-        document.getElementById("otpOutput").textContent = pyodide.runPython(code);
+        document.getElementById("otpOutput").textContent = await pyodide.runPythonAsync(code);
       }
       else if(type === "aes"){
-        document.getElementById("aesOutput").textContent = "Simulation AES : bloc transformé (démo simplifiée)";
+        document.getElementById("aesOutput").textContent = "Simulation AES : bloc traité (exemple conceptuel)";
       }
       else if(type === "rsa"){
-        document.getElementById("rsaOutput").textContent = "Simulation RSA : génération de clé et chiffrement (démo)";
+        document.getElementById("rsaOutput").textContent = "Simulation RSA : génération de clés et chiffrement symbolique";
       }
     }
+
+    function clearOutput(id){
+      document.getElementById(id).textContent = "Console nettoyée.";
+    }
   </script>
+
+  <script src="../background.js"></script>
 </body>
 </html>
