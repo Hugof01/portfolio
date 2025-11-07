@@ -122,158 +122,153 @@
 
 <!-- ==================== SCRIPT PYTHON (PYODIDE) ==================== -->
 <script>
-  let pyodide;
-
-// --------- 1) Démarrage Pyodide ----------
-  (async function initPyodide() {
-    document.querySelectorAll(".output").forEach(el => el.textContent = "⏳ Chargement de l'interpréteur Python...");
-    pyodide = await loadPyodide();
-    document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
-  })();
-
-// --------- 2) Où sont tes scripts ----------
+  /* --------- Pyodide runner propre (ne modifie pas le DOM visuel) --------- */
+  let pyodide = null;
   const SCRIPT_PATHS = {
-    mono:       "../assets/scripts/crypto/mono_alphabetic_cipher.py",
-    vigenere:   "../assets/scripts/crypto/vigenere.py",                 // assure-toi que ce fichier est là
-    transpo:    "../assets/scripts/crypto/transposition.py",
-    otp:        "../assets/scripts/crypto/otp.py",
-    aes:        "../assets/scripts/crypto/aes-ecb.py",                  // sorties “blocs/attaque” comme ton terminal
-    rsa:        "../assets/scripts/crypto/rsa.py"
+    mono: "../assets/scripts/crypto/mono_alphabetic_cipher.py",
+    vigenere: "../assets/scripts/crypto/vigenere.py",
+    transposition: "../assets/scripts/crypto/transposition.py",
+    otp: "../assets/scripts/crypto/otp.py",
+    aes: "../assets/scripts/crypto/aes-ecb.py",
+    rsa: "../assets/scripts/crypto/rsa.py"
   };
-
-  const cache = {}; // on mémorise les fichiers chargés
-
-  async function loadScriptText(kind){
-    if (!cache[kind]) {
-      const res = await fetch(SCRIPT_PATHS[kind]);
-      if (!res.ok) throw new Error(`Impossible de charger ${SCRIPT_PATHS[kind]}`);
-      cache[kind] = await res.text();
+  const scriptCache = {};
+  
+  // utilitaire sûr pour insérer des chaînes dans le code python (échappe backslash et triple-quote)
+  function escForPy(s){
+    if(s === null || s === undefined) return "";
+    return String(s).replace(/\\/g,'\\\\').replace(/"""/g,'\\"""');
+  }
+  
+  // charge un .py (avec cache)
+  async function loadScript(kind){
+    if(!SCRIPT_PATHS[kind]) throw new Error("Unknown script kind: "+kind);
+    if(scriptCache[kind]) return scriptCache[kind];
+    const res = await fetch(SCRIPT_PATHS[kind]);
+    if(!res.ok) throw new Error("Failed to fetch "+SCRIPT_PATHS[kind]+" (status "+res.status+")");
+    const text = await res.text();
+    scriptCache[kind] = text;
+    return text;
+  }
+  
+  // initialise pyodide (non intrusif)
+  async function initPyodideIfNeeded(){
+    if(pyodide) return pyodide;
+    try{
+      document.querySelectorAll(".output").forEach(el => el.textContent = "⏳ Chargement de l'interpréteur Python...");
+      pyodide = await loadPyodide();
+      document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
+      return pyodide;
+    }catch(e){
+      console.error("Pyodide init error:", e);
+      document.querySelectorAll(".output").forEach(el => el.textContent = "❌ Impossible de charger Pyodide : "+e);
+      throw e;
     }
-    return cache[kind];
   }
-
-// --------- 3) Utilitaires ----------
-  function pyStr(s){           // protège les triples quotes
-    return (s ?? "").replaceAll('\\', '\\\\').replaceAll('"""','\\"""');
-  }
-  function setOutput(id, txt){
-    document.getElementById(id).textContent = txt;
-  }
-  window.clearOutput = function(id){
-    setOutput(id, "Console nettoyée.");
-  };
-
-// --------- 4) Routeur d’exécution ----------
-  async function run(kind, payload, mode=""){
-    if(!pyodide) return;
-
-    // 4.1 Charge le fichier demandé
-    const script = await loadScriptText(kind);
-
-    // 4.2 Prépare les variables d’entrée accessibles par le script
-    //     (tu peux t’en servir directement dans tes .py si tu veux)
+  
+  // Exécute le script .py en injectant __TEXT__, __KEY__, __N__, __MODE__
+  // Règle importante : on n'altère pas le DOM, on récupère uniquement la sortie retournée par Pyodide
+  async function execScript(kind, payload = {}, mode = ""){
+    await initPyodideIfNeeded();
+    const script = await loadScript(kind);
+    // bootstrap variables disponibles pour le script
     const bootstrap = `
-__TEXT__ = """${pyStr(payload.text)}"""
-__KEY__  = """${pyStr(payload.key || "")}"""
-__N__    = ${Number(payload.n ?? 0)}
-__MODE__ = """${mode}"""
-`;
-
-    // 4.3 “Driver” générique :
-    // - Exécute ton fichier tel quel (prints affichés)
-    // - Si le script expose une fonction standard, on la déclenche.
-    //   (sinon, tes prints natifs suffisent déjà)
+  __TEXT__ = """${escForPy(payload.text ?? "")}"""
+  __KEY__  = """${escForPy(payload.key ?? "")}"""
+  __N__    = ${Number(payload.n ?? 0)}
+  __MODE__ = """${escForPy(mode)}"""
+  `;
+    // driver non invasif : essaye d'appeler demo/run/main si présent sinon se contente des print() du fichier
     const driver = `
-# ---- Driver générique pour déclencher une démo lisible ----
-_result = None
-try:
-    # Entrées possibles (non obligatoires selon le script)
-    text = __TEXT__
-    key  = __KEY__
-    n    = __N__
-    mode = __MODE__
-
-    # Points d'entrée classiques si présents :
-    if 'demo' in globals():
-        _result = demo(text=text, key=key, n=n, mode=mode)
-    elif 'main' in globals():
-        _result = main(text, mode, key, n)
-    elif 'run' in globals():
-        _result = run(text, mode, key, n)
-    # Sinon : on laisse simplement les print() du script s’afficher
-
-except Exception as _e:
-    import traceback
-    print("❌ Exception:", _e)
-    print(traceback.format_exc())
-
-if _result is not None:
-    print(_result)
-`;
-
-    // 4.4 Exécute dans Pyodide (bootstrap + ton script + driver)
-    const code = bootstrap + "\n" + script + "\n" + driver;
-    return await pyodide.runPythonAsync(code);
+  # driver wrapper — laisse les prints natifs du script s'afficher
+  try:
+      text = __TEXT__
+      key  = __KEY__
+      n    = __N__
+      mode = __MODE__
+      if 'demo' in globals():
+          _res = demo(text=text, key=key, n=n, mode=mode)
+          if _res is not None:
+              print(_res)
+      elif 'main' in globals():
+          _res = main(text, mode, key, n)
+          if _res is not None:
+              print(_res)
+      elif 'run' in globals():
+          _res = run(text, mode, key, n)
+          if _res is not None:
+              print(_res)
+      # sinon : rely on prints defined dans le script importé
+  except Exception as e:
+      import traceback
+      print("❌ Exception dans le script :", e)
+      print(traceback.format_exc())
+  `;
+    const full = bootstrap + "\n" + script + "\n" + driver;
+    // exécution asynchrone
+    return await pyodide.runPythonAsync(full);
   }
-
-// --------- 5) Boutons de ta page ----------
-  // Monoalphabétique
-  window.runMono = async function(){
-    const text = document.getElementById('monoInput').value;
+  
+  /* --- Fonction exposée utilisée par ton HTML : runPython(type,mode) --- 
+     Elle garde EXACTEMENT la même signature que tu utilisais.
+     Elle écrit le résultat dans l'élément id `${type}Output`. */
+  async function runPython(type, mode){
     try{
-      await run("mono", {text});
-    }catch(e){ setOutput("monoOutput", "❌ Erreur : " + e); return; }
-    setOutput("monoOutput", pyodide.globals.get('___last_output') || "✔️ Fini (voir prints ci-dessus)");
-  };
-
-  // Vigenère (chiffrer/déchiffrer/craquer via “mode”)
-  window.runVigenere = async function(mode){
-    const text = document.getElementById('vigenereInput').value;
-    const key  = document.getElementById('vigenereKey').value;
+      await initPyodideIfNeeded();
+    }catch(e){
+      // déjà géré dans init
+      return;
+    }
+  
+    // récupère les entrées depuis le DOM sans réorganiser la page
+    let payload = {};
     try{
-      await run("vigenere", {text, key}, mode);
-    }catch(e){ setOutput("vigenereOutput", "❌ Erreur : " + e); return; }
-    setOutput("vigenereOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
-  };
-
-  // Transposition
-  window.runTranspo = async function(){
-    const text = document.getElementById('transInput').value;
-    const n    = document.getElementById('transKey').value;
+      if(type === "mono"){
+        payload.text = document.getElementById('monoInput')?.value ?? "";
+      } else if(type === "vigenere"){
+        payload.text = document.getElementById('vigenereInput')?.value ?? "";
+        payload.key  = document.getElementById('vigenereKey')?.value ?? "";
+      } else if(type === "transposition"){
+        payload.text = document.getElementById('transInput')?.value ?? "";
+        payload.n    = document.getElementById('transKey')?.value ?? 0;
+      } else if(type === "otp"){
+        payload.text = document.getElementById('otpInput')?.value ?? "";
+      } else if(type === "aes"){
+        payload.text = document.getElementById('aesInput')?.value ?? "";
+      } else if(type === "rsa"){
+        payload.text = document.getElementById('rsaInput')?.value ?? "";
+      } else {
+        // si type inconnu, on essaye de charger par nom exact
+        payload.text = (document.querySelector('textarea')?.value ?? "");
+      }
+    }catch(e){
+      console.warn("Erreur lecture inputs:", e);
+    }
+  
+    const outputEl = document.getElementById(type+"Output");
+    if(outputEl) outputEl.textContent = "▶️ Exécution en cours...";
+  
     try{
-      await run("transpo", {text, n});
-    }catch(e){ setOutput("transOutput", "❌ Erreur : " + e); return; }
-    setOutput("transOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
+      const result = await execScript(type, payload, mode ?? "");
+      // Pyodide affiche les prints directement — on récupère un return éventuel si le script retourne quelque chose
+      // montre le résultat (ou un message de fin si rien contenu)
+      const text = (result === undefined || result === null) ? "✔️ Exécution terminée. Consulte la sortie imprimée ci-dessous." : String(result);
+      if(outputEl) outputEl.textContent = text;
+    }catch(e){
+      console.error("runPython error:", e);
+      if(outputEl) outputEl.textContent = "❌ Erreur d'exécution : " + e;
+    }
+  }
+  
+  // expose global (compatibilité avec tes boutons actuels qui appellent runPython(...))
+  window.runPython = runPython;
+  
+  // petit helper pour effacer (ton HTML appelle clearOutput(id))
+  window.clearOutput = function(id){
+    try{ document.getElementById(id).textContent = "Console nettoyée."; }catch(e){}
   };
-
-  // OTP – affiche binaire + clé + chiffré comme en terminal
-  window.runOTP = async function(){
-    const text = document.getElementById('otpInput').value;
-    try{
-      await run("otp", {text});
-    }catch(e){ setOutput("otpOutput", "❌ Erreur : " + e); return; }
-    setOutput("otpOutput", "✔️ Exécution terminée. Consulte la sortie imprimée au-dessus.");
-  };
-
-  // AES – “normal” ou “attack” (réordonnancement de blocs)
-  window.runAES = async function(mode="normal"){
-    const text = document.getElementById('aesInput').value;
-    try{
-      await run("aes", {text}, mode);
-    }catch(e){ setOutput("aesOutput", "❌ Erreur : " + e); return; }
-    setOutput("aesOutput", "✔️ Simulation affichée comme dans le terminal (blocs & attaque ECB).");
-  };
-
-  // RSA – affichage PEM + signature comme dans ta capture
-  window.runRSA = async function(){
-    const text = document.getElementById('rsaInput').value;
-    try{
-      await run("rsa", {text});
-    }catch(e){ setOutput("rsaOutput", "❌ Erreur : " + e); return; }
-    setOutput("rsaOutput", "✔️ Clés PEM, signature et vérification affichées par le script.");
-  };
-</script>
-
+  </script>
+  
 <script src="../background.js"></script>
 </body>
 </html>
