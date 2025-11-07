@@ -154,88 +154,144 @@
 
 <!-- ==================== SCRIPT PYTHON (PYODIDE) ==================== -->
 <script>
-let pyodide;
-async function initPyodide(){
-  const out=document.querySelector(".output");
-  out.textContent="⏳ Chargement de l'interpréteur Python...";
-  pyodide=await loadPyodide();
-  document.querySelectorAll(".output").forEach(el=>el.textContent="✅ Environnement Python prêt.");
-}
-initPyodide();
-
-async function runPython(type,mode){
-  if(!pyodide)return;
-  let code="",result="";
-  if(type==="mono"){
-    code=`a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
-text="${document.getElementById('monoInput').value}".upper()
-print('Texte chiffré :',''.join(k[a.index(c)] if c in a else c for c in text))`;
+  let pyodide;
+  
+  // capture stdout/stderr d'un code Python et retourne la sortie texte
+  function wrapPy(code){
+    return `
+  import sys, io
+  __buf_out = io.StringIO()
+  __old_out = sys.stdout
+  sys.stdout = __buf_out
+  try:
+  ${code.split('\n').map(l=>'  '+l).join('\n')}
+  finally:
+    sys.stdout = __old_out
+  __buf_out.getvalue()
+  `.trim();
   }
-  else if(type==="vigenere"){
-    code=`
-def vig(text,key,mode):
-  text,key=text.upper(),key.upper()
-  out=''
-  for i,c in enumerate(text):
-    if c.isalpha():
-      val=(ord(c)-65+(ord(key[i%len(key)])-65 if mode=='encrypt' else -(ord(key[i%len(key)])-65)))%26
-      out+=chr(val+65)
-    else: out+=c
-  return out
-print("Mode:", "${mode}")
-print("Clé:", "${document.getElementById('vigenereKey').value}")
-print("Résultat:", vig("""${document.getElementById('vigenereInput').value}""","""${document.getElementById('vigenereKey').value}""","""${mode||'encrypt'}"""))
-`;
+  
+  async function initPyodide(){
+    const first = document.querySelector(".output");
+    if(first){ first.textContent = "⏳ Chargement de l'interpréteur Python..."; }
+    pyodide = await loadPyodide();
+    document.querySelectorAll(".output").forEach(el => el.textContent = "✅ Environnement Python prêt.");
   }
-  else if(type==="transposition"){
-    code=`
-k=int("${document.getElementById('transKey').value or 3}")
-t="${document.getElementById('transInput').value}"
-r=['']*k
-for c in range(k):
-  p=c
-  while p<len(t):
-    r[c]+=t[p];p+=k
-print("Texte chiffré :", ''.join(r))`;
+  initPyodide();
+  
+  async function runPython(type, mode){
+    if(!pyodide) return;
+    let code = "";
+  
+    if(type === "mono"){
+      code = wrapPy(`
+  a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
+  text="${(document.getElementById('monoInput')?.value||'')}".upper()
+  print("Texte chiffré :", ''.join(k[a.index(c)] if c in a else c for c in text))
+  `);
+    }
+    else if(type === "vigenere"){
+      const key = document.getElementById('vigenereKey')?.value || "";
+      const txt = document.getElementById('vigenereInput')?.value || "";
+      const md  = mode || "encrypt";
+      code = wrapPy(`
+  def vig(text,key,mode):
+    text,key=text.upper(),key.upper()
+    out=''
+    j=0
+    for c in text:
+      if c.isalpha():
+        shift = ord(key[j%len(key)])-65 if len(key)>0 else 0
+        out+=chr((ord(c)-65 + (shift if mode=='encrypt' else -shift))%26 + 65)
+        j+=1
+      else:
+        out+=c
+    return out
+  
+  print("Mode:", "${md}")
+  print("Clé:", "${key}")
+  print("Résultat:", vig("""${txt.replace(/\\/g,'\\\\').replace(/"""/g,'\\"""')}""","""${key.replace(/\\/g,'\\\\').replace(/"""/g,'\\"""')}""","""${md}"""))
+  `);
+    }
+    else if(type === "transposition"){
+      // ⚠️ ici on corrige bien en JS avec ||
+      const k = document.getElementById('transKey')?.value || 3;
+      const t = document.getElementById('transInput')?.value || "";
+      code = wrapPy(`
+  k=int(${Number(k)})
+  t="""${t.replace(/\\/g,'\\\\').replace(/"""/g,'\\"""')}"""
+  r=['']*k
+  for c in range(k):
+    p=c
+    while p<len(t):
+      r[c]+=t[p]
+      p+=k
+  print("Texte chiffré :", ''.join(r))
+  `);
+    }
+    else if(type === "otp"){
+      const t = document.getElementById('otpInput')?.value || "";
+      code = wrapPy(`
+  import random
+  t="""${t.replace(/\\/g,'\\\\').replace(/"""/g,'\\"""')}"""
+  b=lambda s:' '.join(format(ord(c),'08b') for c in s)
+  key=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
+  cipher=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,key))
+  print("Plaintext (in binary):", b(t))
+  print("Key (in binary):", b(key))
+  print("Ciphertext (in binary):", b(cipher))
+  print("\\nClé:", key)
+  print("Texte chiffré:", cipher)
+  print("✅ Plaintext verified")
+  `);
+    }
+    else if(type === "aes"){
+      if(mode === "attack"){
+        code = wrapPy(`
+  print("[⚔️] Modified block order detected!\\nBloc1⇄Bloc3 -> contenu altéré\\n[!] Résultat : texte corrompu\\n")
+  `);
+      }else{
+        code = wrapPy(`
+  print("[🔐] Encrypted blocks:")
+  print("Block1: 9eb8bccf...  <-- \\"Vous savez, moi \\"")
+  print("Block2: 9655491a...  <-- \\"je ne pense pas \\"")
+  print("Block3: c1bbb4b4...  <-- \\"qu'il y ait de b\\"")
+  print("Block4: e99bf8cf...  <-- \\"onnes situations\\"")
+  print("Block5: b0c3e0b2...  <-- \\"...avec ce mode \\"")
+  print("\\n✅ Simulation AES terminée")
+  `);
+      }
+    }
+    else if(type === "rsa"){
+      const msg = document.getElementById('rsaInput')?.value || "";
+      code = wrapPy(`
+  print("[🔐] Private key (PEM):\\n-----BEGIN RSA PRIVATE KEY-----\\nMIIC...==\\n-----END RSA PRIVATE KEY-----")
+  print("\\n[📢] Public key (PEM):\\n-----BEGIN PUBLIC KEY-----\\nMIIB...==\\n-----END PUBLIC KEY-----")
+  print("\\n[📝] Message: ${msg.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}")
+  print("[🔍] SHA256(message): 78736eeb2dbb9cc043e03c6d120d6462785646d7f6a36cb7cc66f49a860505e5")
+  print("[✍️] Signature (hex): 57cfa70ad8b3eb06...a3412def")
+  print("\\n✅ Signature verified! Message authentic.")
+  `);
+    }
+  
+    const out = document.getElementById(type+"Output");
+    if(out) out.textContent = "▶️ Exécution en cours...";
+    try{
+      const result = await pyodide.runPythonAsync(code);
+      // result = texte capturé
+      if(out) out.textContent = result || "✔️ Terminé.";
+    }catch(e){
+      console.error(e);
+      if(out) out.textContent = "❌ Erreur : " + e;
+    }
   }
-  else if(type==="otp"){
-    code=`
-import random
-t="${document.getElementById('otpInput').value}"
-b=lambda s:' '.join(format(ord(c),'08b') for c in s)
-key=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
-cipher=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,key))
-print("Plaintext (in binary):", b(t))
-print("Key (in binary):", b(key))
-print("Ciphertext (in binary):", b(cipher))
-print("\\nClé:", key)
-print("Texte chiffré:", cipher)
-print("✅ Plaintext verified")`;
+  
+  function clearOutput(id){
+    const el = document.getElementById(id);
+    if(el) el.textContent = "Console nettoyée.";
   }
-  else if(type==="aes"){
-    if(mode==="attack")
-      code=`print("[⚔️] Modified block order detected!\\nBloc1⇄Bloc3 -> contenu altéré\\n[!] Résultat : texte corrompu\\n")`;
-    else
-      code=`print("[🔐] Encrypted blocks:\\nBlock1: 9eb8bccf...\\nBlock2: 9655491a...\\nBlock3: c1bbb4b4...\\nBlock4: e99bf8cf...\\nBlock5: b0c3e0b2...\\n\\n✅ Simulation AES terminée")`;
-  }
-  else if(type==="rsa"){
-    code=`print("[🔐] Private key (PEM):\\n-----BEGIN RSA PRIVATE KEY-----\\nMIIC...==\\n-----END RSA PRIVATE KEY-----")
-print("\\n[📢] Public key (PEM):\\n-----BEGIN PUBLIC KEY-----\\nMIIB...==\\n-----END PUBLIC KEY-----")
-print("\\n[📝] Message: ${document.getElementById('rsaInput').value}")
-print("[🔍] SHA256(message): 78736eeb2dbb9cc043e03c6d120d6462785646d7f6a36cb7cc66f49a860505e5")
-print("[✍️] Signature (hex): 57cfa70ad8b3eb06...a3412def")
-print("\\n✅ Signature verified! Message authentic.")`;
-  }
-  try{
-    result=await pyodide.runPythonAsync(code);
-    document.getElementById(type+"Output").textContent=result;
-  }catch(e){
-    document.getElementById(type+"Output").textContent="❌ Erreur : "+e;
-  }
-}
-
-function clearOutput(id){document.getElementById(id).textContent="Console nettoyée.";}
-</script>
+  </script>
+  
 
 <script src="../background.js"></script>
 </body>
