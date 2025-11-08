@@ -289,3 +289,41 @@
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   }
   
+/* ===============================
+   STYLE CONSOLES OTP
+   =============================== */
+   .output {
+    background: #0b0c10;
+    color: #fff;                    /* texte binaire blanc */
+    border-radius: 8px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+    margin-top: 1em;
+    box-shadow: 0 0 12px rgba(102,252,241,0.1);
+  }
+  
+  /* titres à l’intérieur des .output */
+  .output::first-line {
+    color: var(--accent);           /* le bleu du site pour les titres */
+    font-weight: 600;
+  }
+  
+  /* petits ajustements d’alignement */
+  #otp-demo button {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 6px 18px rgba(4,20,24,0.6);
+    transition: 0.2s ease;
+  }
+  
+  #otp-demo button:hover {
+    background-color: var(--accent);
+    color: #000;
+  }
+  
