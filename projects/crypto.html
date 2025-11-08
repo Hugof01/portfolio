@@ -111,19 +111,148 @@
     </section>
 
     <!-- ==================== OTP ==================== -->
-    <section class="test-block">
-      <h2>4. One-Time Pad (OTP)</h2>
-      <p>
-        C’est l’algorithme parfait : chaque caractère est combiné à une clé aléatoire unique.
-        Incassable en théorie, inutilisable en pratique sans gestion de clé parfaite. 
-        Ce script m’a appris le rôle fondamental du hasard dans la sécurité.
-      </p>
+<section id="otp-demo" class="algo-block">
+  <h2>4. One-Time Pad (OTP)</h2>
+  <p>
+    XOR caractère par caractère. Affichage binaire (8 bits) et ASCII.
+  </p>
 
-      <textarea id="otpInput" rows="3" placeholder="Texte à chiffrer..."></textarea>
-      <button class="btn" onclick="runPython('otp')">▶️ Lancer le test</button>
-      <button class="btn ghost" onclick="clearOutput('otpOutput')">🧹 Effacer</button>
-      <pre id="otpOutput" class="output">Console prête.</pre>
-    </section>
+  <div class="controls" style="display:grid; gap:12px; max-width:900px;">
+    <label>
+      Message
+      <textarea id="otp-msg" rows="3" placeholder="Entrez le message à chiffrer"
+                style="width:100%;"></textarea>
+    </label>
+
+    <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+      <label style="flex:1 1 320px;">
+        Clé
+        <input id="otp-key" type="text" placeholder="Entrez la clé (≥ longueur du message)"
+               style="width:100%;" />
+      </label>
+
+      <button id="otp-gen"
+              title="Génère une clé aléatoire de la bonne longueur">
+        Générer une clé aléatoire
+      </button>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button id="otp-run">Lancer le test</button>
+      <button id="otp-clear" style="opacity:.8">Effacer</button>
+      <small id="otp-hint" style="opacity:.8">
+        Longueur message requise pour la clé : <span id="otp-need">0</span>
+      </small>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div class="output" id="otp-pt-bin"></div>
+    <div class="output" id="otp-key-bin"></div>
+    <div class="output" id="otp-ct-bin"></div>
+    <div class="output" id="otp-ct-ascii"></div>
+    <div class="output" id="otp-verify"></div>
+  </div>
+</section>
+
+<script>
+  // ===== Helpers =====
+  const toBin8 = (n) => n.toString(2).padStart(8, "0");
+  const strToBinLine = (s) =>
+    Array.from(s, ch => toBin8(ch.charCodeAt(0))).join(" ");
+  const xorStrings = (a, b) => {
+    const n = a.length;
+    let out = "";
+    for (let i = 0; i < n; i++) {
+      const c = a.charCodeAt(i) ^ b.charCodeAt(i);
+      out += String.fromCharCode(c);
+    }
+    return out;
+  };
+  const randomKeyAZ = (len) => {
+    const ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let k = "";
+    for (let i = 0; i < len; i++) k += ABC[Math.floor(Math.random()*ABC.length)];
+    return k;
+  };
+
+  // ===== UI elements =====
+  const $ = (id) => document.getElementById(id);
+  const msgEl = $("otp-msg");
+  const keyEl = $("otp-key");
+  const needEl = $("otp-need");
+
+  const outPtBin = $("otp-pt-bin");
+  const outKeyBin = $("otp-key-bin");
+  const outCtBin = $("otp-ct-bin");
+  const outCtAscii = $("otp-ct-ascii");
+  const outVerify = $("otp-verify");
+
+  const setOutput = (el, title, body) => {
+    el.textContent = title + "\n" + body;
+  };
+  const clearOutputs = () => {
+    [outPtBin, outKeyBin, outCtBin, outCtAscii, outVerify].forEach(e => e.textContent = "");
+  };
+
+  // ===== Live hint for key length =====
+  const updateNeed = () => { needEl.textContent = msgEl.value.length; };
+  msgEl.addEventListener("input", updateNeed);
+  updateNeed();
+
+  // ===== Actions =====
+  $("otp-gen").addEventListener("click", () => {
+    const L = msgEl.value.length;
+    keyEl.value = randomKeyAZ(L);
+  });
+
+  $("otp-clear").addEventListener("click", () => {
+    msgEl.value = "";
+    keyEl.value = "";
+    clearOutputs();
+    updateNeed();
+  });
+
+  $("otp-run").addEventListener("click", () => {
+    clearOutputs();
+    const msg = msgEl.value ?? "";
+    const key = keyEl.value ?? "";
+
+    if (!msg.length) {
+      outVerify.textContent = "⚠️ Entrez un message.";
+      return;
+    }
+    if (key.length < msg.length) {
+      outVerify.textContent =
+        `❌ Clé trop courte (clé=${key.length}, message=${msg.length}). ` +
+        `La clé doit faire au moins ${msg.length} caractères.`;
+      return;
+    }
+
+    // On tronque la clé au besoin pour un comportement strictement “OTP”
+    const keyUse = key.slice(0, msg.length);
+
+    // 1) Binaire plaintext & clé
+    setOutput(outPtBin, "Plaintext (binaire 8 bits)", strToBinLine(msg));
+    setOutput(outKeyBin, "Clé (binaire 8 bits)", strToBinLine(keyUse));
+
+    // 2) Chiffrement (XOR caractère par caractère)
+    const ct = xorStrings(msg, keyUse);
+
+    // 3) Binaire + ASCII du ciphertext
+    setOutput(outCtBin, "Ciphertext (binaire 8 bits)", strToBinLine(ct));
+    setOutput(outCtAscii, "Ciphertext (ASCII)", ct);
+
+    // 4) Vérification (décrypt = XOR avec la même clé)
+    const recovered = xorStrings(ct, keyUse);
+    const ok = recovered === msg;
+    setOutput(
+      outVerify,
+      "Vérification",
+      ok ? `Plaintext vérifié ✅\n${recovered}` : "❌ Échec de la vérification"
+    );
+  });
+</script>
 
     <!-- ==================== AES ==================== -->
     <section class="test-block">
@@ -220,17 +349,6 @@ def transpose(t,k):
 transpose("""${document.getElementById('transInput').value}""","""${document.getElementById('transKey').value}""")
 `;
         document.getElementById("transOutput").textContent = await pyodide.runPythonAsync(code);
-      }
-      else if(type === "otp"){
-        code = `
-import random
-def otp(t):
-  k=''.join(chr(random.randint(65,90)) for _ in range(len(t)))
-  e=''.join(chr(ord(a)^ord(b)) for a,b in zip(t,k))
-  return "Clé: "+k+"\\nTexte chiffré: "+e
-otp("""${document.getElementById('otpInput').value}""")
-`;
-        document.getElementById("otpOutput").textContent = await pyodide.runPythonAsync(code);
       }
       else if(type === "aes"){
         document.getElementById("aesOutput").textContent = "Simulation AES : bloc traité (exemple conceptuel)";
