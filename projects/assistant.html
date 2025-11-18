@@ -5,28 +5,622 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Assistant Linux | Hugo François</title>
   <meta name="description" content="Assistant CLI Linux pour débutants — automatisation et tutoriels interactifs.">
-  <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* Variables de couleurs */
+    :root {
+      --bg: #0b0c10;
+      --card: #121417;
+      --accent: #66fcf1;
+      --muted: #9ea3a6;
+      --btn-bg: #45a29e;
+      --btn-text: #0b0c10;
+      --glass: rgba(255,255,255,0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", system-ui, Arial, sans-serif;
+      color: #e6eef0;
+      background: linear-gradient(180deg, var(--bg), #060606 120%);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Fond Matrix */
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.1;
+    }
+
+    header, main, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    body, h1, h2, h3, p, a, li {
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* Header */
+    .site-header {
+      padding: 48px 0 24px;
+    }
+
+    .header-inner h1 {
+      font-size: 2.6rem;
+      margin: 0 0 8px;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      margin: 8px 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    /* Section */
+    .section {
+      padding: 48px 0;
+    }
+
+    .section h2 {
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-size: 1.8rem;
+    }
+
+    .section p {
+      color: #d7f6f4;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .section ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 16px 0;
+    }
+
+    .section ul li {
+      color: #d7f6f4;
+      margin: 8px 0;
+    }
+
+    /* Boutons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-top: 8px;
+      box-shadow: 0 6px 18px rgba(4,20,24,0.6);
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--accent);
+      color: #000;
+      opacity: 1;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(102,252,241,0.3);
+    }
+
+    /* Terminal Demo */
+    .terminal-demo {
+      margin-top: 32px;
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
+      border-radius: 12px;
+      border: 1px solid rgba(102,252,241,0.08);
+      box-shadow: 0 6px 24px rgba(3,6,8,0.6);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      background: rgba(102,252,241,0.05);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(102,252,241,0.1);
+    }
+
+    .btn-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .btn-close { background: #ff5f56; }
+    .btn-minimize { background: #ffbd2e; }
+    .btn-maximize { background: #27c93f; }
+
+    .terminal-title {
+      color: var(--accent);
+      margin-left: 10px;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .terminal-body {
+      padding: 20px;
+      min-height: 450px;
+      max-height: 600px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      color: var(--accent);
+      background: var(--bg);
+    }
+
+    .terminal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .terminal-body::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    .terminal-body::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    .line {
+      margin-bottom: 5px;
+      line-height: 1.5;
+    }
+
+    .cyan { color: #66fcf1; }
+    .yellow { color: #ffbd2e; }
+    .green { color: #27c93f; }
+    .red { color: #ff5f56; }
+    .purple { color: #a06cff; }
+    .bold { font-weight: bold; }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .prompt {
+      color: var(--accent);
+      margin-right: 10px;
+    }
+
+    .terminal-body input {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      outline: none;
+      flex: 1;
+      caret-color: var(--accent);
+    }
+
+    .ascii-art {
+      font-size: 10px;
+      line-height: 1.2;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    /* Footer */
+    .site-footer {
+      padding: 24px 0;
+      background: linear-gradient(180deg,#060606, #050505);
+      color: var(--muted);
+      margin-top: 48px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.02);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .header-inner h1 {
+        font-size: 2rem;
+      }
+      .ascii-art {
+        font-size: 6px;
+      }
+      .section {
+        padding: 32px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>Assistant Linux</h1><p class="subtitle">Outil CLI pour guider les débutants dans l’univers Linux</p></div></header>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+  
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Assistant Linux</h1>
+      <p class="subtitle">Outil CLI pour guider les débutants dans l'univers Linux</p>
+    </div>
+  </header>
 
   <main class="container section">
     <h2>Objectif</h2>
     <p>
-      L’assistant Linux est un outil CLI permettant d’apprendre les bases de Linux via des commandes interactives.  
-      Il installe automatiquement les outils essentiels et guide l’utilisateur pas à pas dans l’apprentissage.
+      L'assistant Linux est un outil CLI permettant d'apprendre les bases de Linux via des commandes interactives.  
+      Il installe automatiquement les outils essentiels et guide l'utilisateur pas à pas dans l'apprentissage.
     </p>
 
     <ul>
-      <li>Installation automatisée d’outils (git, python, docker, etc.)</li>
+      <li>Installation automatisée d'outils (git, python, docker, etc.)</li>
       <li>Scripts explicatifs et démonstrations en direct</li>
       <li>Approche pédagogique pour étudiants et autodidactes</li>
     </ul>
 
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+    <h2 style="margin-top: 48px;">Démo Interactive</h2>
+    <p>Testez l'assistant directement dans votre navigateur ! Tapez <strong>Yes</strong> pour commencer.</p>
+
+    <div class="terminal-demo">
+      <div class="terminal-header">
+        <div class="btn-circle btn-close"></div>
+        <div class="btn-circle btn-minimize"></div>
+        <div class="btn-circle btn-maximize"></div>
+        <span class="terminal-title">terminal@linux-assistant</span>
+      </div>
+      
+      <div class="terminal-body" id="terminal">
+        <div class="ascii-art">
+   ______                 __    __          __                __  _            
+  /_  __/________  __  __/ /_  / /__  _____/ /_  ____  ____  / /_(_)___  ____ _
+   / / / ___/ __ \/ / / / __ \/ / _ \/ ___/ __ \/ __ \/ __ \/ __/ / __ \/ __  /
+  / / / /  / /_/ / /_/ / /_/ / /  __(__  ) / / / /_/ / /_/ / /_/ / / / / /_/ / 
+ /_/ /_/   \____/\__,_/_.___/_/\___/____/_/ /_/\____/\____/\__/_/_/ /_/\__, /  
+                                                                      /____/   
+                                  __          __ 
+                                 / /_  ____  / /_
+                                / __ \/ __ \/ __/
+                               / /_/ / /_/ / /_  
+                              /_.___/\____/\__/  
+        </div>
+        <div class="line">Hello <span class="cyan" id="username">visitor</span>!</div>
+        <div class="line"><span class="yellow">The weather for Paris: ☁️  +7°C</span></div>
+        <div class="line"> </div>
+        <div id="output"></div>
+        <div class="input-line" id="inputLine">
+          <span class="prompt">$</span>
+          <input type="text" id="userInput" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+      <a href="https://github.com" class="btn" target="_blank">Voir sur GitHub</a>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Assistant Linux</p></div></footer>
-  <script src="../background.js"></script>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 Hugo François — Assistant Linux</p>
+    </div>
+  </footer>
+
+  <script>
+    // Effet Matrix bleuté feutré
+    window.addEventListener("load", function () {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const canvas2 = document.getElementById("canvas2");
+      const ctx2 = canvas2.getContext("2d");
+
+      let cw = window.innerWidth;
+      let ch = window.innerHeight;
+
+      canvas.width = canvas2.width = cw;
+      canvas.height = canvas2.height = ch;
+
+      const charArr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@&$%".split("");
+      const fallingCharArr = [];
+      const fontSize = 14;
+      let maxColumns = Math.floor(cw / fontSize);
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+      }
+      function randomFloat(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function Point(x, y) {
+        this.x = x;
+        this.y = y;
+        this.speed = randomFloat(1, 2.2);
+        this.value = charArr[randomInt(0, charArr.length)];
+      }
+
+      Point.prototype.draw = function () {
+        this.value = charArr[randomInt(0, charArr.length)];
+
+        // Halo clair
+        ctx2.fillStyle = "rgba(255,255,255,0.4)";
+        ctx2.font = fontSize + "px monospace";
+        ctx2.fillText(this.value, this.x, this.y);
+
+        // Couleur principale (bleu accentué)
+        ctx.fillStyle = "#66fcf1";
+        ctx.font = fontSize + "px monospace";
+        ctx.fillText(this.value, this.x, this.y);
+
+        this.y += this.speed;
+        if (this.y > ch) {
+          this.y = randomFloat(-100, 0);
+          this.speed = randomFloat(1, 2.2);
+        }
+      };
+
+      function initColumns() {
+        fallingCharArr.length = 0;
+        maxColumns = Math.floor(cw / fontSize);
+        for (let i = 0; i < maxColumns; i++) {
+          fallingCharArr.push(new Point(i * fontSize, randomFloat(-1000, 0)));
+        }
+      }
+      initColumns();
+
+      function update() {
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        ctx.fillRect(0, 0, cw, ch);
+        ctx2.clearRect(0, 0, cw, ch);
+
+        for (let i = 0; i < fallingCharArr.length; i++) {
+          fallingCharArr[i].draw();
+        }
+
+        requestAnimationFrame(update);
+      }
+      update();
+
+      window.addEventListener("resize", () => {
+        cw = window.innerWidth;
+        ch = window.innerHeight;
+        canvas.width = canvas2.width = cw;
+        canvas.height = canvas2.height = ch;
+        initColumns();
+      });
+    });
+
+    // Terminal Logic
+    let currentState = 'initial';
+    const terminal = document.getElementById('terminal');
+    const output = document.getElementById('output');
+    const inputLine = document.getElementById('inputLine');
+    const userInput = document.getElementById('userInput');
+    
+    function showInitialPrompt() {
+      addLine('<span class="green">Wanna some infos?</span> <span class="cyan">Yes/No</span>');
+      currentState = 'initial';
+    }
+    
+    function addLine(text) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.innerHTML = text;
+      output.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+    
+    function showMainMenu() {
+      addLine('<span class="green">What do you want to know between:</span>');
+      addLine('<span class="cyan">1</span> : Current shell used');
+      addLine('<span class="cyan">2</span> : Files in this directory');
+      addLine('<span class="cyan">3</span> : A random number XD');
+      addLine('<span class="cyan">4</span> : Today\'s date');
+      addLine('<span class="cyan">5</span> : Create/delete a file or a directory');
+      addLine('<span class="cyan">6</span> : Know what your IP address is');
+      addLine('<span class="cyan">7</span> : Change the access for a file');
+      addLine('<span class="cyan">8</span> : Create or delete a user');
+      addLine('<span class="cyan">9</span> : List of the current user');
+      addLine('<span class="cyan">10</span> : Ping an @IP/website');
+      addLine('<span class="cyan">11</span> : Traceroute an @IP/website');
+      addLine('<span class="cyan">12</span> : Generate a password');
+      addLine('<span class="cyan">13</span> : Port scan options');
+      addLine(' ');
+      addLine('<span class="green">Choose between your number</span> (<span class="cyan">1-13</span>) :');
+      currentState = 'menu';
+    }
+    
+    function handleMenuChoice(choice) {
+      switch(choice) {
+        case '1':
+          addLine(' ');
+          addLine('<span class="bold">The shell used is: /bin/bash</span>');
+          break;
+        case '2':
+          addLine(' ');
+          addLine('<span class="green">The files are:</span>');
+          addLine(' ');
+          addLine('assistant.html');
+          addLine('multitool.sh');
+          addLine('style.css');
+          addLine('background.js');
+          addLine('index.html');
+          break;
+        case '3':
+          addLine(' ');
+          addLine('<span class="green">Let\'s say ...</span>');
+          setTimeout(() => {
+            addLine('<span class="bold">hummm ... ' + Math.floor(Math.random() * 32768) + '</span>');
+          }, 1000);
+          break;
+        case '4':
+          addLine(' ');
+          addLine(new Date().toString());
+          break;
+        case '5':
+          addLine(' ');
+          addLine('<span class="cyan">1</span> : create a file');
+          addLine('<span class="cyan">2</span> : create a directory');
+          addLine(' ');
+          addLine('<span class="cyan">3</span> : delete a file');
+          addLine('<span class="cyan">4</span> : delete a directory');
+          currentState = 'file_menu';
+          return;
+        case '6':
+          addLine(' ');
+          addLine('<span class="green">Do you want your private address (enter</span> 1<span class="green">) or your public address (enter</span> 2<span class="green">)?</span>');
+          currentState = 'ip_menu';
+          return;
+        case '9':
+          addLine('<span class="green">The current users are:</span>');
+          addLine(' ');
+          addLine('root');
+          addLine('daemon');
+          addLine('visitor');
+          addLine('hugo');
+          addLine('www-data');
+          break;
+        case '12':
+          addLine('<span class="green">Choose the password length:</span>');
+          currentState = 'password_length';
+          return;
+        default:
+          addLine('<span class="green">Invalid option, please choose a number between</span> <span class="cyan">1</span><span class="green"> and </span><span class="cyan">13</span>.');
+      }
+      
+      setTimeout(() => {
+        addLine(' ');
+        addLine('<span class="green">Wanna more infos?</span> <span class="cyan">Yes/No</span>');
+        currentState = 'initial';
+      }, 1500);
+    }
+    
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const value = userInput.value.trim();
+        addLine('<span class="prompt">$</span> ' + value);
+        userInput.value = '';
+        
+        if (currentState === 'initial') {
+          if (value.toLowerCase() === 'yes') {
+            showMainMenu();
+          } else if (value.toLowerCase() === 'no') {
+            addLine(' ');
+            addLine('<span class="green">Goodbye! 👋</span>');
+            inputLine.style.display = 'none';
+          } else {
+            addLine('<span class="green">Invalid option, please enter</span> Yes<span class="green"> or</span> No<span class="green">.</span>');
+            addLine(' ');
+            addLine('<span class="green">Wanna some infos?</span> <span class="cyan">Yes/No</span>');
+          }
+        } else if (currentState === 'menu') {
+          handleMenuChoice(value);
+        } else if (currentState === 'file_menu') {
+          if (value === '1') {
+            addLine(' ');
+            addLine('<span class="green">Enter the name of the file:</span>');
+            currentState = 'create_file';
+          } else if (value === '2') {
+            addLine(' ');
+            addLine('<span class="green">Enter the name of the directory:</span>');
+            currentState = 'create_dir';
+          }
+        } else if (currentState === 'create_file') {
+          addLine('<span class="green">The file</span> ' + value + ' <span class="green">is created with success! Quit this script with Ctrl+C and enter the command nano</span> ' + value);
+          addLine('<span class="green">For deleting the file, use the command:</span> rm ' + value);
+          setTimeout(() => {
+            addLine(' ');
+            addLine('<span class="green">Wanna more infos?</span> <span class="cyan">Yes/No</span>');
+            currentState = 'initial';
+          }, 1000);
+        } else if (currentState === 'create_dir') {
+          addLine(' ');
+          addLine('<span class="green">The directory</span> ' + value + '<span class="green"> is created with success!</span>');
+          addLine('<span class="green">For deleting the directory, use the command:</span> rm -rf ' + value);
+          setTimeout(() => {
+            addLine(' ');
+            addLine('<span class="green">Wanna more infos?</span> <span class="cyan">Yes/No</span>');
+            currentState = 'initial';
+          }, 1000);
+        } else if (currentState === 'ip_menu') {
+          if (value === '1') {
+            addLine('<span class="green">Your private IP address is:</span> 192.168.1.42');
+          } else if (value === '2') {
+            addLine('<span class="green">Here it is! --></span> 93.184.216.34');
+          }
+          setTimeout(() => {
+            addLine(' ');
+            addLine('<span class="green">Wanna more infos?</span> <span class="cyan">Yes/No</span>');
+            currentState = 'initial';
+          }, 1000);
+        } else if (currentState === 'password_length') {
+          const length = parseInt(value);
+          if (length > 0) {
+            addLine('<span class="green">How many passwords do you want to create?</span>');
+            currentState = 'password_count';
+            window.passwordLength = length;
+          }
+        } else if (currentState === 'password_count') {
+          const count = parseInt(value);
+          const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_";
+          
+          let securityLevel = '';
+          if (window.passwordLength <= 6) {
+            securityLevel = '[<span class="green">#</span>-----------------------------]';
+          } else if (window.passwordLength <= 12) {
+            securityLevel = '[<span class="yellow">##########</span>--------------------]';
+          } else if (window.passwordLength <= 16) {
+            securityLevel = '[<span class="red">####################</span>----------]';
+          } else {
+            securityLevel = '[<span class="purple">##############################</span>]';
+          }
+          
+          for (let i = 0; i < count; i++) {
+            let password = '';
+            for (let j = 0; j < window.passwordLength; j++) {
+              password += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            addLine('<span class="green">Password ' + (i+1) + ':</span> ' + password);
+            addLine('<span class="green">Security Level:</span> ' + securityLevel);
+          }
+          
+          setTimeout(() => {
+            addLine(' ');
+            addLine('<span class="green">Wanna more infos?</span> <span class="cyan">Yes/No</span>');
+            currentState = 'initial';
+          }, 500);
+        }
+      }
+    });
+    
+    // Démarrage
+    showInitialPrompt();
+    
+    // Focus sur le terminal quand on clique dessus
+    terminal.addEventListener('click', () => userInput.focus());
+  </script>
 </body>
 </html>
