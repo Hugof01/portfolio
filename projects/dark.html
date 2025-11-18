@@ -9,19 +9,154 @@
 </head>
 <body>
   <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>Archives (darkweb)</h1><p class="subtitle">Analyse responsable et archivage de ressources</p></div></header>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div>
+        <h1>Archives (darkweb)</h1>
+        <p class="subtitle">Mise en place d’un service caché Tor et d’un site statique en 2023</p>
+        <p class="lead">
+          Projet personnel réalisé à l’automne 2023 pour comprendre concrètement comment
+          fonctionne l’hébergement de services anonymes sur le réseau Tor.
+        </p>
+        <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+      </div>
+    </div>
+  </header>
 
   <main class="container section">
-    <h2>Présentation</h2>
-    <p>
-      Dans le cadre d’un travail de recherche, j’ai réalisé l’analyse de sites hébergés sur le darkweb afin d’en étudier les structures et les protocoles utilisés.  
-      Les captures ont été archivées hors ligne, sans diffusion publique, dans un cadre purement technique et éthique.
-    </p>
+    <!-- INTRODUCTION -->
+    <section class="project-details">
+      <div class="detail">
+        <h2>Contexte du projet</h2>
+        <p>
+          En <strong>octobre 2023</strong>, j’ai déployé un petit site web personnel sur le
+          <strong>dark web</strong> via un service caché Tor. L’objectif n’était pas de publier du
+          contenu sensible, mais d’<strong>expérimenter l’infrastructure</strong> : comprendre
+          comment un service en <code>.onion</code> est exposé, comment il se lie à un serveur web
+          classique (Nginx) et quelles sont les implications en matière d’anonymat.
+        </p>
+        <p>
+          À l’époque, je n’avais pas voulu — et je n’aurais de toute façon pas pu — utiliser
+          des assistants comme <strong>ChatGPT</strong> pour m’aider : tout était fait à la main,
+          en ligne de commande, directement sur la machine. Cette approche « brute » m’a permis
+          de comprendre en profondeur les mécanismes sous-jacents.
+        </p>
+        <p class="muted">
+          Toutes les captures ont été conservées hors ligne, dans une logique d’<strong>archivage
+          technique et responsable</strong>, sans aucun lien cliquable ni redirection active.
+        </p>
+      </div>
 
-    <p class="muted">Aucune redirection ni lien actif. Étude historique et sécurité des services anonymes.</p>
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+      <!-- TOR HIDDEN SERVICE -->
+      <div class="detail">
+        <h2>1. Lancement du service Tor et génération de l’adresse .onion</h2>
+        <p>
+          La première étape consistait à configurer et lancer le service Tor sur la machine.
+          La capture ci-dessous montre les commandes utilisées pour vérifier l’état du service :
+          <code>sudo service tor status</code>, puis <code>sudo service tor start</code>.
+        </p>
+        <p>
+          Une fois Tor démarré, l’adresse du service caché est générée dans le répertoire
+          <code>/var/lib/tor/hidden_service/</code>. En lisant le fichier
+          <code>hostname</code>, on obtient l’URL en <code>.onion</code> qui permettra d’accéder au
+          site uniquement via le réseau Tor.
+        </p>
+
+        <figure class="project-media">
+          <img src="darkweb_adresse_url_onion.png"
+               alt="Affichage du statut du service Tor et de l’adresse du service caché .onion">
+          <figcaption>
+            Vérification du service Tor et récupération de l’adresse <code>.onion</code>
+            (<strong>20 octobre 2023</strong>).
+          </figcaption>
+        </figure>
+
+        <p>
+          Cette étape m’a permis de comprendre que le service Tor fait office d’<strong>interface
+          d’anonymisation</strong> : l’utilisateur ne voit jamais l’adresse IP réelle du serveur,
+          uniquement le nom de domaine en <code>.onion</code> généré par Tor.
+        </p>
+      </div>
+
+      <!-- SERVEUR NGINX -->
+      <div class="detail">
+        <h2>2. Couplage avec Nginx : le serveur web derrière Tor</h2>
+        <p>
+          Ensuite, j’ai choisi d’utiliser <strong>Nginx</strong> comme serveur HTTP classique, qui
+          écoute localement sur la machine. Tor est alors configuré pour rediriger le trafic du
+          service caché vers ce port local, ce qui revient à placer le site web « derrière » Tor.
+        </p>
+
+        <figure class="project-media">
+          <img src="darkweb_nginx_status.png"
+               alt="Statut du service Nginx servant le site derrière le service Tor">
+          <figcaption>
+            Nginx actif en arrière-plan, servant le site statique derrière le service caché Tor.
+          </figcaption>
+        </figure>
+
+        <p>
+          Cette architecture m’a fait toucher du doigt la notion de <strong>séparation entre le
+          serveur applicatif et la couche d’anonymisation</strong>. L’adresse IP publique n’est
+          jamais exposée : seul Tor accepte les connexions entrantes, et relaie ensuite les requêtes
+          HTTP vers Nginx via un port local.
+        </p>
+      </div>
+
+      <!-- CONTENU DU SITE -->
+      <div class="detail">
+        <h2>3. Un site statique minimaliste, codé à la main</h2>
+        <p>
+          Côté contenu, le site en lui-même était volontairement très simple : une page HTML
+          statique, éditée directement dans <code>nano</code> sur la machine. Pas de framework,
+          pas de générateur de site, uniquement du HTML et du CSS embarqué.
+        </p>
+
+        <figure class="project-media">
+          <img src="darkweb_index_html_de_base.png"
+               alt="Édition de la page index.html du site statique hébergé sur le service caché">
+          <figcaption>
+            Édition de la page <code>index.html</code> du site hébergé sur le service caché.
+          </figcaption>
+        </figure>
+
+        <p>
+          Travailler de cette manière m’a permis de me concentrer sur
+          l’<strong>infrastructure</strong> plutôt que sur le design : comment la page est servie,
+          comment elle est rendue accessible via Tor, et quelles sont les implications en termes de
+          journalisation, d’exposition de services et de surface d’attaque.
+        </p>
+      </div>
+
+      <!-- CONCLUSION -->
+      <div class="detail">
+        <h2>4. Ce que ce projet m’a apporté</h2>
+        <p>
+          Ce projet d’archives darkweb est une étape importante dans mon parcours : il m’a donné
+          une vision très concrète du fonctionnement des <strong>services cachés Tor</strong>,
+          de la chaîne réseau complète (Tor ↔ Nginx ↔ site statique) et des enjeux d’anonymat côté
+          serveur.
+        </p>
+        <p>
+          Aujourd’hui, je m’appuie sur des outils plus modernes et sur des environnements mieux
+          industrialisés (comme ceux utilisés pour ce portfolio), mais cette expérience « low-level »
+          en 2023 reste une base solide pour comprendre et auditer des architectures plus complexes.
+        </p>
+        <p class="muted">
+          Projet purement éducatif, sans hébergement de contenu illégal ; l’intérêt réside dans la
+          compréhension technique et la réflexion sur la sécurité des services anonymes.
+        </p>
+      </div>
+    </section>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Archives darkweb</p></div></footer>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 Hugo François — Archives darkweb (projet 2023)</p>
+    </div>
+  </footer>
+
   <script src="../background.js"></script>
 </body>
 </html>
