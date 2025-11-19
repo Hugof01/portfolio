@@ -1,92 +1,100 @@
-<h2>Présentation</h2>
+<main class="container section">
 
-<p>
-  Antares est aujourd’hui le projet le plus complet que j’ai entrepris.  
-  Je travaille dessus depuis bientôt un an, avec l’objectif de développer un logiciel
-  macOS de chiffrement à la fois simple, robuste et cohérent avec les standards modernes
-  de sécurité. L’ensemble de l’architecture – interface, logique applicative, cryptographie,
-  gestion de la Secure Enclave et Touch ID – a été conçu et développé par moi-même.
-</p>
+  <h2>Présentation</h2>
 
-<p>
-  L’application repose sur un principe clair : permettre à l’utilisateur de sécuriser
-  un dossier en quelques secondes, tout en garantissant une protection forte et un contrôle
-  complet de l’intégrité des données. Antares gère automatiquement la dérivation des clés,
-  la construction du header, le chiffrement du contenu et la vérification des éléments sensibles,
-  tout en offrant des outils avancés pour l’analyse et le débogage.
-</p>
+  <div class="project-details">
 
-<h3>Fonctionnalités principales</h3>
+    <div class="detail">
+      <p>
+        Antares est aujourd’hui le projet le plus complet que j’ai entrepris.  
+        Je travaille dessus depuis bientôt un an, avec l’objectif de développer un logiciel macOS
+        de chiffrement à la fois simple, robuste et cohérent avec les standards modernes de sécurité.
+        L’ensemble de l’architecture – interface, logique applicative, cryptographie, Secure Enclave,
+        Touch ID – a été entièrement conçu et développé par moi-même.
+      </p>
 
-<ul>
-  <li>Sélection d’un dossier à chiffrer ou déchiffrer</li>
-  <li>Authentification par mot de passe ou via Touch ID (Secure Enclave)</li>
-  <li>Dérivation de clé par Argon2id pour remplacer les dérivations classiques</li>
-  <li>Chiffrement AES-128 ou AES-256 selon le niveau de sécurité choisi</li>
-  <li>Header sécurisé incluant IV, version du format, niveau de chiffrement et tag d’intégrité</li>
-  <li>Vérification automatique de l’intégrité lors du chiffrement et du déchiffrement</li>
-</ul>
+      <p>
+        L’application repose sur un principe clair : permettre à l’utilisateur de sécuriser un dossier
+        en quelques secondes tout en garantissant une protection forte et une vérification systématique
+        de l’intégrité des données.
+      </p>
+    </div>
 
-<h3>Outils d’analyse et de vérification</h3>
+    <div class="detail">
+      <h3>Fonctionnalités principales</h3>
+      <ul>
+        <li>Sélection d’un dossier à chiffrer ou déchiffrer</li>
+        <li>Authentification par mot de passe ou via Touch ID (Secure Enclave)</li>
+        <li>Dérivation de clé par Argon2id pour remplacer les dérivations classiques</li>
+        <li>Chiffrement AES-128 ou AES-256 selon le niveau choisi</li>
+        <li>
+          Header sécurisé intégrant IV, version du format, niveau de chiffrement et
+          tag d’intégrité
+        </li>
+        <li>Vérification automatique de l’intégrité lors du chiffrement et du déchiffrement</li>
+      </ul>
+    </div>
 
-<p>
-  Antares intègre un centre de vérification permettant d’inspecter l’état des fichiers sensibles
-  et de détecter toute modification accidentelle ou malveillante.  
-  Ce module permet notamment de :
-</p>
+    <div class="detail">
+      <h3>Outils d’analyse et de vérification</h3>
+      <p>
+        Antares intègre un centre d’analyse permettant d’inspecter l’état des fichiers sensibles et
+        de détecter toute altération accidentelle ou malveillante.
+      </p>
+      <ul>
+        <li>Affichage des logs</li>
+        <li>Vérification de l’intégrité des logs</li>
+        <li>Vérification de l’intégrité du fichier de mapping</li>
+        <li>Analyse détaillée d’un dossier chiffré</li>
+        <li>Déchiffrement ciblé d’un fichier précis</li>
+      </ul>
+    </div>
 
-<ul>
-  <li>Afficher les logs de l’application</li>
-  <li>Vérifier l’intégrité des logs</li>
-  <li>Vérifier l’intégrité du fichier de mapping (structure interne du chiffrement)</li>
-  <li>Analyser un dossier chiffré et contrôler chaque fichier individuellement</li>
-  <li>Déchiffrer un fichier précis à la demande</li>
-</ul>
+    <div class="detail">
+      <h3>Mode Débogage</h3>
+      <p>
+        Le mode Débogage offre des outils avancés pour examiner les fichiers chiffrés : lecture des
+        métadonnées, vérification approfondie de l’intégrité, ou encore forçage du déchiffrement
+        dans un cadre contrôlé. Ce module est destiné aux tests et aux validations internes.
+      </p>
+    </div>
 
-<h3>Mode Débogage</h3>
+    <div class="detail">
+      <h3>Paramètres et maintenance</h3>
+      <ul>
+        <li>Basculement entre mode clair et sombre</li>
+        <li>Réinitialisation du mapping interne</li>
+        <li>Nettoyage des fichiers orphelins</li>
+        <li>Purge des logs</li>
+        <li>Choix de la langue (six langues disponibles)</li>
+      </ul>
+    </div>
 
-<p>
-  Un mode Débogage dédié offre la possibilité d’examiner en détail les fichiers chiffrés,
-  de vérifier leurs métadonnées, leur intégrité, ou encore de forcer un déchiffrement dans
-  un cadre contrôlé. Ce module est principalement destiné aux tests et au développement
-  afin d’assurer la stabilité et la conformité des mécanismes cryptographiques.
-</p>
+    <div class="detail">
+      <h3>Démo vidéo</h3>
+      <div class="video-container">
+        <video controls preload="metadata">
+          <source src="../assets/videos/antares_demo.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la vidéo MP4.
+        </video>
+      </div>
+      <p class="muted">
+        La démonstration présente les principales étapes : sélection du dossier, choix de
+        l’authentification, chiffrement, gestion des paramètres et analyse via le mode Débogage.
+      </p>
+    </div>
 
-<h3>Paramètres et maintenance</h3>
+    <div class="detail">
+      <h3>Perspectives</h3>
+      <p>
+        Antares est un projet en évolution continue. L’objectif est de proposer une version distribuée
+        au public, stable, sécurisée et adaptée aux besoins variés des utilisateurs. Je continue
+        d’améliorer l’interface, la fiabilité et les mécanismes de sécurité.  
+      </p>
+      <p>Pour toute question ou échange autour du projet :</p>
+      <a href="mailto:hugo.francois@student-cs.fr" class="btn">Me contacter</a>
+    </div>
 
-<ul>
-  <li>Basculement entre mode clair et sombre</li>
-  <li>Réinitialisation du mapping interne</li>
-  <li>Nettoyage des fichiers orphelins</li>
-  <li>Purge des logs</li>
-  <li>Choix de la langue (six langues disponibles)</li>
-</ul>
+  </div>
 
-<h3>Démo vidéo</h3>
-
-<div class="video-container">
-  <video controls preload="metadata">
-      <source src="../assets/videos/antares_demo.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la vidéo MP4.
-  </video>
-</div>
-
-<p class="muted">
-  La démonstration ci-dessus présente les principales étapes : lancement de l’application, sélection d’un
-  dossier, choix de l’authentification, chiffrement, gestion des paramètres, inspection des logs et
-  utilisation du mode Débogage.
-</p>
-
-<h3>Perspectives</h3>
-
-<p>
-  Antares est un projet en évolution continue.  
-  L’objectif à terme est de proposer une version distribuée au public, stable, sécurisée et adaptée
-  à différents niveaux d’exigence. Je travaille actuellement sur les optimisations finales,
-  l’amélioration de l’expérience utilisateur et l’élargissement des fonctionnalités de sécurité.
-  Pour toute question ou échange autour du projet, je reste disponible.
-</p>
-
-<div style="margin-top:24px;">
-  <a href="mailto:hugo.francois@student-cs.fr" class="btn">Me contacter</a>
-</div>
+</main>
