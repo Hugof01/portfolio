@@ -1,34 +1,99 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>detect-malicious-url | Hugo François</title>
-  <meta name="description" content="Application web de détection d'URL malveillantes et d'attaques stéganographiques.">
-  <link rel="stylesheet" href="../style.css" />
-</head>
-<body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <header class="site-header"><div class="container header-inner"><h1>detect-malicious-url</h1><p class="subtitle">Détection d’attaques stéganographiques dans les URL</p></div></header>
+<main class="container section">
 
-  <main class="container section">
-    <h2>Présentation</h2>
-    <p>
-      Cette application web analyse des URL pour identifier les patterns suspects liés à la stéganographie et aux redirections cachées.  
-      Le projet combine analyse heuristique, extraction d’entropie et vérification de réputation de domaine.
-    </p>
+  <h2>Présentation</h2>
+  <p>
+    Ce projet est un petit analyseur d’URL, conçu pour détecter des caractères invisibles,
+    des homographes Unicode et d’autres formes de stéganographie dans les liens.  
+    L’objectif n’est pas de proposer un outil parfait ou professionnel, mais plutôt de
+    comprendre comment fonctionnent ces attaques et d’apprendre à les repérer.
+  </p>
 
-    <h3>Fonctionnalités</h3>
-    <ul>
-      <li>Analyse du contenu HTML et des métadonnées d’image</li>
-      <li>Détection de patterns stéganographiques connus</li>
-      <li>Scan de domaine (age, DNS, ASN, réputation)</li>
-      <li>Score de confiance calculé en temps réel</li>
-    </ul>
+  <h2>Exécution de l’application (local uniquement)</h2>
+  <p>
+    L’application fonctionne entièrement en local, pour deux raisons simples :
+  </p>
+  <ul>
+    <li>aucune URL analysée n’est envoyée à un serveur externe ; tout reste sur la machine,</li>
+    <li>cela me permet de tester, modifier et améliorer l’outil sans backend ni hébergement.</li>
+  </ul>
 
-    <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
-  </main>
-  <footer class="site-footer"><div class="container"><p>© 2025 Hugo François — Projet detect-malicious-url</p></div></footer>
-  <script src="../background.js"></script>
-</body>
-</html>
+  <p>Pour la lancer, j’utilise simplement <code>npm run start</code> dans le dossier de l’application.</p>
+
+  <figure>
+    <img src="../assets/images/stega_lancement_app.png" alt="Capture montrant le lancement en local avec Vite" style="border-radius:8px; margin-top:1em;">
+    <figcaption style="font-size:14px; opacity:0.7; margin-top:4px;">
+      Lancement en local via Vite (« npm run start »)
+    </figcaption>
+  </figure>
+
+  <h2>Fonctionnement général</h2>
+  <p>
+    Le fonctionnement est volontairement simple. L’outil analyse les URL caractère par caractère
+    pour identifier :
+  </p>
+  <ul>
+    <li>les caractères invisibles (espaces zéro-largeur, séparateurs, contrôles),</li>
+    <li>les homographes Unicode (caractères ressemblants visuellement),</li>
+    <li>les mélanges de scripts (latin, grec, cyrillique),</li>
+    <li>certains symboles considérés atypiques dans une URL classique.</li>
+  </ul>
+
+  <p>
+    Lorsqu’un élément suspect est détecté, l’outil renvoie soit une alerte claire, soit un avertissement
+    lorsqu’il y a un doute mais pas nécessairement un danger.  
+    L’idée est d’aider l’utilisateur à douter d’un lien avant de cliquer.
+  </p>
+
+  <h2>Démonstration vidéo</h2>
+  <p>
+    Voici une courte démonstration que j’ai enregistrée pour illustrer le comportement de l’analyseur.
+    La vidéo montre l’interface, l’analyse d’exemples et le rendu détaillé des résultats.
+  </p>
+
+  <video controls style="width:100%; border-radius:8px; margin-top:1em;">
+    <source src="../assets/videos/stega_demo_video.mov" type="video/mp4">
+    Votre navigateur ne supporte pas la lecture vidéo.
+  </video>
+
+  <h2>Interprétation des résultats</h2>
+  <p>
+    Pendant mes tests, l’outil affiche <strong>33% de précision</strong>.  
+    Cela peut prêter à confusion : ce chiffre ne signifie pas que l’outil est « mauvais ».
+  </p>
+
+  <p>
+    En réalité, la précision baisse parce que l’analyseur génère beaucoup
+    <strong>d’avertissements</strong>.  
+    Ceux-ci ne sont ni des réussites complètes, ni des erreurs : ce sont simplement des zones grises.
+  </p>
+
+  <ul>
+    <li><strong>0 échec</strong> : aucune URL réellement malveillante n’a été manquée.</li>
+    <li><strong>100% de détection</strong> : l’outil identifie systématiquement les caractères suspects.</li>
+    <li><strong>Les avertissements</strong> font baisser la précision affichée, mais ils ne représentent pas un défaut majeur.</li>
+  </ul>
+
+  <p>
+    Dans un projet orienté sécurité, il vaut mieux avoir <strong>trop d’avertissements</strong> que
+    <strong>pas assez d’alertes</strong>.  
+    Ce comportement est donc normal et même plutôt souhaitable.
+  </p>
+
+  <h2>Ce que ce projet m’a appris</h2>
+  <p>
+    Ce projet m’a surtout permis de mieux comprendre les risques liés aux caractères
+    invisibles et aux homographes Unicode.  
+    J’ai aussi appris à concevoir une interface simple, à structurer une petite application
+    web locale et à tester différents scénarios d’attaque.
+  </p>
+
+  <p>
+    Cela reste un projet modeste, mais il m’a beaucoup appris sur la manière dont les utilisateurs
+    peuvent percevoir un lien comme fiable alors qu’il cache en réalité des éléments trompeurs.
+    C’est un bon rappel que, même dans les petites expériences, on peut toujours améliorer
+    sa compréhension de la sécurité.
+  </p>
+
+  <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
+
+</main>
