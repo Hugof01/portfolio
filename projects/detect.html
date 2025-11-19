@@ -1,98 +1,124 @@
 <main class="container section">
 
-  <h2>Présentation</h2>
-  <p>
-    Ce projet est un petit analyseur d’URL, conçu pour détecter des caractères invisibles,
-    des homographes Unicode et d’autres formes de stéganographie dans les liens.  
-    L’objectif n’est pas de proposer un outil parfait ou professionnel, mais plutôt de
-    comprendre comment fonctionnent ces attaques et d’apprendre à les repérer.
-  </p>
 
-  <h2>Exécution de l’application (local uniquement)</h2>
-  <p>
-    L’application fonctionne entièrement en local, pour deux raisons simples :
-  </p>
-  <ul>
-    <li>aucune URL analysée n’est envoyée à un serveur externe ; tout reste sur la machine,</li>
-    <li>cela me permet de tester, modifier et améliorer l’outil sans backend ni hébergement.</li>
-  </ul>
+  <div class="project-details">
+    <h1 style="color: var(--accent); margin-bottom: 4px;">StegaGuard</h1>
+    <p class="subtitle">Analyse locale de stéganographie dans les URL</p>
+  </div>
 
-  <p>Pour la lancer, j’utilise simplement <code>npm run start</code> dans le dossier de l’application.</p>
 
-  <figure>
-    <img src="../assets/images/stega_lancement_app.png" alt="Capture montrant le lancement en local avec Vite" style="border-radius:8px; margin-top:1em;">
-    <figcaption style="font-size:14px; opacity:0.7; margin-top:4px;">
-      Lancement en local via Vite (« npm run start »)
-    </figcaption>
-  </figure>
+  <div class="detail">
+    <h3>Présentation</h3>
+    <p>
+      StegaGuard est un petit outil que j'ai développé pour analyser les URL et y détecter
+      des caractères invisibles, des homographes Unicode ou des mélanges de scripts pouvant être utilisés
+      dans des attaques de stéganographie.  
+      L’objectif n’est pas de proposer un outil parfait, mais plutôt d’apprendre et d’expérimenter
+      dans un domaine où de petits détails peuvent complètement tromper un utilisateur.
+    </p>
+    <p>
+      C’est un projet humble, réalisé pour progresser en détection et mieux comprendre les risques liés
+      aux caractères spéciaux présents dans certains liens.
+    </p>
+  </div>
 
-  <h2>Fonctionnement général</h2>
-  <p>
-    Le fonctionnement est volontairement simple. L’outil analyse les URL caractère par caractère
-    pour identifier :
-  </p>
-  <ul>
-    <li>les caractères invisibles (espaces zéro-largeur, séparateurs, contrôles),</li>
-    <li>les homographes Unicode (caractères ressemblants visuellement),</li>
-    <li>les mélanges de scripts (latin, grec, cyrillique),</li>
-    <li>certains symboles considérés atypiques dans une URL classique.</li>
-  </ul>
 
-  <p>
-    Lorsqu’un élément suspect est détecté, l’outil renvoie soit une alerte claire, soit un avertissement
-    lorsqu’il y a un doute mais pas nécessairement un danger.  
-    L’idée est d’aider l’utilisateur à douter d’un lien avant de cliquer.
-  </p>
+  <div class="detail">
+    <h3>Exécution en local</h3>
+    <p>
+      StegaGuard fonctionne entièrement en <strong>local</strong>.  
+      J’ai choisi cette approche pour deux raisons :
+    </p>
+    <ul>
+      <li>Aucune URL analysée n’est envoyée en ligne : tout reste sur la machine.</li>
+      <li>Cela me permet de tester rapidement l’application sans backend ni déploiement.</li>
+    </ul>
 
-  <h2>Démonstration vidéo</h2>
-  <p>
-    Voici une courte démonstration que j’ai enregistrée pour illustrer le comportement de l’analyseur.
-    La vidéo montre l’interface, l’analyse d’exemples et le rendu détaillé des résultats.
-  </p>
+    <p>Voici comment je lance l’application depuis le terminal :</p>
 
-  <video controls style="width:100%; border-radius:8px; margin-top:1em;">
-    <source src="../assets/videos/stega_demo_video.mov" type="video/mp4">
-    Votre navigateur ne supporte pas la lecture vidéo.
-  </video>
+    <div class="project-media">
+      <img src="../assets/images/stega_lancement_app.png" alt="Lancement de StegaGuard en local via Vite">
+      <figcaption>Lancement local via <code>npm run start</code></figcaption>
+    </div>
+  </div>
 
-  <h2>Interprétation des résultats</h2>
-  <p>
-    Pendant mes tests, l’outil affiche <strong>33% de précision</strong>.  
-    Cela peut prêter à confusion : ce chiffre ne signifie pas que l’outil est « mauvais ».
-  </p>
 
-  <p>
-    En réalité, la précision baisse parce que l’analyseur génère beaucoup
-    <strong>d’avertissements</strong>.  
-    Ceux-ci ne sont ni des réussites complètes, ni des erreurs : ce sont simplement des zones grises.
-  </p>
+  <div class="detail">
+    <h3>Fonctionnement général</h3>
+    <p>
+      StegaGuard analyse une URL caractère par caractère et signale différents types d’irrégularités :
+    </p>
+    <ul>
+      <li>Caractères invisibles (espaces zéro-largeur, séparateurs, contrôles…)</li>
+      <li>Homographes Unicode (lettres visuellement similaires mais provenant d’autres alphabets)</li>
+      <li>Mélanges de scripts (latin, grec, cyrillique)</li>
+      <li>Symboles atypiques dans une URL classique</li>
+    </ul>
+    <p>
+      Lorsqu’un comportement douteux est détecté, l’outil affiche soit un avertissement, soit une alerte claire.  
+      Le but est simplement d’aider l’utilisateur à <strong>douter intelligemment avant de cliquer</strong>.
+    </p>
+  </div>
 
-  <ul>
-    <li><strong>0 échec</strong> : aucune URL réellement malveillante n’a été manquée.</li>
-    <li><strong>100% de détection</strong> : l’outil identifie systématiquement les caractères suspects.</li>
-    <li><strong>Les avertissements</strong> font baisser la précision affichée, mais ils ne représentent pas un défaut majeur.</li>
-  </ul>
 
-  <p>
-    Dans un projet orienté sécurité, il vaut mieux avoir <strong>trop d’avertissements</strong> que
-    <strong>pas assez d’alertes</strong>.  
-    Ce comportement est donc normal et même plutôt souhaitable.
-  </p>
+  <div class="detail">
+    <h3>Démonstration vidéo</h3>
+    <p>
+      J'ai enregistré une courte démonstration pour illustrer l’interface et la manière dont l’outil réagit
+      face à différents exemples.
+    </p>
 
-  <h2>Ce que ce projet m’a appris</h2>
-  <p>
-    Ce projet m’a surtout permis de mieux comprendre les risques liés aux caractères
-    invisibles et aux homographes Unicode.  
-    J’ai aussi appris à concevoir une interface simple, à structurer une petite application
-    web locale et à tester différents scénarios d’attaque.
-  </p>
+    <div class="project-media" style="margin-top: 1.5em;">
+      <video controls style="width: 100%; max-width: 650px; border-radius: 10px;">
+        <source src="../assets/videos/stega_demo_video.mov" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+      <figcaption>Vidéo de démonstration du fonctionnement de StegaGuard</figcaption>
+    </div>
+  </div>
 
-  <p>
-    Cela reste un projet modeste, mais il m’a beaucoup appris sur la manière dont les utilisateurs
-    peuvent percevoir un lien comme fiable alors qu’il cache en réalité des éléments trompeurs.
-    C’est un bon rappel que, même dans les petites expériences, on peut toujours améliorer
-    sa compréhension de la sécurité.
-  </p>
+
+  <div class="detail">
+    <h3>Interprétation des résultats</h3>
+    <p>
+      Lors des tests, StegaGuard affiche un score de <strong>33% de précision</strong>.  
+      Ce chiffre peut donner l’impression que l’outil fonctionne mal, mais ce n’est pas le cas.
+    </p>
+
+    <p>
+      La précision affichée baisse principalement à cause du nombre d’<strong>avertissements</strong>,
+      qui ne sont ni des réussites complètes ni des échecs.  
+      Pourtant :
+    </p>
+
+    <ul>
+      <li><strong>0 URL dangereuse n’a été manquée</strong> → aucun faux négatif</li>
+      <li><strong>100% des caractères suspects sont détectés</strong></li>
+      <li>Les avertissements représentent simplement des zones grises et non des erreurs</li>
+    </ul>
+
+    <p>
+      En sécurité, il vaut mieux <strong>trop prévenir que pas assez</strong>.  
+      Les avertissements réduisent donc la métrique affichée, mais ils renforcent la prudence.
+    </p>
+  </div>
+
+
+  <div class="detail">
+    <h3>Ce que ce projet m’a appris</h3>
+    <p>
+      Ce projet m’a permis d’approfondir ma compréhension des attaques par homoglyphes,
+      des caractères invisibles et des manipulations Unicode dans les URL.  
+      J’ai également pu travailler sur une interface simple, une logique d’analyse locale et une
+      présentation lisible des résultats.
+    </p>
+
+    <p>
+      Même si StegaGuard reste un projet modeste, il m’a beaucoup appris : sur les détails qui comptent,
+      sur la façon d’expliquer un risque à un utilisateur, et sur les petites choses qui rendent un outil
+      plus clair et plus utile.
+    </p>
+  </div>
 
   <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
 
