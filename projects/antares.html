@@ -1,100 +1,173 @@
-<main class="container section">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Antares — Logiciel de chiffrement macOS | Hugo François</title>
+  <meta name="description" content="Antares est un logiciel macOS de chiffrement sécurisé intégrant Touch ID, Secure Enclave, Argon2id et vérification d’intégrité.">
+  <link rel="stylesheet" href="../style.css?v=3" />
+  <link rel="icon" type="image/png" href="../favicon.png" />
+</head>
 
-  <h2>Présentation</h2>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
 
-  <div class="project-details">
-
-    <div class="detail">
-      <p>
-        Antares est aujourd’hui le projet le plus complet que j’ai entrepris.  
-        Je travaille dessus depuis bientôt un an, avec l’objectif de développer un logiciel macOS
-        de chiffrement à la fois simple, robuste et cohérent avec les standards modernes de sécurité.
-        L’ensemble de l’architecture – interface, logique applicative, cryptographie, Secure Enclave,
-        Touch ID – a été entièrement conçu et développé par moi-même.
-      </p>
-
-      <p>
-        L’application repose sur un principe clair : permettre à l’utilisateur de sécuriser un dossier
-        en quelques secondes tout en garantissant une protection forte et une vérification systématique
-        de l’intégrité des données.
-      </p>
-    </div>
-
-    <div class="detail">
-      <h3>Fonctionnalités principales</h3>
-      <ul>
-        <li>Sélection d’un dossier à chiffrer ou déchiffrer</li>
-        <li>Authentification par mot de passe ou via Touch ID (Secure Enclave)</li>
-        <li>Dérivation de clé par Argon2id pour remplacer les dérivations classiques</li>
-        <li>Chiffrement AES-128 ou AES-256 selon le niveau choisi</li>
-        <li>
-          Header sécurisé intégrant IV, version du format, niveau de chiffrement et
-          tag d’intégrité
-        </li>
-        <li>Vérification automatique de l’intégrité lors du chiffrement et du déchiffrement</li>
-      </ul>
-    </div>
-
-    <div class="detail">
-      <h3>Outils d’analyse et de vérification</h3>
-      <p>
-        Antares intègre un centre d’analyse permettant d’inspecter l’état des fichiers sensibles et
-        de détecter toute altération accidentelle ou malveillante.
-      </p>
-      <ul>
-        <li>Affichage des logs</li>
-        <li>Vérification de l’intégrité des logs</li>
-        <li>Vérification de l’intégrité du fichier de mapping</li>
-        <li>Analyse détaillée d’un dossier chiffré</li>
-        <li>Déchiffrement ciblé d’un fichier précis</li>
-      </ul>
-    </div>
-
-    <div class="detail">
-      <h3>Mode Débogage</h3>
-      <p>
-        Le mode Débogage offre des outils avancés pour examiner les fichiers chiffrés : lecture des
-        métadonnées, vérification approfondie de l’intégrité, ou encore forçage du déchiffrement
-        dans un cadre contrôlé. Ce module est destiné aux tests et aux validations internes.
-      </p>
-    </div>
-
-    <div class="detail">
-      <h3>Paramètres et maintenance</h3>
-      <ul>
-        <li>Basculement entre mode clair et sombre</li>
-        <li>Réinitialisation du mapping interne</li>
-        <li>Nettoyage des fichiers orphelins</li>
-        <li>Purge des logs</li>
-        <li>Choix de la langue (six langues disponibles)</li>
-      </ul>
-    </div>
-
-    <div class="detail">
-      <h3>Démo vidéo</h3>
-      <div class="video-container">
-        <video controls preload="metadata">
-          <source src="../assets/videos/antares_demo.mp4" type="video/mp4">
-          Votre navigateur ne supporte pas la vidéo MP4.
-        </video>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="hero-text">
+        <h1>Antares</h1>
+        <p class="subtitle">Logiciel de chiffrement macOS sécurisé</p>
       </div>
-      <p class="muted">
-        La démonstration présente les principales étapes : sélection du dossier, choix de
-        l’authentification, chiffrement, gestion des paramètres et analyse via le mode Débogage.
-      </p>
+    </div>
+  </header>
+
+  <main class="container section">
+
+    <h2>Présentation</h2>
+
+    <div class="project-details">
+
+      <!-- INTRO -->
+      <div class="detail">
+        <p>
+          Antares est aujourd’hui le projet le plus abouti que j’ai réalisé.  
+          J’y travaille depuis bientôt un an, avec un objectif simple : construire un outil de
+          chiffrement macOS qui soit à la fois accessible, fiable, et conforme aux bonnes pratiques
+          modernes de sécurité.
+        </p>
+
+        <p>
+          Le projet s’est construit progressivement, étape par étape.  
+          J’ai développé moi-même l’intégralité de l’application : l’interface, le chiffrement,
+          la gestion de la Secure Enclave, Touch ID, la vérification d’intégrité, le système
+          de logs, et toute l’architecture interne.  
+          L’idée n’a jamais été d’être « innovant », mais plutôt de comprendre en profondeur
+          comment concevoir un logiciel sécurisé de bout en bout.
+        </p>
+
+        <p>
+          Antares repose sur une approche simple d’utilisation : sélectionner un dossier,
+          choisir une méthode d’authentification, puis chiffrer ou déchiffrer.  
+          Derrière cette simplicité apparente se cache une structure complète dédiée à la
+          robustesse, à la cohérence et à la vérification des données.
+        </p>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="detail">
+        <h3>Fonctionnalités principales</h3>
+        <p>
+          L’essentiel d’Antares repose sur les opérations de chiffrement et de déchiffrement.
+          Chaque action est accompagnée d’un contrôle systématique pour garantir que les données
+          n’ont pas été altérées.
+        </p>
+
+        <ul>
+          <li>Sélection d’un dossier à chiffrer ou déchiffrer</li>
+          <li>Authentification par mot de passe ou Touch ID (Secure Enclave)</li>
+          <li>Dérivation de clé renforcée avec Argon2id</li>
+          <li>Chiffrement AES-128 ou AES-256 selon le niveau choisi</li>
+          <li>Header sécurisé incluant IV, version du format, niveau et tag d’intégrité</li>
+          <li>Vérification automatique de l’intégrité avant chaque opération</li>
+        </ul>
+      </div>
+
+      <!-- ANALYSIS -->
+      <div class="detail">
+        <h3>Outils d’analyse et de vérification</h3>
+
+        <p>
+          Une partie importante du projet est consacrée à la sécurité autour du chiffrement :
+          Antares intègre un module de vérification capable d’analyser l’état des fichiers et
+          d’alerter en cas de modification suspecte.
+        </p>
+
+        <ul>
+          <li>Affichage des logs internes</li>
+          <li>Vérification de l’intégrité des logs</li>
+          <li>Vérification de l’intégrité du fichier de mapping</li>
+          <li>Analyse d’un dossier chiffré et contrôle fichier par fichier</li>
+          <li>Déchiffrement ciblé d’un fichier en particulier</li>
+        </ul>
+      </div>
+
+      <!-- DEBUG MODE -->
+      <div class="detail">
+        <h3>Mode Débogage</h3>
+
+        <p>
+          Le mode Débogage a été conçu pour faciliter les tests et la compréhension interne
+          du logiciel. Il permet, entre autres, d’inspecter des fichiers chiffrés, d’en vérifier
+          l’intégrité ou encore de forcer un déchiffrement dans un cadre contrôlé.
+        </p>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="detail">
+        <h3>Paramètres et maintenance</h3>
+
+        <p>
+          Antares intègre également plusieurs outils de maintenance permettant de garder
+          l’environnement propre et cohérent lors des mises à jour ou des tests.
+        </p>
+
+        <ul>
+          <li>Basculement entre mode clair et sombre</li>
+          <li>Réinitialisation du fichier de mapping</li>
+          <li>Nettoyage des fichiers orphelins</li>
+          <li>Purge complète des logs</li>
+          <li>Six langues disponibles</li>
+        </ul>
+      </div>
+
+      <!-- VIDEO -->
+      <div class="detail">
+        <h3>Démo vidéo</h3>
+
+        <div class="video-container">
+          <video controls preload="metadata">
+            <source src="../assets/videos/antares_demo.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la lecture vidéo.
+          </video>
+        </div>
+
+        <p class="muted">
+          La démonstration ci-dessus illustre l’utilisation générale de l’application :
+          lancement, sélection du dossier, authentification, chiffrement, déchiffrement,
+          consultation des paramètres et utilisation du mode Débogage.
+        </p>
+      </div>
+
+      <!-- FUTURE -->
+      <div class="detail">
+        <h3>Perspectives</h3>
+
+        <p>
+          Antares continue d’évoluer.  
+          Je poursuis son développement afin d’améliorer sa stabilité, renforcer les mécanismes
+          de sécurité et affiner l’expérience utilisateur.  
+          À terme, mon objectif est de proposer une version distribuée au public,
+          simple à installer et suffisamment robuste pour être utilisée au quotidien.
+        </p>
+
+        <p>
+          Pour toute question ou pour en discuter plus en détail :
+        </p>
+
+        <a href="mailto:hugo.francois@student-cs.fr" class="btn">Me contacter</a>
+      </div>
+
     </div>
 
-    <div class="detail">
-      <h3>Perspectives</h3>
-      <p>
-        Antares est un projet en évolution continue. L’objectif est de proposer une version distribuée
-        au public, stable, sécurisée et adaptée aux besoins variés des utilisateurs. Je continue
-        d’améliorer l’interface, la fiabilité et les mécanismes de sécurité.  
-      </p>
-      <p>Pour toute question ou échange autour du projet :</p>
-      <a href="mailto:hugo.francois@student-cs.fr" class="btn">Me contacter</a>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      © 2025 Hugo François
     </div>
+  </footer>
 
-  </div>
-
-</main>
+  <script src="../background.js"></script>
+</body>
+</html>
