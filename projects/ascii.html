@@ -69,60 +69,7 @@
       </figure>
     </div>
 
-    <!-- Section interactive -->
-    <h2>Tester la version Python (exécution locale)</h2>
-    <p>
-      Vous pouvez tester ici le fonctionnement du script sans accéder à son contenu.  
-      Le code est exécuté directement dans votre navigateur via <strong>Pyodide</strong>.
-    </p>
-
-    <div style="margin: 1em 0;">
-      <button id="run-btn" class="btn">▶️ Lancer la démo</button>
-      <button id="clear-btn" class="btn ghost">🧹 Effacer la console</button>
-    </div>
-
-    <pre id="output">Console prête.</pre>
-
-    <div style="margin-top:30px;">
-      <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container"><p>© 2025 Hugo François — Projet Image → ASCII</p></div>
-  </footer>
-
-  <script>
-    let pyodide;
-    let scriptCode = "";
-
-    async function initPyodide() {
-      const output = document.getElementById("output");
-      output.textContent = "⏳ Chargement de l'interpréteur Python...";
-      pyodide = await loadPyodide();
-      output.textContent = "✅ Environnement Python prêt.";
-      const response = await fetch("../assets/scripts/ascii.py");
-      scriptCode = await response.text();
-    }
-
-    initPyodide();
-
-    document.getElementById("run-btn").addEventListener("click", async () => {
-      const output = document.getElementById("output");
-      output.textContent = "▶️ Exécution du script...\n";
-      try {
-        const result = await pyodide.runPythonAsync(scriptCode);
-        if (result !== undefined) output.textContent += "\n" + result;
-      } catch (err) {
-        output.textContent = "❌ Erreur : " + err;
-      }
-    });
-
-    document.getElementById("clear-btn").addEventListener("click", () => {
-      document.getElementById("output").textContent = "Console nettoyée.";
-    });
-  </script>
-
+    <h2>La démo arrive bientôt ;)</h2>
   <script src="../background.js"></script>
 </body>
 </html>
