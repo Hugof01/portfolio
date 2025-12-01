@@ -4,24 +4,19 @@
   <meta charset="UTF-8">
   <title>Projet Transport – Calculateur de trajets</title>
   <link rel="stylesheet" href="../style.css">
-
-  <!-- Pyodide -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 
   <style>
-    /* Terminal stylé en accord avec le site */
     .terminal-box {
       background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
       border: 1px solid rgba(102,252,241,0.12);
       border-radius: 12px;
-      box-shadow: 0 0 18px rgba(102,252,241,0.15);
       padding: 18px;
       height: 420px;
       overflow-y: auto;
-      font-family: monospace;
-      font-size: 15px;
+      box-shadow: 0 0 18px rgba(102,252,241,0.15);
       color: #dffefe;
-      line-height: 1.4;
+      font-family: monospace;
     }
 
     #input-field {
@@ -40,28 +35,24 @@
 
 <body>
 
+<!-- ======== FOND MATRIX ======== -->
+<canvas id="canvas"></canvas>
+<canvas id="canvas2"></canvas>
+<script src="../background.js"></script>
+<!-- ============================= -->
+
 <main class="section container">
 
   <h1 style="color:var(--accent);">Projet Transport — Calculateur de trajets</h1>
 
   <p class="muted">
-    Ce projet a été réalisé lors de ma deuxième année post-bac (<strong>Maths Spé — Bac +2</strong>) dans le cadre d’un module de
-    mathématiques appliquées, portant sur les graphes, les réseaux et les plus courts chemins.
-    L’objectif était de modéliser un réseau de transport (métro / tram) sous forme de graphe pondéré, puis d’implémenter
-    un algorithme permettant de trouver le trajet optimal entre deux stations selon :
-    <br><br>
-    • les temps de trajet entre stations  
-    • la gestion des correspondances  
-    • la structure du réseau sélectionné (Paris, Lyon, Lille, Bordeaux)  
-    <br>
-    Cela m’a amené à manipuler des fichiers CSV, construire des dictionnaires de stations, et implémenter une version
-    personnalisée de l’algorithme de Dijkstra.
+    Projet réalisé en deuxième année post-bac (<strong>Maths Spé – Bac +2</strong>) dans un module de mathématiques appliquées
+    portant sur les graphes, les réseaux et l’algorithme de Dijkstra.
   </p>
 
   <hr style="opacity:0.15; margin:40px 0;">
 
   <h2 style="color:var(--accent);">💻 Démonstration — Terminal interactif</h2>
-  <p class="muted">Tapez <code>run</code> pour lancer le programme, puis suivez les instructions comme dans un vrai terminal.</p>
 
   <div id="terminal" class="terminal-box"></div>
   <input id="input-field" placeholder="Entrez une commande puis appuyez sur Entrée…">
@@ -72,67 +63,73 @@
 
 let py;
 let waitingInput = false;
-let inputResolver = null;
+let inputResolve = null;
 
-// INITIALISATION
+// Initialisation Pyodide
 (async () => {
   py = await loadPyodide();
 
-  // Charger APP3.py
-  const code = await (await fetch("../data/app3/APP3.py")).text();
-  py.runPython(code);
-
-  // Charger les CSV dans le FS
-  const files = ["paris_v4.csv", "lille.csv", "lyon.csv", "bordeaux.csv"];
-  for (let f of files) {
-    const content = await (await fetch("../data/app3/" + f)).text();
-    py.FS.writeFile(f, content);
+  // CHARGEMENT APP3.PY
+  try {
+    const script = await (await fetch("../data/app3/APP3.py")).text();
+    py.runPython(script);
+  } catch(e) {
+    print("❌ Erreur : Impossible de charger APP3.py\n" + e);
+    return;
   }
 
-  printToTerminal("Transport CLI — Projet Maths Spé (Bac +2)\n");
-  printToTerminal("Python 3.11 (via Pyodide)\n");
-  printToTerminal("Tapez `run` pour commencer.\n\n");
+  // Charger les CSV
+  const files = ["paris_v4.csv", "lille.csv", "lyon.csv", "bordeaux.csv"];
+  for (let f of files) {
+    try {
+      const txt = await (await fetch("../data/app3/" + f)).text();
+      py.FS.writeFile(f, txt);
+    } catch(e) {
+      print("❌ CSV manquant : " + f + "\n");
+    }
+  }
+
+  print("Transport CLI – Projet Maths Spé (Bac +2)\n");
+  print("Tapez `run` pour lancer le programme.\n\n");
 })();
 
-// Terminal output
-function printToTerminal(text) {
-  const t = document.getElementById("terminal");
-  t.innerHTML += text.replace(/\n/g, "<br>");
-  t.scrollTop = t.scrollHeight;
+// Print helper
+function print(text) {
+  const term = document.getElementById("terminal");
+  term.innerHTML += text.replace(/\n/g, "<br>");
+  term.scrollTop = term.scrollHeight;
 }
 
-// Système input() Python
+// input()
 py.setStdin({
   readline() {
     return new Promise(resolve => {
       waitingInput = true;
-      inputResolver = resolve;
+      inputResolve = resolve;
     });
   }
 });
 
-// Saisie utilisateur
-document.getElementById("input-field").addEventListener("keydown", async (event) => {
-  if (event.key === "Enter") {
-    const input = event.target.value;
-    event.target.value = "";
-    printToTerminal(`<span style="color:var(--accent);">$</span> ${input}\n`);
+// Commandes utilisateur
+document.getElementById("input-field").addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    const v = e.target.value;
+    e.target.value = "";
 
-    // Fournir l'input à Python
+    print(`<span style="color:var(--accent);">$</span> ${v}\n`);
+
     if (waitingInput) {
       waitingInput = false;
-      inputResolver(input);
+      inputResolve(v);
       return;
     }
 
-    // Commande "run"
-    if (input.trim() === "run") {
-      printToTerminal("Lancement du programme...\n\n");
-
+    if (v.trim() === "run") {
+      print("Lancement du programme...\n\n");
       try {
         await py.runPythonAsync("Menu()");
-      } catch (err) {
-        printToTerminal(`<span style='color:red;'>Erreur : ${err}</span>\n`);
+      } catch(e) {
+        print("❌ Erreur d'exécution Python : " + e);
       }
     }
   }
