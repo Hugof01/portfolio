@@ -1,0 +1,183 @@
+METRO A;Perrache;;TRAM 1:,TRAM 2:
+METRO A;Ampère - Victor Hugo;
+METRO A;Bellecour;;METRO D:
+METRO A;Cordeliers;
+METRO A;Hôtel de Ville - Louis Pradel;;METRO C:
+METRO A;Foch
+METRO A;Masséna
+METRO A;Charpennes-Charles Hemu;;METRO B:,TRAM 1:,TRAM 4:
+METRO A;République - Villeurbanne
+METRO A;Gratte-Ciel
+METRO A;Flachet - Alain Gilles
+METRO A;Cusset
+METRO A;Laurent Bonnevay - Astroballe
+METRO A;Vaulx-en-Velin La Soie;;TRAM 3:,TRAM 7:
+
+METRO B;Charpennes - Charles Hernu;;METRO A:,TRAM 1:,TRAM 4:
+METRO B;Brotteaux
+METRO B;Gare Part-Dieu-Vivier Merle;;TRAM 1:
+METRO B;Place Guichard - Bourse du Travail
+METRO B;Saxe - Gambetta;;METRO D:
+METRO B;Jean Macé;;TRAM 2:
+METRO B;Place Jean Jaurès
+METRO B;Debourg;;TRAM 1:,TRAM 6:
+METRO B;Stade de Gerland
+METRO B;Gare d'Oullins
+
+METRO C;Hôtel de Ville - Louis Pradel;;METRO A:
+METRO C;Croix-Paquet
+METRO C;Croix-Rousse
+METRO C;Henon
+METRO C;Cuire
+
+METRO D;Gare de Vaise
+METRO D;Valmy
+METRO D;Gorge de Loup
+METRO D;Vieux Lyon - Cathédrale Saint-Jean
+METRO D;Bellecour;;METRO A:
+METRO D;Guillotière - Gabriel Péri;;TRAM 1:
+METRO D;Saxe - Gambetta;;METRO B:
+METRO D;Garibaldi
+METRO D;Sans Souci
+METRO D;Monplaisir - Lumière
+METRO D;Grange Blanche;;TRAM 2:,TRAM 5:
+METRO D;Laënnec
+METRO D;Mermoz - Pinel
+METRO D;Parilly
+METRO D;Gare de Vénissieux;;TRAM 4:
+
+TRAM 1;Debourg;;TRAM 6:,METRO B:
+TRAM 1;ENS Lyon
+TRAM 1;Halle Tony Garnier
+TRAM 1;Musée des Confluences
+TRAM 1;Hôtel de Région - Montrochet;;TRAM 2:
+TRAM 1;Ste Blandine;;TRAM 2:
+TRAM 1;Place des Archives;;TRAM 2:
+TRAM 1;Perrache;;TRAM 2:,METRO A:
+TRAM 1;Quai Claude-Bernard
+TRAM 1;Rue de l'Université
+TRAM 1;Saint-André
+TRAM 1;Guillotière - Gabriel Péri;;METRO D:
+TRAM 1;Liberté
+TRAM 1;Saxe - Préfecture
+TRAM 1;Palais de Justice - Marie du 3e
+TRAM 1;Part-Dieu - Auditorium
+TRAM 1;Gare Part-Dieu - Vivier Merle;;METRO B:,TRAM 1:
+TRAM 1;Thiers - Layette;;TRAM 4:
+TRAM 1;Collège Bellecombe;;TRAM 4:
+TRAM 1;Charpennes - Charles Hernu;;TRAM 1:,TRAM 4:,METRO A:
+TRAM 1;Le Tonkin;;TRAM 4:
+TRAM 1;Condorcet;;TRAM 4:
+TRAM 1;Université Lyon 1;;TRAM 4:
+TRAM 1;La Doua - Gaston Berger;;TRAM 4:
+TRAM 1;INSA - Einstein
+TRAM 1;Croix - Luizet
+TRAM 1;IUT - Feyssine
+
+
+TRAM 2;Hôtel de région - Montrochet;;TRAM 1 
+TRAM 2;Sainte - Blandine;;TRAM 1
+TRAM 2;Place des Archives;;TRAM 1
+TRAM 2;Perrache;;TRAM 1:,METRO A
+TRAM 2;Centre Berthelot - Sciences Po Lyon 
+TRAM 2;Jean Macé;;METRO B
+TRAM 2;Garibaldi - Berthelot
+TRAM 2;Route de Vienne
+TRAM 2;Jet d'eau - Mendès France;;TRAM 4
+TRAM 2;Villon
+TRAM 2;Bachut - Mairie du 8e
+TRAM 2;Jean XXIII - Maryse Bastié
+TRAM 2;Grange Blanche;;TRAM 5:,METRO D
+TRAM 2;Ambroise Paré;;TRAM 5
+TRAM 2;Desgenettes;;TRAM 5
+TRAM 2;Essarts - Iris;;TRAM 5
+TRAM 2;Boutasse - Camille Rousset;;TRAM 5 
+TRAM 2;Hôtel de Ville - Bron;;TRAM 5 
+TRAM 2;Les Alizés;;TRAM 5
+TRAM 2;Rebufer
+TRAM 2;Parilly - Université - Hippodrome
+TRAM 2;Europe - Université
+TRAM 2;Porte des Alpes
+TRAM 2;Parc Technologique 
+TRAM 2;Hauts de Feuilly
+TRAM 2;Salvador Allende 
+TRAM 2;Alfred de Vigny
+TRAM 2;Saint-Priest - Hôtel de Ville
+TRAM 2;Esplanade des Arts
+TRAM 2;Jules Ferry
+TRAM 2;Cordière
+TRAM 2;Saint-Priest - Bel Air
+
+TRAM 3;Gare Part-Dieu - Villette;;TRAM 4
+TRAM 3;Dauphiné - Lacassagne
+TRAM 3;Reconnaissance - Balzac
+TRAM 3;Gare de Villeubanne
+TRAM 3;Bel Air - Les Brosses
+TRAM 3;Vaulw-en-Velin - La Soie;;TRAM 7:,METRO A
+TRAM 3;Décines - Centre;;TRAM 7
+TRAM 3;Décines - Grand Large;;TRAM 7
+TRAM 3;Meyzieu Gare  
+TRAM 3;Meyzieu Z.I.
+TRAM 3;Meyzieu - Les Panettes
+
+TRAM 4;La Doua - Gaston Berger;;TRAM 1
+TRAM 4;Université Lyon 1;;TRAM 1
+TRAM 4;Condorcet;;TRAM 1
+TRAM 4;Le Tonkin;;TRAM 1
+TRAM 4;Charpennes_- Charles Hernu;;TRAM 1:,METRO A
+TRAM 4;Collège Bellecombe;;TRAM 1
+TRAM 4;Thiers - Lafayette;;TRAM 1
+TRAM 4;Gare Part-Dieu - Vilette;;TRAM 3
+TRAM 4;Archives Départementales
+TRAM 4;Manufacture - Montluc
+TRAM 4;Lycée Colbert
+TRAM 4;Jet d'Eau - Mendès France;;TRAM 2 
+TRAM 4;Lycée Lumière
+TRAm 4;Etats-Unis-Musée Tony Garnier
+TRAM 4;Beauvisage - CISL;;TRAM 6
+TRAM 4;Etats-Unis - Vivani
+TRAM 4;Joliot Curie - Marcel Sembat
+TRAM 4;La Borelle
+TRam 4;Gare de Vénissieux;;METRO D
+TRAM 4;Croizat - Paul Bert
+TRAM 4;Marcel Houël - Hôtel de Ville
+TRAM 4;Lycée Jacques Brel
+TRAM 4;Herriot - Cagne
+TRAM 4;Vénissy
+TRAM 4;Division Leclerc
+TRAM 4;Maurice Thorez
+TRAM 4;Lénine - Corsière
+TRAM 4;Darnaise
+TRAM 4;Hôpital Feyzin Vénissieux
+
+TRAM 5;Grange Blanche;;TRAM 2:,METRO D
+TRAM 5;Ambroise Paré;;TRAM 2
+TRAM 5;Desgenettes;;TRAM 2
+TRAM 5;Essarts-Iris;;TRAM 2
+TRAM 5;Boutasse - Camille Rousset;;TRAM 2
+TRAM 5;Hôtel de Ville - Bron;;TRAM 2 
+TRAM 5;Les Alizés;;TRAM 2
+TRAM 5;De Tassigny - Curial
+TRAM 5;Lycée Jean-Paul Sartre
+TRAM 5;Parc du Chêne
+TRAM 5;Eurexpo
+
+TRAM 6;Debourg;;TRAM 1:,METRO B
+TRAM 6;Challemel-Lacour - Artillerie
+TRAM 6;Moulin à Vent
+TRAM 6;Petite Guille
+TRAM 6;Beauvisage - Pressensé
+TRAM 6;Beauvisage - CISL;;TRAM 4
+TRAM 6;Grange Rouge - Santy
+TRAM 6;Mermoz - Californie
+TRAM 6;Mermoz - Moselle
+TRAM 6;Mermoz-Pinel;;METRO D 
+TRAM 6;Essarts - Laënnec
+TRAM 6;Desgenettes 
+TRAM 6;Vinatier
+TRAM 6;Hôpitaux Est - Pinel
+
+TRAM 7;Vaulx-en-Velin-La Soie;;TRAM 3:,METRO A
+TRAM 7;Décines - Centre;;TRAM 3
+TRAM 7;Décines - Grand Large;;TRAM 3
+TRAM 7;Décines-OL Vallée

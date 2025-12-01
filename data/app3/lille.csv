@@ -1,0 +1,107 @@
+METRO 1;CHR B Calmette;50.620868,3.054233;METRO 1:CHR Oscar Lambret
+METRO 1;CHR Oscar Lambret;50.625033,3.049736;METRO 1:CHR B Calmette,Porte des Postes
+METRO 1;Porte des Postes;50.618210,3.102408;METRO 2:Porte des Postes,METRO 1:CHR Oscar Lambret,Wazemmes
+METRO 1;Wazemmes;50.636644,3.043758;METRO 1:Porte des Postes,Gambetta
+METRO 1;Gambetta;50.639148,3.054641;METRO 1:Wazemmes,République Beaux-Arts
+METRO 1;République Beaux-Arts;50.636715,3.059862;METRO 1:Gambetta,Rihour
+METRO 1;Rihour;50.635048,3.063078;METRO 1:République Beaux-Arts,Gare Lille Flandres
+METRO 1;Gare Lille Flandres;50.633126,3.065107;METRO 1:Rihour,Caulier
+METRO 1;Caulier;50.624055,3.133986;METRO 1:Gare Lille Flandres,Fives
+METRO 1;Fives;50.618825,3.113594;METRO 1:Caulier,Marbrerie
+METRO 1;Marbrerie;50.621019,3.123772;METRO 1:Fives,Hellemmes
+METRO 1;Hellemmes;50.6237,3.1188;METRO 1:Marbrerie,Lezennes
+METRO 1;Lezennes;50.6118,3.1296;METRO 1:Hellemmes,Pont de Bois
+METRO 1;Pont de Bois;50.6055,3.0454;METRO 1:Lezennes,Villeneuve d'Ascq Hôtel de Ville
+METRO 1;Villeneuve d'Ascq Hôtel de Ville;50.6082,3.1429;METRO 1:Pont de Bois,Triolo
+METRO 1;Triolo;50.5962,3.1749;METRO 1:Villeneuve d'Ascq Hôtel de Ville,Cité Scientifique
+METRO 1;Cité Scientifique;50.6018,3.1407;METRO 1:Triolo,Quatre Cantons
+METRO 1;Quatre Cantons;50.6019,3.1591;METRO 1:Cité Scientifique
+METRO 2;Saint-Philibert;50.642013,3.009485;METRO 2:Bourg
+METRO 2;Bourg;50.641046,3.020234;METRO 2:Saint-Philibert,Maison des Enfants
+METRO 2;Maison des Enfants;50.620870,3.075319;METRO 2:Bourg,Mitterie
+METRO 2;Mitterie;50.619138,3.063006;METRO 2:Maison des Enfants,Pont Supérieur
+METRO 2;Pont Supérieur;50.622204,3.083720;METRO 2:Mitterie,Lomme - Lambersart - Arthur-Notebart
+METRO 2;Lomme - Lambersart - Arthur-Notebart;50.648356,3.018471;METRO 2:Pont Supérieur,Canteleu
+METRO 2;Canteleu;50.640693,3.045193;METRO 2:Lomme - Lambersart - Arthur-Notebart,Bois Blancs
+METRO 2;Bois Blancs;50.637019,3.059126;METRO 2:Canteleu,Port de Lille
+METRO 2;Port de Lille;50.632725,3.074661;METRO 2:Bois Blancs,Cormontaigne
+METRO 2;Cormontaigne;50.625164,3.057792;METRO 2:Port de Lille,Montebello
+METRO 2;Montebello;50.698983,3.139002;METRO 2:Cormontaigne,Porte des Postes
+METRO 2;Porte des Postes;50.618210,3.102408;METRO 1:Porte des Postes,METRO 2:Montebello,Porte d'Arras
+METRO 2;Porte d'Arras;50.619670,3.093579;METRO 2:Porte des Postes,Porte de Douai
+METRO 2;Porte de Douai;50.615369,3.119476;METRO 2:Porte d'Arras,Porte de Valenciennes
+METRO 2;Porte de Valenciennes;50.634717,3.033506;METRO 2:Porte de Douai,Lille Grand Palais
+METRO 2;Lille Grand Palais;50.629480,3.135830;METRO 2:Porte de Valenciennes,Mairie de Lille
+METRO 2;Mairie de Lille;50.629467,3.062828;METRO 2:Lille Grand Palais,Gare Lille Flandres
+METRO 2;Gare Lille Flandres;50.633126,3.065107;METRO 2:Mairie de Lille,Gare Lille Europe
+METRO 2;Gare Lille Europe;50.636305,3.075129;METRO 2:Gare Lille Flandres,Saint-Maurice Pellevoisin
+METRO 2;Saint-Maurice Pellevoisin;50.630996,3.043191;METRO 2:Gare Lille Europe,Mons Sarts
+METRO 2;Mons Sarts;50.667912,3.164772;METRO 2:Saint-Maurice Pellevoisin,Mairie de Mons
+METRO 2;Mairie de Mons;50.671703,3.128364;METRO 2:Mons Sarts,Fort de Mons
+METRO 2;Fort de Mons;50.662584,3.128318;METRO 2:Mairie de Mons,Les Pres
+METRO 2;Les Pres;50.591847,3.094630;METRO 2:Fort de Mons,Jean Jaurès
+METRO 2;Jean Jaurès;50.676764,3.129697;METRO 2:Les Pres,Wasquehal Pavé de Lille
+METRO 2;Wasquehal Pavé de Lille;50.688191,3.134672;TRAM R:Wasquehal Pavé de Lille,METRO 2:Jean Jaurès,Wasquehal Hôtel de Ville
+METRO 2;Wasquehal Hôtel de Ville;50.692936,3.131468;METRO 2:Wasquehal Pavé de Lille,Croix  Centre
+METRO 2;Croix  Centre;50.682906,3.149870;METRO 2:Wasquehal Hôtel de Ville,Croix Mairie
+METRO 2;Croix Mairie;50.697105,3.130383;METRO 2:Croix  Centre,Épeule - Montesquieu
+METRO 2;Épeule - Montesquieu;50.627393,3.086880;METRO 2:Croix Mairie,Roubaix - Charles de Gaulle
+METRO 2;Roubaix - Charles de Gaulle;50.698394,3.169183;METRO 2:Épeule - Montesquieu,Eurotéléport
+METRO 2;Eurotéléport;50.704205,3.128168;TRAM R:Eurotéléport,METRO 2:Roubaix - Charles de Gaulle,Roubaix - Grand-Place
+METRO 2;Roubaix - Grand-Place;50.694036,3.174245;METRO 2:Eurotéléport,Gare Jean Lebas
+METRO 2;Gare Jean Lebas;50.692293,3.159198;METRO 2:Roubaix - Grand-Place,Alsace
+METRO 2;Alsace;50.809508,3.126499;METRO 2:Gare Jean Lebas,Mercure
+METRO 2;Mercure;50.636416,3.069245;METRO 2:Alsace,Carliers
+METRO 2;Carliers;50.727131,3.163778;METRO 2:Mercure,Gare de Tourcoing
+METRO 2;Gare de Tourcoing;50.723299,3.161862;METRO 2:Carliers,Tourcoing Centre
+METRO 2;Tourcoing Centre;50.719621,3.163008;TRAM T:Tourcoing Centre,METRO 2:Gare de Tourcoing,Colbert
+METRO 2;Colbert;50.687593,3.153904;METRO 2:Tourcoing Centre,Phalempins
+METRO 2;Phalempins;50.742192,3.162035;METRO 2:Colbert,Pont de Neuville -
+METRO 2;Pont de Neuville -;50.786715,3.146217;METRO 2:Phalempins,Bourgogne
+METRO 2;Bourgogne;50.792764,3.139953;METRO 2:Pont de Neuville -,CH Dron
+METRO 2;CH Dron;50.750747,3.163756;METRO 2:Bourgogne
+TRAM R;Gare Lille Flandres;50.633126,3.065107;TRAM R:Gare Lille Europe
+TRAM R;Gare Lille Europe;50.636305,3.075129;TRAM R:Gare Lille Flandres,Romarin
+TRAM R;Romarin;50.6236,3.0529;TRAM R:Gare Lille Europe,Botanique
+TRAM R;Botanique;50.625686,3.057625;TRAM R:Romarin,Saint-Maur
+TRAM R;Saint-Maur;50.624553,3.049641;TRAM R:Botanique,Buisson
+TRAM R;Buisson;50.677151,3.083131;TRAM R:Saint-Maur,Brossolette
+TRAM R;Brossolette;50.762368,3.160174;TRAM R:Buisson,Clemenceau - Hippodrome
+TRAM R;Clemenceau - Hippodrome;50.652109,3.073029;TRAM R:Brossolette,Croisé-Laroche
+TRAM R;Croisé-Laroche;50.658365,3.048688;TRAM R:Clemenceau - Hippodrome,Acacias
+TRAM R;Acacias;50.657478,3.038915;TRAM R:Croisé-Laroche,Pont de Wasquehal
+TRAM R;Pont de Wasquehal;50.680097,3.130281;TRAM R:Acacias,La Terrasse
+TRAM R;La Terrasse;50.817311,3.122800;TRAM R:Pont de Wasquehal,Wasquehal Pavé de Lille
+TRAM R;Wasquehal Pavé de Lille;50.688191,3.134672;METRO 2:Wasquehal Pavé de Lille,TRAM R:La Terrasse,Le Sart -
+TRAM R;Le Sart -;50.797798,3.136512;TRAM R:Wasquehal Pavé de Lille,Planche Epinoy
+TRAM R;Planche Epinoy;50.703561,3.126169;TRAM R:Le Sart -,La Marque
+TRAM R;La Marque;50.680372,3.166658;TRAM R:Planche Epinoy,Villa Cavrois
+TRAM R;Villa Cavrois;50.686465,3.171495;TRAM R:La Marque,Bol d'Air
+TRAM R;Bol d'Air;50.692328,3.174388;TRAM R:Villa Cavrois,Parc Barbieux
+TRAM R;Parc Barbieux;50.696270,3.176991;TRAM R:Bol d'Air,Hopital Victor Provo
+TRAM R;Hopital Victor Provo;50.805700,3.128855;TRAM R:Parc Barbieux,Jean Moulin
+TRAM R;Jean Moulin;50.667056,3.151203;TRAM R:Hopital Victor Provo,Alfred Mongy
+TRAM R;Alfred Mongy;50.693557,3.181578;TRAM R:Jean Moulin,Eurotéléport
+TRAM R;Eurotéléport;50.704205,3.128168;METRO 2:Eurotéléport,TRAM R:Alfred Mongy
+TRAM T;Gare Lille Flandres;50.633126,3.065107;TRAM T:Gare Lille Europe
+TRAM T;Gare Lille Europe;50.636305,3.075129;TRAM T:Gare Lille Flandres,Romarin
+TRAM T;Romarin;50.6236,3.0529;TRAM T:Gare Lille Europe,Botanique
+TRAM T;Botanique;50.625686,3.057625;TRAM T:Romarin,Saint-Maur
+TRAM T;Saint-Maur;50.624553,3.049641;TRAM T:Botanique,Buisson
+TRAM T;Buisson;50.677151,3.083131;TRAM T:Saint-Maur,Brossolette -
+TRAM T;Brossolette -;50.762368,3.160174;TRAM T:Buisson,Clemenceau - Hippodrome
+TRAM T;Clemenceau - Hippodrome;50.652109,3.073029;TRAM T:Brossolette -,Croisé-Laroche
+TRAM T;Croisé-Laroche;50.658365,3.048688;TRAM T:Clemenceau - Hippodrome,Foch
+TRAM T;Foch;50.641563,3.060141;TRAM T:Croisé-Laroche,Le Quesne
+TRAM T;Le Quesne;50.640031,3.052917;TRAM T:Foch,Cerisaie Centre d'Affaire
+TRAM T;Cerisaie Centre d'Affaire;50.639501,3.045809;TRAM T:Le Quesne,Château Rouge
+TRAM T;Château Rouge;50.641703,3.036600;TRAM T:Cerisaie Centre d'Affaire,Cartelot
+TRAM T;Cartelot;50.643682,3.028925;TRAM T:Château Rouge,Grand Cottignies
+TRAM T;Grand Cottignies;50.634773,3.076563;TRAM T:Cartelot,Triez
+TRAM T;Triez;50.632566,3.070593;TRAM T:Grand Cottignies,Trois Suisses
+TRAM T;Trois Suisses;50.630087,3.064495;TRAM T:Triez,Faidherbe
+TRAM T;Faidherbe;50.627512,3.058548;TRAM T:Trois Suisses,Ma Campagne
+TRAM T;Ma Campagne;50.625374,3.052126;TRAM T:Faidherbe,Point Hydraulique
+TRAM T;Point Hydraulique;50.756252,3.160752;TRAM T:Ma Campagne,Victoire
+TRAM T;Victoire;50.629984,3.062641;TRAM T:Point Hydraulique,Tourcoing Centre
+TRAM T;Tourcoing Centre;50.719621,3.163008;METRO 2:Tourcoing Centre,TRAM T:Victoire

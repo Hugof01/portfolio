@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Calculateur de trajets</title>
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+  <style>
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #111;
+      color: #0ef;
+      border: 1px solid #0ef;
+      padding: 10px;
+      font-family: monospace;
+      border-radius: 8px;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #000;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #0ef;
+      margin-top: 20px;
+      color: #fff;
+    }
+  </style>
+
+</head>
+<body>
+
+  <section class="section container">
+    <h1>Calculateur de trajets en Python</h1>
+    <p class="muted">
+      Calcul automatique du plus court chemin entre deux stations de métro,
+      utilisant un algorithme de Dijkstra personnalisé.
+      Le code Python ci-dessous est entièrement exécuté dans votre navigateur grâce à Pyodide.
+    </p>
+
+    <h2>Tester le programme en ligne</h2>
+    <p>Choisissez une ville :</p>
+
+    <select id="city" style="padding: 10px; font-size: 16px;">
+      <option value="1">Paris</option>
+      <option value="2">Lyon</option>
+      <option value="3">Lille</option>
+      <option value="4">Bordeaux</option>
+    </select>
+
+    <p>Station de départ :</p>
+    <input id="start" type="text" style="padding:10px; width:100%">
+
+    <p>Station d’arrivée :</p>
+    <input id="end" type="text" style="padding:10px; width:100%">
+
+    <button class="btn" style="margin-top:20px;" onclick="runApp3()">Calculer le trajet</button>
+
+    <h3>Sortie :</h3>
+    <div id="output">En attente…</div>
+
+    <hr>
+
+    <h2>Code source</h2>
+    <p class="muted">Voici le script Python utilisé :</p>
+
+    <textarea id="python-src"></textarea>
+
+  </section>
+
+<script>
+let pyodideReady = false;
+let py;
+
+// Charger Pyodide
+async function loadPy() {
+  py = await loadPyodide();
+  pyodideReady = true;
+
+  // Charger ton code Python dans le textarea
+  const code = await (await fetch("../data/app3/APP3.py")).text();
+  document.getElementById("python-src").value = code;
+
+  // Charger le code dans Pyodide
+  await py.runPythonAsync(code);
+}
+
+loadPy();
+
+// Fonction principale exécutée par le bouton
+async function runApp3() {
+  if (!pyodideReady) {
+    document.getElementById("output").textContent = "Chargement de Python…";
+    return;
+  }
+
+  const city = document.getElementById("city").value;
+  const start = document.getElementById("start").value;
+  const end = document.getElementById("end").value;
+
+  // On transfère les valeurs dans Python
+  py.globals.set("selected_city", city);
+  py.globals.set("station_start", start);
+  py.globals.set("station_end", end);
+
+  // Charger le bon CSV dans Pyodide
+  let fileMap = {
+    "1": "paris_v4.csv",
+    "2": "lyon.csv",
+    "3": "lille.csv",
+    "4": "bordeaux.csv"
+  };
+
+  const csvUrl = "../data/app3/" + fileMap[city];
+  const csvText = await (await fetch(csvUrl)).text();
+
+  // On écrit le fichier dans le FS virtuel de Pyodide
+  py.FS.writeFile(fileMap[city], csvText);
+
+  // Appeler ton Menu() mais en version adaptée
+  const result = await py.runPythonAsync(`
+file_name = "${fileMap[selected_city]}"
+stations = Generate_dict_stations(file_name)
+trajet, cout = dijkstra(stations, station_start, station_end)
+trajet
+  `);
+
+  document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+}
+</script>
+
+</body>
+</html>
