@@ -2,156 +2,137 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Transport – Calculateur de trajets (Projet d'école)</title>
+  <title>Projet Transport – Calculateur de trajets</title>
   <link rel="stylesheet" href="../style.css">
 
   <!-- Pyodide -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 
   <style>
-    body {
-      background: #000;
-      color: #0ef;
-      font-family: monospace;
-    }
-
-    #terminal {
-      width: 90%;
-      height: 500px;
-      background: #0a0a0a;
-      margin: 30px auto;
-      padding: 20px;
+    /* Terminal stylé en accord avec le site */
+    .terminal-box {
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
+      border: 1px solid rgba(102,252,241,0.12);
       border-radius: 12px;
-      border: 1px solid #0ef;
+      box-shadow: 0 0 18px rgba(102,252,241,0.15);
+      padding: 18px;
+      height: 420px;
       overflow-y: auto;
-      font-size: 18px;
-      line-height: 1.5;
-      box-shadow: 0 0 15px #0ef4;
-    }
-
-    .prompt {
-      color: #0ef;
+      font-family: monospace;
+      font-size: 15px;
+      color: #dffefe;
+      line-height: 1.4;
     }
 
     #input-field {
-      width: 90%;
-      display: block;
-      margin: 0 auto;
-      margin-top: 15px;
-      padding: 10px;
-      background: #000;
-      border: 1px solid #0ef;
-      color: #0ef;
-      font-size: 18px;
-      border-radius: 6px;
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(102,252,241,0.25);
+      background: var(--card);
+      color: var(--accent);
       font-family: monospace;
-    }
-
-    .section-container {
-      width: 90%;
-      margin: 50px auto;
+      font-size: 16px;
     }
   </style>
 </head>
 
 <body>
 
-  <section class="section-container">
-    <h1 style="color:#0ef;">Projet Transport – Calculateur de trajets</h1>
+<main class="section container">
 
-    <p class="muted">
-      Ce projet a été réalisé lors de ma deuxième année post-bac (<strong>Maths Spé – Bac +2</strong>) dans le cadre d’un module mêlant
-      mathématiques appliquées, graphes et algorithmique.  
-      L’objectif consistait à modéliser un réseau de transports (métro/tram) sous forme de graphe pondéré, puis à implémenter
-      un algorithme permettant de calculer le plus court chemin entre deux stations, en tenant compte :
-      <br><br>
-      • des temps de trajet entre stations  
-      • des correspondances  
-      • de la ville sélectionnée (Paris, Lyon, Lille ou Bordeaux)  
-      <br>
-      Ce travail a demandé la manipulation de fichiers CSV, la création d’un dictionnaire de stations,
-      la compréhension du fonctionnement de Dijkstra et la gestion d’un interface utilisateur en ligne de commande.
-    </p>
+  <h1 style="color:var(--accent);">Projet Transport — Calculateur de trajets</h1>
 
-    <p class="muted">
-      Sur cette page, vous pouvez tester directement le programme Python original, exécuté dans votre navigateur grâce à Pyodide.
-    </p>
+  <p class="muted">
+    Ce projet a été réalisé lors de ma deuxième année post-bac (<strong>Maths Spé — Bac +2</strong>) dans le cadre d’un module de
+    mathématiques appliquées, portant sur les graphes, les réseaux et les plus courts chemins.
+    L’objectif était de modéliser un réseau de transport (métro / tram) sous forme de graphe pondéré, puis d’implémenter
+    un algorithme permettant de trouver le trajet optimal entre deux stations selon :
+    <br><br>
+    • les temps de trajet entre stations  
+    • la gestion des correspondances  
+    • la structure du réseau sélectionné (Paris, Lyon, Lille, Bordeaux)  
+    <br>
+    Cela m’a amené à manipuler des fichiers CSV, construire des dictionnaires de stations, et implémenter une version
+    personnalisée de l’algorithme de Dijkstra.
+  </p>
 
-    <hr style="border-color:#0ef4; margin:40px 0;">
+  <hr style="opacity:0.15; margin:40px 0;">
 
-    <h2 style="color:#0ef;">💻 Démonstration – Terminal interactif</h2>
-    <p class="muted">
-      Tapez <code>run</code> pour lancer le programme, puis suivez les instructions comme dans un vrai terminal.
-    </p>
+  <h2 style="color:var(--accent);">💻 Démonstration — Terminal interactif</h2>
+  <p class="muted">Tapez <code>run</code> pour lancer le programme, puis suivez les instructions comme dans un vrai terminal.</p>
 
-    <div id="terminal"></div>
-    <input id="input-field" placeholder="Tape une commande ici puis Enter…">
-  </section>
+  <div id="terminal" class="terminal-box"></div>
+  <input id="input-field" placeholder="Entrez une commande puis appuyez sur Entrée…">
+
+</main>
 
 <script>
 
 let py;
-let awaitingInput = false;
+let waitingInput = false;
 let inputResolver = null;
 
-// ====== INITIALISATION ======
+// INITIALISATION
 (async () => {
   py = await loadPyodide();
 
-  // Charger ton code APP3.py
+  // Charger APP3.py
   const code = await (await fetch("../data/app3/APP3.py")).text();
   py.runPython(code);
 
-  // Charger les CSV dans le FS virtuel
+  // Charger les CSV dans le FS
   const files = ["paris_v4.csv", "lille.csv", "lyon.csv", "bordeaux.csv"];
   for (let f of files) {
     const content = await (await fetch("../data/app3/" + f)).text();
     py.FS.writeFile(f, content);
   }
 
-  printToTerminal("Transport – Projet Maths Spé (Bac +2)\n");
-  printToTerminal("Python 3.11 (Pyodide)\n");
-  printToTerminal("Tape `run` pour lancer le programme.\n\n");
+  printToTerminal("Transport CLI — Projet Maths Spé (Bac +2)\n");
+  printToTerminal("Python 3.11 (via Pyodide)\n");
+  printToTerminal("Tapez `run` pour commencer.\n\n");
 })();
 
-// ====== AFFICHAGE TERMINAL ======
+// Terminal output
 function printToTerminal(text) {
-  const term = document.getElementById("terminal");
-  term.innerHTML += text.replace(/\n/g, "<br>");
-  term.scrollTop = term.scrollHeight;
+  const t = document.getElementById("terminal");
+  t.innerHTML += text.replace(/\n/g, "<br>");
+  t.scrollTop = t.scrollHeight;
 }
 
-// ====== SIMULATION DE input() ======
+// Système input() Python
 py.setStdin({
   readline() {
     return new Promise(resolve => {
-      awaitingInput = true;
+      waitingInput = true;
       inputResolver = resolve;
     });
   }
 });
 
-// ====== GESTION DES COMMANDES UTILISATEUR ======
+// Saisie utilisateur
 document.getElementById("input-field").addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
-    const userInput = event.target.value;
+    const input = event.target.value;
     event.target.value = "";
+    printToTerminal(`<span style="color:var(--accent);">$</span> ${input}\n`);
 
-    printToTerminal(`<span class='prompt'>$ </span>${userInput}\n`);
-
-    if (awaitingInput) {
-      awaitingInput = false;
-      inputResolver(userInput);
+    // Fournir l'input à Python
+    if (waitingInput) {
+      waitingInput = false;
+      inputResolver(input);
       return;
     }
 
-    // Lancer APP3
-    if (userInput.trim() === "run") {
+    // Commande "run"
+    if (input.trim() === "run") {
       printToTerminal("Lancement du programme...\n\n");
+
       try {
         await py.runPythonAsync("Menu()");
-      } catch (e) {
-        printToTerminal("[Erreur Python] " + e + "\n");
+      } catch (err) {
+        printToTerminal(`<span style='color:red;'>Erreur : ${err}</span>\n`);
       }
     }
   }
