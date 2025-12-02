@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Projet Transport – Calculateur de trajets</title>
+  <title>Calculateur de trajets - projet d'école</title>
   <link rel="stylesheet" href="../style.css">
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 
@@ -16,7 +16,8 @@
       overflow-y: auto;
       box-shadow: 0 0 18px rgba(102,252,241,0.15);
       color: #dffefe;
-      font-family: monospace;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
     }
 
     #input-field {
@@ -27,8 +28,18 @@
       border: 1px solid rgba(102,252,241,0.25);
       background: var(--card);
       color: var(--accent);
-      font-family: monospace;
+      font-family: 'Courier New', monospace;
       font-size: 16px;
+    }
+
+    #input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(102,252,241,0.3);
+    }
+
+    .prompt {
+      color: var(--accent);
     }
   </style>
 </head>
@@ -43,19 +54,60 @@
 
 <main class="section container">
 
-  <h1 style="color:var(--accent);">Projet Transport — Calculateur de trajets</h1>
+  <h1 style="color:var(--accent);">Calculateur de trajets</h1>
 
   <p class="muted">
     Projet réalisé en deuxième année post-bac (<strong>Maths Spé – Bac +2</strong>) dans un module de mathématiques appliquées
-    portant sur les graphes, les réseaux et l’algorithme de Dijkstra.
+    portant sur les graphes, les réseaux et l'algorithme de Dijkstra.
   </p>
 
   <hr style="opacity:0.15; margin:40px 0;">
 
-  <h2 style="color:var(--accent);">💻 Démonstration — Terminal interactif</h2>
+  <h2 style="color:var(--accent);">📋 Description du projet</h2>
+  
+  <p>
+    Ce programme permet de calculer le trajet optimal entre deux stations de métro dans 4 villes françaises : 
+    <strong>Paris, Lyon, Lille et Bordeaux</strong>. Il utilise l'algorithme de Dijkstra pour trouver le chemin le plus rapide
+    en tenant compte des correspondances et des distances réelles entre les stations.
+  </p>
+
+  <div class="detail">
+    <h3>Fonctionnalités principales</h3>
+    <p>
+      • Calcul du trajet optimal entre deux stations<br>
+      • Estimation du temps de trajet en fonction du type de ligne (métro/tram)<br>
+      • Prise en compte des temps de correspondance<br>
+      • Suggestions de stations similaires en cas d'erreur de saisie<br>
+      • Support de 4 réseaux de transport urbain
+    </p>
+  </div>
+
+  <div class="detail">
+    <h3>🔧 Technologies utilisées</h3>
+    <p>
+      • <strong>Python</strong> : langage principal du projet<br>
+      • <strong>Algorithme de Dijkstra</strong> : recherche du plus court chemin<br>
+      • <strong>Formule de Haversine</strong> : calcul des distances géographiques<br>
+      • <strong>Structure de graphes</strong> : représentation du réseau de transport
+    </p>
+  </div>
+
+  <div class="detail">
+    <h3>Ce que j'ai appris</h3>
+    <p>
+      Ce projet m'a particulièrement intéressé car il m'a permis de comprendre concrètement l'application des graphes 
+      et des algorithmes de recherche de chemin dans un contexte réel. J'ai appris à optimiser les calculs de distance,
+      à structurer des données complexes (réseaux de transport), et à gérer les erreurs utilisateur de manière intelligente
+      avec la recherche dichotomique et les suggestions de stations similaires.
+    </p>
+  </div>
+
+  <hr style="opacity:0.15; margin:40px 0;">
+
+  <h2 style="color:var(--accent);">Démonstration – Terminal interactif</h2>
 
   <div id="terminal" class="terminal-box"></div>
-  <input id="input-field" placeholder="Entrez une commande puis appuyez sur Entrée…">
+  <input id="input-field" placeholder="Entrez une commande puis appuyez sur Entrée…" autocomplete="off">
 
 </main>
 
@@ -67,30 +119,40 @@ let inputResolve = null;
 
 // Initialisation Pyodide
 (async () => {
-  py = await loadPyodide();
-
-  // CHARGEMENT APP3.PY
   try {
+    py = await loadPyodide();
+
+    // Configuration de stdin APRÈS le chargement
+    py.setStdin({
+      readline() {
+        return new Promise(resolve => {
+          waitingInput = true;
+          inputResolve = resolve;
+        });
+      }
+    });
+
+    // CHARGEMENT APP3.PY
     const script = await (await fetch("../data/app3/APP3.py")).text();
     py.runPython(script);
-  } catch(e) {
-    print("❌ Erreur : Impossible de charger APP3.py\n" + e);
-    return;
-  }
 
-  // Charger les CSV
-  const files = ["paris_v4.csv", "lille.csv", "lyon.csv", "bordeaux.csv"];
-  for (let f of files) {
-    try {
-      const txt = await (await fetch("../data/app3/" + f)).text();
-      py.FS.writeFile(f, txt);
-    } catch(e) {
-      print("❌ CSV manquant : " + f + "\n");
+    // Charger les CSV
+    const files = ["paris_v4.csv", "lille.csv", "lyon.csv", "bordeaux.csv"];
+    for (let f of files) {
+      try {
+        const txt = await (await fetch("../data/app3/" + f)).text();
+        py.FS.writeFile(f, txt);
+      } catch(e) {
+        print("⚠️ CSV manquant : " + f + "\n");
+      }
     }
-  }
 
-  print("Transport CLI – Projet Maths Spé (Bac +2)\n");
-  print("Tapez `run` pour lancer le programme.\n\n");
+    print("🚇 Transport CLI – Projet Maths Spé (Bac +2)\n");
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+    print("Tapez `run` pour lancer le programme.\n\n");
+  } catch(e) {
+    print("❌ Erreur d'initialisation : " + e + "\n");
+  }
 })();
 
 // Print helper
@@ -100,15 +162,7 @@ function print(text) {
   term.scrollTop = term.scrollHeight;
 }
 
-// input()
-py.setStdin({
-  readline() {
-    return new Promise(resolve => {
-      waitingInput = true;
-      inputResolve = resolve;
-    });
-  }
-});
+// Configuration de stdin sera faite après le chargement
 
 // Commandes utilisateur
 document.getElementById("input-field").addEventListener("keydown", async (e) => {
@@ -116,7 +170,7 @@ document.getElementById("input-field").addEventListener("keydown", async (e) => 
     const v = e.target.value;
     e.target.value = "";
 
-    print(`<span style="color:var(--accent);">$</span> ${v}\n`);
+    print(`<span class="prompt">$</span> ${v}\n`);
 
     if (waitingInput) {
       waitingInput = false;
@@ -129,12 +183,23 @@ document.getElementById("input-field").addEventListener("keydown", async (e) => 
       try {
         await py.runPythonAsync("Menu()");
       } catch(e) {
-        print("❌ Erreur d'exécution Python : " + e);
+        print("❌ Erreur d'exécution Python : " + e + "\n");
       }
+    } else if (v.trim() === "clear") {
+      document.getElementById("terminal").innerHTML = "";
+    } else if (v.trim() === "help") {
+      print("Commandes disponibles :\n");
+      print("  run   - Lance le calculateur de trajets\n");
+      print("  clear - Efface le terminal\n");
+      print("  help  - Affiche cette aide\n\n");
+    } else if (v.trim() !== "") {
+      print(`Commande inconnue : '${v}'. Tapez 'help' pour voir les commandes disponibles.\n\n`);
     }
   }
 });
-</script>
 
+// Focus automatique sur l'input
+document.getElementById("input-field").focus();
+</script>
 </body>
 </html>

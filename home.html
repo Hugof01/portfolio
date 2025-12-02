@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hugo FRANÇOIS — Portfolio</title>
+  <meta name="description" content="Portfolio de Hugo François — Étudiant en cybersécurité. Projets : Antares, C-grid, detect-malicious-URL, assistant Linux, outils crypto, etc.">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+
+<body>
+  <!-- ===== Effet Matrix en arrière-plan ===== -->
+  <canvas id="canvas">Votre navigateur ne supporte pas Canvas.</canvas>
+  <canvas id="canvas2">Votre navigateur ne supporte pas Canvas.</canvas>
+  <!-- ======================================= -->
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="me">
+        <img src="assets/images/avatar.png" alt="Photo de Hugo François" class="avatar" onerror="this.style.display='none'"/>
+      </div>
+      <div class="hero-text">
+        <h1>Hugo FRANÇOIS</h1>
+        <p class="subtitle">Étudiant en Cybersécurité — CentraleSupélec | ESME Sudria | UCLA</p>
+        <p class="lead">
+          Passionné par la cybersécurité, notamment la cryptographie. Développeur de logiciels et créateur d’applications.  
+          Amateur d’astronomie et de physique, de la mécanique classique à la physique quantique.  
+          Magicien depuis l’enfance, habitué des spectacles.  
+          Sportif polyvalent, notamment en badminton de niveau national, et musicien amateur de piano et de guitare.
+        </p>
+        <nav class="header-cta">
+          <a class="btn" href="#projects">Voir mes projets ↓</a>
+          <a class="btn ghost" href="#cv">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- À PROPOS -->
+    <section id="about" class="section container">
+      <h2>À propos</h2>
+      <div class="about-grid">
+        <div>
+          <h3>Études</h3>
+          <p>
+            Actuellement en double diplôme d’ingénieur à CentraleSupélec avec une spécialisation en cybersécurité, 
+            j’ai eu l’opportunité d’effectuer un semestre à UCLA, où j’ai approfondi mes compétences en sécurité informatique et en management.  
+            À mon retour en France, début 2025, avant la reprise des cours à l’ESME Sudria (mon école d’origine), 
+            j’ai poursuivi mon apprentissage en validant une certification en cryptographie de l’université de Stanford.
+          </p>
+        </div>
+
+        <div>
+          <h3>Centres d'intérêt</h3>
+          <ul>
+            <li>Cybersécurité — cryptographie, chiffrement, sécurité logicielle</li>
+            <li>Astronomie — de la mécanique classique à la physique quantique</li>
+            <li>Magie — spectacles depuis l’âge de 13 ans (close-up)</li>
+            <li>Sport — badminton (compétition), tennis, golf, ski</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section container">
+      <h2>Projets — Aperçu</h2>
+      <p class="muted">
+        Tous les projets ci-dessous disposent d’une page descriptive dédiée — certains repos sont privés (code non publié).
+      </p>
+    
+      <!-- ========================= -->
+      <!--     GRANDS PROJETS        -->
+      <!-- ========================= -->
+      <h3 style="margin-top: 40px;">Grands projets</h3>
+      <div class="projects-grid">
+    
+        <article class="project-card">
+          <h3>C-grid — Projet de Fin d'Études (PFE)</h3>
+          <p>Algorithme de chiffrement symétrique basé sur des analyses de fréquences de bigrammes dans des grilles multidimensionnelles.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/cgrid.html">Détails</a>
+          </div>
+        </article>
+    
+        <article class="project-card">
+          <h3>Antares — Logiciel de chiffrement macOS</h3>
+          <p>Application macOS pour chiffrer des dossiers avec Touch ID / Secure Enclave et différents niveaux de chiffrement.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/antares.html">Détails</a>
+          </div>
+        </article>
+    
+      </div>
+    
+      <!-- ========================= -->
+      <!--     PROJETS SECONDAIRES   -->
+      <!-- ========================= -->
+      <h3 style="margin-top: 40px;">Autres projets</h3>
+      <div class="projects-grid">
+    
+        <article class="project-card">
+          <h3>Moteurs polymorphiques & PRNG</h3>
+          <p>Expérimentations sur la génération pseudo-aléatoire et les moteurs polymorphiques pour la recherche.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/poly.html">Détails</a>
+          </div>
+        </article>
+    
+        <article class="project-card">
+          <h3>Collection : Codes cryptographiques</h3>
+          <p>Quelques codes simples pour mieux comprendre la crypto — Vigenère, Substitution, César, AES, RSA, OTP, etc.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/crypto.html">Détails</a>
+          </div>
+        </article>
+    
+        <article class="project-card">
+          <h3>Stegaguard</h3>
+          <p>Application web permettant de vérifier une URL afin de détecter une attaque stéganographique.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/detect.html">Détails</a>
+          </div>
+        </article>
+    
+        <!--<article class="project-card">
+          <h3>Calculateur de trajets</h3>
+          <p>
+            Application permettant de calculer automatiquement le plus court chemin entre deux stations 
+            de métro (Paris, Lyon, Lille, Bordeaux)
+          </p>
+          <div class="card-actions">
+            <a class="btn" href="projects/transport.html">Détails</a>
+          </div>
+        </article>
+      -->
+        <article class="project-card">
+          <h3>Assistant Linux</h3>
+          <p>Assistant CLI pour aider les débutants à découvrir Linux à travers des commandes et scripts interactifs.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/assistant.html">Détails</a>
+          </div>
+        </article>
+    
+        <article class="project-card">
+          <h3>Image → ASCII</h3>
+          <p>Script transformant une image en art ASCII avec palette personnalisée et conversion niveaux de gris.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/ascii.html">Détails</a>
+          </div>
+        </article>
+    
+        <article class="project-card">
+          <h3>Archives (darkweb)</h3>
+          <p>Exploration encadrée et analyse de sites historiques — présentation méthodologique et screenshots archivés.</p>
+          <div class="card-actions">
+            <a class="btn" href="projects/dark.html">Détails</a>
+          </div>
+        </article>
+    
+      </div>
+    </section>    
+
+    <!-- CERTIFICATIONS -->
+<section id="certifications" class="section container">
+  <h2>Certifications</h2>
+  <p class="muted">
+    Quelques certifications récentes obtenues dans le domaine de la cybersécurité et de la cryptographie.
+  </p>
+
+  <div class="projects-grid">
+
+    <article class="project-card">
+      <h3>Stanford — Applied Cryptography</h3>
+      <p>Certification obtenue début 2025 auprès de Stanford University, portant sur les protocoles, primitives et attaques cryptographiques.</p>
+      <div class="card-actions">
+        <a class="btn" href="assets/docs/Stanford_KO667YJETTWI.pdf" target="_blank">Voir le certificat</a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <h3>TryHackMe — Complete Beginner</h3>
+      <p>Apprentissage des bases de la cybersécurité : réseau, Linux, exploitation simple, bonnes pratiques et premiers challenges.</p>
+      <div class="card-actions">
+        <a class="btn" href="assets/docs/THM-3XMUNKI7D1.png" target="_blank">Voir le certificat</a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <h3>TryHackMe — Web Fundamentals</h3>
+      <p>Introduction à la sécurité web : injections, authentification, sessions, attaques classiques et défense.</p>
+      <div class="card-actions">
+        <a class="btn" href="assets/docs/THM-LPBFV41BGI.png" target="_blank">Voir le certificat</a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <h3>TryHackMe — Jr Penetration Tester</h3>
+      <p>Certification avancée couvrant l’énumération, l’exploitation, la post-exploitation, le reporting et les outils de pentest.</p>
+      <div class="card-actions">
+        <a class="btn" href="assets/docs/THM-3XMUNKI7D1.png" target="_blank">Voir le certificat</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+    <!-- CV + LinkedIn -->
+<section id="cv" class="section container">
+
+  <h2>Mon CV & Réseaux</h2>
+  <p>Pour demander l'accès à un projet privé ou échanger :</p>
+  <p>📧 <a href="mailto:hugo.francois@student-cs.fr">hugo.francois@student-cs.fr</a></p>
+  <div style="margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+
+
+    <a href="assets/docs/CV-HF-19-11-25.pdf" download>
+      <button id="btn">Télécharger mon CV</button>
+    </a>
+
+    <a href="https://www.linkedin.com/in/hugo-fran%C3%A7ois-63b141222/" target="_blank">
+      <button class="linkedin-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            d="M18.3362 18.339H15.6707V14.1622C15.6707 13.1662 15.6505 11.8845 14.2817 11.8845C12.892 11.8845 12.6797 12.9683 12.6797 14.0887V18.339H10.0142V9.75H12.5747V10.9207H12.6092C12.967 10.2457 13.837 9.53325 15.1367 9.53325C17.8375 9.53325 18.337 11.3108 18.337 13.6245V18.339H18.3362ZM7.00373 8.57475C6.14573 8.57475 5.45648 7.88025 5.45648 7.026C5.45648 6.1725 6.14648 5.47875 7.00373 5.47875C7.85873 5.47875 8.55173 6.1725 8.55173 7.026C8.55173 7.88025 7.85798 8.57475 7.00373 8.57475ZM8.34023 18.339H5.66723V9.75H8.34023V18.339ZM19.6697 3H4.32923C3.59498 3 3.00098 3.5805 3.00098 4.29675V19.7033C3.00098 20.4202 3.59498 21 4.32923 21H19.6675C20.401 21 21.001 20.4202 21.001 19.7033V4.29675C21.001 3.5805 20.401 3 19.6675 3H19.6697Z">
+          </path>
+        </svg>
+        <span>LinkedIn</span>
+      </button>
+    </a>
+
+  </div>
+</section>
+
+    
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 Hugo FRANCOIS — Les projets sont privés.</p>
+    </div>
+  </footer>
+
+  <!-- Effet Matrix -->
+  <script src="background.js"></script>
+</body>
+</html>
