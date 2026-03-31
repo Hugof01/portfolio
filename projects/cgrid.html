@@ -3,12 +3,156 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>C-grid — Projet de Fin d’Études (PFE) | Hugo FRANCOIS</title>
-  <meta name="description" content="C-grid : algorithme de chiffrement fondé sur des grilles de bigrammes et un réarrangement statistique des lettres.">
+  <title>VCG — Visual Cipher Grid | Projet de Fin d'Études | Hugo FRANCOIS</title>
+  <meta name="description" content="VCG (Visual Cipher Grid) : système de chiffrement symétrique fondé sur une représentation bidimensionnelle des données dans une grille 26×26, combinant permutations secrètes et masquage par vecteur d'initialisation. Projet de fin d'études d'école d'ingénieur.">
   <link rel="stylesheet" href="../style.css" />
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-
+  <style>
+    /* Styles supplémentaires spécifiques à la page VCG */
+    .vcg-formula {
+      background: rgba(0,0,0,0.18);
+      border-left: 3px solid rgba(255,255,255,0.25);
+      border-radius: 4px;
+      padding: 14px 20px;
+      margin: 16px 0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.05em;
+      letter-spacing: 0.03em;
+      overflow-x: auto;
+    }
+    .vcg-formula-inline {
+      font-family: 'Courier New', Courier, monospace;
+      background: rgba(0,0,0,0.15);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 0.97em;
+    }
+    .vcg-notice {
+      border-left: 3px solid rgba(255,200,80,0.6);
+      background: rgba(255,200,80,0.07);
+      border-radius: 4px;
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-style: italic;
+      font-size: 0.96em;
+    }
+    .vcg-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.95em;
+    }
+    .vcg-table th {
+      background: rgba(255,255,255,0.08);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .vcg-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      vertical-align: top;
+    }
+    .vcg-table tr:last-child td {
+      border-bottom: none;
+    }
+    .vcg-table code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.93em;
+      background: rgba(0,0,0,0.18);
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+    .vcg-versions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .vcg-version-card {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+    .vcg-version-card h4 {
+      margin: 0 0 10px 0;
+      font-size: 1.05em;
+      opacity: 0.9;
+    }
+    .vcg-version-card .vcg-formula {
+      margin: 8px 0 0 0;
+      padding: 9px 13px;
+      font-size: 0.93em;
+    }
+    .vcg-pipeline-list {
+      counter-reset: pipeline-counter;
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+    .vcg-pipeline-list li {
+      counter-increment: pipeline-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .vcg-pipeline-list li:last-child {
+      border-bottom: none;
+    }
+    .vcg-pipeline-list li::before {
+      content: counter(pipeline-counter);
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82em;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .vcg-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .vcg-stat-card {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 6px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+    .vcg-stat-card .stat-value {
+      font-size: 1.55em;
+      font-weight: 700;
+      font-family: 'Courier New', Courier, monospace;
+      opacity: 0.9;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .vcg-stat-card .stat-label {
+      font-size: 0.82em;
+      opacity: 0.65;
+    }
+    .figures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .project-media {
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
@@ -17,118 +161,682 @@
   <header class="site-header">
     <div class="container header-inner">
       <div class="hero-text">
-        <h1>C-grid</h1>
-        <p class="subtitle">Projet personnel continué en projet de fin d’études — Conception d'un algorithme
-          de chiffrement symétrique fondé sur
-          des analyses fréquentielles de
-          bigrammes dans des grilles
-          multidimensionnelles</p>
+        <h1>VCG — Visual Cipher Grid</h1>
+        <p class="subtitle">
+          Projet personnel continué en projet de fin d'études —
+          Conception d'un système de chiffrement symétrique fondé sur
+          une représentation bidimensionnelle des données dans une grille 26×26,
+          combinant permutations secrètes et masquage par vecteur d'initialisation
+        </p>
       </div>
     </div>
   </header>
 
   <main class="container section">
 
-    <h2>Présentation du projet</h2>
+    <!-- =============================================
+         1. PRÉSENTATION GÉNÉRALE
+         ============================================= -->
+    <h2>Présentation générale</h2>
     <p>
-      Le projet consiste à concevoir un algorithme de chiffrement reposant sur l’utilisation de bigrammes (ou trigrammes)
-      et sur la construction d’une <strong>grille de fréquences</strong>.  
-      L’idée est de transmettre un message non pas par le texte envoyé lui-même, mais par la <em>répartition statistique des enchaînements de lettres</em> dans cette grille.
+      VCG (<em>Visual Cipher Grid</em>) est un algorithme de chiffrement symétrique original, développé
+      dans le cadre d'une démarche de recherche et d'expérimentation cryptographique. Le principe fondateur
+      du système repose sur la transformation de l'information en une représentation bidimensionnelle structurée
+      sous forme de grille 26×26, correspondant au produit cartésien de l'alphabet latin avec lui-même.
+    </p>
+    <p>
+      Contrairement aux algorithmes classiques qui opèrent directement sur les octets ou les bits du message,
+      VCG encode d'abord le message dans une représentation matricielle de bigrammes. L'information n'est
+      donc pas portée directement par une séquence de caractères lisibles, mais par la structure
+      géométrique et statistique de la distribution des cellules activées dans la grille.
+    </p>
+    <p>
+      La transformation cryptographique repose sur trois mécanismes combinés : une <strong>représentation
+      spatiale</strong> du message dans la grille, des <strong>permutations secrètes</strong> de lignes et de colonnes
+      dérivées de la clé, et un <strong>masquage XOR</strong> par un vecteur d'initialisation aléatoire. Le projet
+      a évolué vers une version capable de traiter des <strong>documents couleur complets</strong> par découpage
+      en tuiles 26×26, avec un mécanisme de chaînage entre tuiles inspiré du mode CBC.
+    </p>
+    <p>
+      Ce projet s'inscrit dans une démarche expérimentale : VCG n'est pas une construction cryptographique
+      standardisée, mais constitue une base sérieuse d'expérimentation et d'analyse, accompagnée de tests
+      statistiques rigoureux et d'une évaluation de ses propriétés de sécurité observées.
     </p>
 
-    <h2>Principe de fonctionnement :</h2>
+    <!-- =============================================
+         2. PRINCIPE FONDAMENTAL DE LA GRILLE
+         ============================================= -->
+    <h2>Principe fondamental de la grille</h2>
     <p>
-      Le texte transmis est une suite artificielle de bigrammes ou de trigrammes.  
-      Ces enchaînements sont comptabilisés dans une matrice de fréquences, dont les lignes et colonnes correspondent à un alphabet donné.
-      En remplissant cette grille, on fait apparaître visuellement une lettre ou une forme.
+      La structure centrale de VCG est une grille binaire de dimension 26×26, dont les lignes et
+      les colonnes sont indexées par les 26 lettres de l'alphabet latin (A à Z). Chaque cellule
+      <span class="vcg-formula-inline">G<sub>i,j</sub></span> de la grille correspond à un bigramme,
+      c'est-à-dire une paire ordonnée de deux lettres <span class="vcg-formula-inline">(i, j) ∈ Σ²</span>.
+      Le nombre total de bigrammes possibles est <strong>26² = 676</strong>.
+    </p>
+    <p>
+      Pour représenter un message textuel dans la grille, chaque caractère est encodé à l'aide d'un
+      <strong>patron de pixels 4×5</strong> (analogue à une fonte bitmap). Ces patrons sont placés dans
+      la grille avec des offsets horizontaux et verticaux, permettant d'écrire plusieurs lettres dans
+      la même grille (jusqu'à 20 caractères par grille dans l'implémentation de référence). Les cellules
+      correspondant aux pixels actifs du motif sont activées à 1.
+    </p>
+    <p>
+      La grille ainsi construite est appelée <strong>grille claire</strong> <span class="vcg-formula-inline">P</span>.
+      Elle constitue la représentation canonique du message dans la base identité — c'est-à-dire avant
+      toute application de permutation ou de masquage. Visuellement, si l'on affichait cette grille,
+      on pourrait y lire le message d'origine sous la forme d'un ensemble de motifs géométriques.
+    </p>
+    <p>
+      Un ensemble de bigrammes activés dans la grille peut ainsi dessiner une lettre, un mot, ou tout
+      motif arbitraire. C'est cette propriété de représentation visuelle qui est au cœur de l'approche VCG.
     </p>
 
+    <!-- =============================================
+         3. STRUCTURE DE LA CLÉ SECRÈTE
+         ============================================= -->
+    <h2>Structure de la clé secrète</h2>
     <p>
-      Par exemple, pour transmettre la lettre <strong>i</strong>, on peut envoyer le texte suivant : <code>ac, cc, dc, ec</code>.  
-      Lorsque ces bigrammes sont reportés dans la matrice (lignes et colonnes allant de <em>a</em> à <em>e</em>), les cases correspondantes se remplissent et dessinent la lettre <strong>i</strong>.  
-      Ce procédé est répété pour chaque caractère du message, de manière à former l’ensemble du texte voulu.
+      La clé secrète du système VCG est composée de deux permutations indépendantes de l'alphabet
+      de 26 lettres, formant ainsi un élément du groupe :
+    </p>
+    <div class="vcg-formula">K = (K<sub>c</sub>, K<sub>r</sub>) &nbsp; avec &nbsp; K<sub>c</sub>, K<sub>r</sub> ∈ S<sub>26</sub></div>
+    <p>
+      où <span class="vcg-formula-inline">K<sub>c</sub></span> est la permutation des <strong>colonnes</strong>
+      et <span class="vcg-formula-inline">K<sub>r</sub></span> est la permutation des <strong>lignes</strong>
+      de la grille. En pratique, la clé est représentée sous la forme d'une chaîne de 52 caractères :
+      les 26 premiers définissent l'ordre des colonnes, les 26 suivants l'ordre des lignes.
+    </p>
+    <p>
+      L'espace de clé est défini par :
+    </p>
+    <div class="vcg-formula">|K| = (26!)² ≈ 1.61 × 10<sup>53</sup></div>
+    <p>
+      Intuitivement, la clé ne modifie pas la quantité d'information présente dans la grille : le nombre
+      de cellules activées reste identique avant et après permutation. En revanche, elle réorganise
+      la position de chaque cellule de manière à rendre la structure du motif illisible sans la
+      connaissance de la permutation inverse. Une attaque exhaustive sur cet espace est computationnellement
+      hors de portée.
     </p>
 
+    <!-- =============================================
+         4. OPÉRATEUR DE PERMUTATION SECRÈTE PS
+         ============================================= -->
+    <h2>Opérateur de permutation secrète <em>PS</em></h2>
     <p>
-      Ainsi, l’information n’est pas directement contenue dans le texte, mais dans <strong>l’empreinte laissée par la distribution statistique des bigrammes</strong>.
+      L'opérateur de permutation secrète <span class="vcg-formula-inline">PS</span> est le cœur
+      de la transformation cryptographique. Appliqué à une grille <span class="vcg-formula-inline">G</span>,
+      il réordonne simultanément les lignes selon <span class="vcg-formula-inline">K<sub>r</sub></span>
+      et les colonnes selon <span class="vcg-formula-inline">K<sub>c</sub></span> :
+    </p>
+    <div class="vcg-formula">PS(G)<sub>i,j</sub> = G<sub>K<sub>r</sub>(i), K<sub>c</sub>(j)</sub></div>
+    <p>
+      La permutation inverse <span class="vcg-formula-inline">PS<sup>−1</sup></span> satisfait :
+    </p>
+    <div class="vcg-formula">PS<sup>−1</sup>(PS(G)) = G &nbsp; pour toute grille G</div>
+    <p>
+      Propriétés formelles de <span class="vcg-formula-inline">PS</span> :
+    </p>
+    <ul>
+      <li><strong>Conservation des valeurs :</strong> PS ne modifie pas les valeurs des cellules, uniquement leurs positions. Le nombre de cellules activées est invariant.</li>
+      <li><strong>Réversibilité exacte :</strong> la connaissance de la clé correcte permet de reconstruire exactement la grille d'origine.</li>
+      <li><strong>Bijection :</strong> PS est une bijection sur l'ensemble des grilles 26×26 ; deux grilles différentes ne peuvent pas avoir la même image par PS.</li>
+    </ul>
+
+    <!-- =============================================
+         5. FORMULES DE CHIFFREMENT ET DÉCHIFFREMENT
+         ============================================= -->
+    <h2>Formules de chiffrement et de déchiffrement</h2>
+    <p>
+      Trois versions successives de l'algorithme ont été définies, chacune apportant un niveau de robustesse
+      accru. Le tableau ci-dessous en donne une vue synthétique :
     </p>
 
-    <h2>Ajout d’une clé de chiffrement</h2>
+    <table class="vcg-table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Chiffrement</th>
+          <th>Déchiffrement</th>
+          <th>Mécanisme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>V1</strong></td>
+          <td><code>C = PS(P)</code></td>
+          <td><code>P = PS⁻¹(C)</code></td>
+          <td>Permutation seule</td>
+        </tr>
+        <tr>
+          <td><strong>V2</strong></td>
+          <td><code>C = PS(IV ⊕ P)</code></td>
+          <td><code>P = PS⁻¹(C) ⊕ IV</code></td>
+          <td>XOR avec IV + permutation</td>
+        </tr>
+        <tr>
+          <td><strong>V3</strong> ★</td>
+          <td><code>C = PS(IV ⊕ PS(P))</code></td>
+          <td><code>P = PS⁻¹(PS⁻¹(C) ⊕ IV)</code></td>
+          <td>Double permutation + masquage</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="vcg-versions-grid">
+      <div class="vcg-version-card">
+        <h4>V1 — Permutation seule</h4>
+        <p style="font-size:0.9em;opacity:0.75;margin:0 0 4px 0;">Chiffrement</p>
+        <div class="vcg-formula">C = PS(P)</div>
+        <p style="font-size:0.9em;opacity:0.75;margin:8px 0 4px 0;">Déchiffrement</p>
+        <div class="vcg-formula">P = PS⁻¹(C)</div>
+        <p style="font-size:0.88em;opacity:0.65;margin-top:10px;">
+          Application directe de la permutation secrète. Vulnérable à une analyse structurelle
+          si le taux d'activation de la grille est connu ou prévisible.
+        </p>
+      </div>
+      <div class="vcg-version-card">
+        <h4>V2 — XOR + permutation</h4>
+        <p style="font-size:0.9em;opacity:0.75;margin:0 0 4px 0;">Chiffrement</p>
+        <div class="vcg-formula">C = PS(IV ⊕ P)</div>
+        <p style="font-size:0.9em;opacity:0.75;margin:8px 0 4px 0;">Déchiffrement</p>
+        <div class="vcg-formula">P = PS⁻¹(C) ⊕ IV</div>
+        <p style="font-size:0.88em;opacity:0.65;margin-top:10px;">
+          L'ajout d'un vecteur d'initialisation aléatoire introduit de la variabilité :
+          deux chiffrements du même message produisent des grilles différentes.
+        </p>
+      </div>
+      <div class="vcg-version-card">
+        <h4>V3 — Double PS + masquage ★</h4>
+        <p style="font-size:0.9em;opacity:0.75;margin:0 0 4px 0;">Chiffrement</p>
+        <div class="vcg-formula">C = PS(IV ⊕ PS(P))</div>
+        <p style="font-size:0.9em;opacity:0.75;margin:8px 0 4px 0;">Déchiffrement</p>
+        <div class="vcg-formula">P = PS⁻¹(PS⁻¹(C) ⊕ IV)</div>
+        <p style="font-size:0.88em;opacity:0.65;margin-top:10px;">
+          Version principale du système. La double application de PS encadre le masquage XOR,
+          rendant toute inversion partielle sans la clé plus difficile.
+        </p>
+      </div>
+    </div>
+
     <p>
-      Pour renforcer la sécurité, une clé est introduite sous la forme d’un <strong>réarrangement des lignes et colonnes</strong> de la grille.  
-      Ce réordonnancement brouille les formes initiales : la lettre devient méconnaissable, et seule la clé permet de retrouver l’ordre correct pour la lire.  
-      Sans cette clé, le message reste illisible.
+      La version V3 est la version principale mise en avant dans ce projet. L'enchaînement
+      <span class="vcg-formula-inline">PS → XOR → PS</span> signifie qu'un attaquant qui inverserait
+      partiellement la seconde permutation obtiendrait
+      <span class="vcg-formula-inline">IV ⊕ PS(P)</span> — une valeur masquée par IV et déjà permutée —
+      et non directement le clair. La double application de PS combinée au masquage aléatoire
+      rend l'analyse structurelle nettement plus difficile. Les versions V1 et V2 ont été abandonnées
+      car elles présentaient une résistance insuffisante aux analyses statistiques.
     </p>
 
-    <h2>Résistance aux attaques :</h2>
+    <!-- =============================================
+         6. FONCTIONNEMENT — TEXTE
+         ============================================= -->
+    <h2>Fonctionnement pour un texte</h2>
     <p>
-      L’espace de clé est extrêmement vaste, puisqu’il n’existe en théorie aucune limite et que l’algorithme fonctionne avec toutes les tailles d’alphabet.  
-      Une attaque par force brute devient donc irréaliste.  
-      La seule approche possible pour un attaquant serait une <em>analyse statistique</em>.  
-      L’objectif est de s’assurer que, même après application de la clé, la répartition des cases actives reste aussi uniforme que possible afin d’éliminer tout motif exploitable.
+      Le chiffrement d'un message textuel passe par un pipeline de transformation en plusieurs étapes,
+      depuis la représentation canonique jusqu'à la grille chiffrée finale.
     </p>
 
-    <h2>Étapes du projet :</h2>
-    <ol>
-      <li><strong>Définition des formes des lettres & calculs statistiques :</strong>  
-          concevoir des représentations graphiques dans la grille pour chaque caractère, tout en vérifiant leur résistance aux patterns visibles après chiffrement.</li>
-      <li><strong>Implémentation de l’algorithme :</strong>  
-          développer les fonctions de chiffrement/déchiffrement, de génération de clé, et de transposition de la grille.</li>
-      <li><strong>Comparaison avec AES :</strong>  
-          évaluer la rapidité et l’efficacité.  
-          Le ratio d’information utile est faible, mais le chiffrement est instantané (réarrangement de lignes et colonnes), contrairement aux multiples tours d’AES.</li>
+    <h3>Pipeline de chiffrement d'un texte</h3>
+    <ol class="vcg-pipeline-list">
+      <li><strong>Texte clair :</strong> le message est lu en entrée sous forme de chaîne de caractères.</li>
+      <li><strong>Encodage en patrons 4×5 :</strong> chaque caractère est associé à un patron bitmap de 4 colonnes × 5 lignes, représentant sa forme visuelle dans la grille.</li>
+      <li><strong>Placement dans la grille 26×26 :</strong> les patrons sont positionnés dans la grille avec des offsets horizontaux et verticaux calculés pour éviter les chevauchements. Une grille peut contenir jusqu'à 20 caractères.</li>
+      <li><strong>Génération des bigrammes actifs :</strong> pour chaque cellule activée, le bigramme correspondant est identifié. La grille claire <span class="vcg-formula-inline">P ∈ {0,1}²⁶×²⁶</span> est construite.</li>
+      <li><strong>Génération du vecteur d'initialisation :</strong> un IV aléatoire de même dimension que la grille est généré selon une distribution de Bernoulli (<em>p</em> = 0.5).</li>
+      <li><strong>Application de PS(P) :</strong> première permutation secrète appliquée à la grille claire.</li>
+      <li><strong>Masquage XOR :</strong> la grille permutée est XORée avec IV.</li>
+      <li><strong>Application finale de PS :</strong> seconde permutation secrète produisant la grille chiffrée <span class="vcg-formula-inline">C</span>.</li>
+      <li><strong>Sérialisation :</strong> la grille chiffrée C est convertie en séquence de bigrammes (positions des cellules actives). Le couple <span class="vcg-formula-inline">(C, IV)</span> est transmis.</li>
     </ol>
 
-    <h2>Illustrations :</h2>
-
-    <figure class="project-media">
-      <img src="../assets/images/cgrid_crypted.png" alt="Grille chiffrée" onerror="this.style.display='none'">
-      <figcaption>Visualisation d’une grille chiffrée (motif brouillé après permutation de clé).</figcaption>
-    </figure>
-
-    <figure class="project-media">
-      <img src="../assets/images/cgrid_decrypted.png" alt="Grille déchiffrée" onerror="this.style.display='none'">
-      <figcaption>Grille déchiffrée : le message « ALGO DE HUGO » réapparaît après application de la clé correcte.</figcaption>
-    </figure>
-
-    <!-- ========================================= -->
-    <!-- SECTION PERFORMANCE -->
-    <!-- ========================================= -->
-    <h2>Performance :</h2>
     <p>
-      Un test de performance a été réalisé pour comparer <strong>C-grid</strong> (implémenté en Python) avec les algorithmes standards de chiffrement symétrique 
-      <strong>AES</strong> dans ses différents modes : ECB, CBC, CTR et GCM.  
-      Le test a été effectué sur un texte d’exemple <code>"ALGO DE HUGO"</code>.
+      Le déchiffrement suit le pipeline inverse : reconstruction de la grille chiffrée à partir des
+      bigrammes, application de <span class="vcg-formula-inline">PS⁻¹</span>, XOR avec IV,
+      seconde application de <span class="vcg-formula-inline">PS⁻¹</span>, puis lecture du motif
+      résultant pour reconstruire le texte clair.
     </p>
 
+    <p>
+      Il convient de noter que l'ordre des bigrammes transmis n'affecte pas la reconstruction de la grille :
+      le texte chiffré peut être vu comme un ensemble non ordonné de bigrammes, ce qui offre une
+      propriété supplémentaire d'indépendance à l'ordre de transmission.
+    </p>
+
+    <!-- =============================================
+         7. FONCTIONNEMENT — DOCUMENT COULEUR
+         ============================================= -->
+    <h2>Fonctionnement pour un document ou une image couleur</h2>
+    <p>
+      Le système VCG a été étendu pour traiter des documents visuels complets (images raster et PDF).
+      Ce mode d'utilisation constitue une extension pratique et significative du concept de grille au
+      chiffrement de données visuelles en couleur.
+    </p>
+
+    <h3>Principe du mode couleur</h3>
+    <p>
+      Dans le mode couleur, chaque pixel est représenté par ses trois composantes RGB. L'algorithme
+      opère sur des blocs (tuiles) de dimension 26×26 pixels, correspondant exactement à la structure
+      de la grille VCG. Pour chaque tuile et chaque composante de couleur, la transformation V3 est
+      appliquée indépendamment. Les formules de chiffrement d'une tuile couleur sont :
+    </p>
+    <div class="vcg-formula">
+      (1) C₁ = PS(P) &nbsp;&nbsp; ← première permutation sur le bloc clair<br>
+      (2) Y &nbsp;= mask ⊕ C₁ &nbsp;← masquage par un masque pseudo-aléatoire<br>
+      (3) C &nbsp;= PS(Y) &nbsp;&nbsp;&nbsp;← seconde permutation → bloc chiffré final
+    </div>
+    <p>Le déchiffrement applique les opérations en ordre inverse :</p>
+    <div class="vcg-formula">
+      (1) Y &nbsp;= PS⁻¹(C) &nbsp;&nbsp;&nbsp;← inversion de la seconde permutation<br>
+      (2) C₁ = Y ⊕ mask &nbsp;&nbsp;&nbsp;← suppression du masque<br>
+      (3) P &nbsp;= PS⁻¹(C₁) &nbsp;← inversion de la première permutation → bloc clair reconstruit
+    </div>
+
+    <h3>Masque et chaînage de type CBC</h3>
+    <p>
+      Le masque utilisé est pseudo-aléatoire et n'est pas indépendant d'un bloc à l'autre.
+      Un mécanisme de <strong>chaînage inspiré du mode CBC</strong> est appliqué : le dernier bloc chiffré
+      d'une tuile influence le masque de la tuile suivante, et le dernier bloc d'une page influence
+      le masque de la page suivante. Ce chaînage évite que deux blocs identiques en clair produisent
+      des blocs identiques en chiffré — une vulnérabilité connue du mode ECB.
+    </p>
+
+    <h3>Résumé du pipeline document</h3>
+    <ol class="vcg-pipeline-list">
+      <li><strong>Conversion au format raster :</strong> le document est converti en PDF si nécessaire, puis chaque page est rasterisée en image RGB à la résolution souhaitée (paramètre DPI).</li>
+      <li><strong>Padding :</strong> chaque page est complétée (padding) pour que ses dimensions soient des multiples de 26 pixels.</li>
+      <li><strong>Découpage en tuiles 26×26×3 :</strong> la page est découpée en blocs de 26×26 pixels (3 composantes couleur). Chaque tuile est traitée indépendamment.</li>
+      <li><strong>Chiffrement par tuile :</strong> pour chaque tuile et chaque composante RGB, la transformation V3 couleur est appliquée avec mise à jour du masque de chaînage.</li>
+      <li><strong>Stockage lossless :</strong> les pages chiffrées sont encodées en PNG (compression sans perte) et archivées dans un fichier <code>.cgrid</code>. La structure archive garantit l'absence de dégradation cryptographique.</li>
+      <li><strong>Prévisualisation optionnelle :</strong> un aperçu PDF peut être généré à partir des pages PNG chiffrées. Il s'agit d'une visualisation uniquement ; le format cryptographique de référence reste l'archive <code>.cgrid</code>.</li>
+      <li><strong>Déchiffrement :</strong> les pages PNG sont extraites de l'archive, les tuiles déchiffrées dans l'ordre inverse avec le même masque de chaînage, puis les pages sont recomposées et l'image originale reconstruite.</li>
+    </ol>
+
+    <div class="vcg-notice">
+      <strong>Note sur l'expansion des données :</strong> contrairement à AES ou ChaCha20, VCG
+      introduit une expansion significative de la taille des données lors du chiffrement d'un document.
+      Pour un PDF rasterisé, cette expansion peut être très importante selon la résolution choisie,
+      car la taille du chiffré croît approximativement en O(DPI²). Une plage de fonctionnement pratique
+      de 50 à 100 DPI constitue un compromis réaliste pour les documents volumineux dans l'état actuel
+      du prototype.
+    </div>
+
+    <!-- =============================================
+         8. TESTS STATISTIQUES
+         ============================================= -->
+    <h2>Tests statistiques</h2>
+    <p>
+      Des campagnes de tests statistiques ont été menées sur un grand nombre de grilles générées
+      aléatoirement afin d'évaluer les propriétés de diffusion du système VCG. L'objectif est de
+      vérifier que les structures visuelles présentes dans la grille claire disparaissent statistiquement
+      dans la grille chiffrée, et qu'aucun biais exploitable n'est détectable sur les 676 positions de la grille.
+    </p>
+
+    <h3>Métriques analysées</h3>
+    <ul>
+      <li><strong>Distribution des cellules activées :</strong> fréquence d'activation par position sur l'ensemble des 676 cellules de la grille.</li>
+      <li><strong>Moyenne et écart-type :</strong> indicateurs de centralité et de dispersion de la distribution d'activation.</li>
+      <li><strong>Coefficient de variation :</strong> rapport écart-type / moyenne, permettant une comparaison normalisée entre grilles claires et chiffrées.</li>
+      <li><strong>Entropie empirique :</strong> mesure de l'uniformité de la distribution d'activation par position.</li>
+      <li><strong>Heatmaps de probabilité :</strong> représentation visuelle de la distribution des activations par position dans la grille 26×26.</li>
+      <li><strong>Histogrammes de distribution :</strong> répartition des fréquences d'activation sur les 676 positions, comparant grilles claires, intermédiaires et chiffrées.</li>
+    </ul>
+
+    <h3>Protocole de comparaison</h3>
+    <p>
+      Les analyses portent sur trois ensembles de grilles comparés côte à côte :
+    </p>
+    <ul>
+      <li><strong>Grilles claires P :</strong> distributions caractéristiques, non uniformes, révélant les motifs des caractères encodés.</li>
+      <li><strong>Grilles intermédiaires</strong> (<span class="vcg-formula-inline">IV ⊕ P</span> ou <span class="vcg-formula-inline">IV ⊕ PS(P)</span>) : premier niveau de masquage.</li>
+      <li><strong>Grilles chiffrées finales C₂ ou C₃ :</strong> distributions observées après application de la transformation complète.</li>
+    </ul>
+
+    <p>
+      Les résultats statistiques clés obtenus sur un ensemble de 10 000 grilles sont les suivants :
+    </p>
+
+    <div class="vcg-stats-grid">
+      <div class="vcg-stat-card">
+        <span class="stat-value">0.2929</span>
+        <span class="stat-label">Moyenne d'activation<br>des grilles claires P₀</span>
+      </div>
+      <div class="vcg-stat-card">
+        <span class="stat-value">0.4957</span>
+        <span class="stat-label">Moyenne d'activation<br>des grilles chiffrées P₁</span>
+      </div>
+      <div class="vcg-stat-card">
+        <span class="stat-value">0.1059</span>
+        <span class="stat-label">Écart-type<br>des grilles claires</span>
+      </div>
+      <div class="vcg-stat-card">
+        <span class="stat-value">0.0052</span>
+        <span class="stat-label">Écart-type<br>des grilles chiffrées</span>
+      </div>
+    </div>
+
+    <p>
+      La réduction de l'écart-type d'un facteur supérieur à 20 entre grilles claires et grilles chiffrées
+      indique que la distribution des activations est nettement uniformisée après chiffrement.
+      La moyenne s'approche de 0.5, valeur attendue pour une distribution de Bernoulli d'uniformité maximale.
+    </p>
+
+    <table class="vcg-table">
+      <thead>
+        <tr>
+          <th>Mesure</th>
+          <th>Valeur observée</th>
+          <th>Interprétation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Écart moyen |P₀ − P₁|</td>
+          <td><code>0.2051</code></td>
+          <td>Différence de distribution nette entre clair et chiffré</td>
+        </tr>
+        <tr>
+          <td>Écart maximum |P₀ − P₁|</td>
+          <td><code>0.4284</code></td>
+          <td>Certaines positions très caractéristiques du clair sont totalement masquées</td>
+        </tr>
+        <tr>
+          <td>Statistique χ² (chiffrés)</td>
+          <td><code>189.73</code></td>
+          <td>Largement inférieure au seuil critique</td>
+        </tr>
+        <tr>
+          <td>Seuil χ²₀.₉₉(675 ddl)</td>
+          <td><code>763.40</code></td>
+          <td>Seuil critique à 99% pour 675 degrés de liberté</td>
+        </tr>
+        <tr>
+          <td>p-valeur</td>
+          <td><code>1.000</code></td>
+          <td>Aucune déviation significative par rapport à une distribution uniforme</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      La statistique χ² observée sur les grilles chiffrées (189.73) est largement inférieure au seuil
+      critique à 99% (763.40). L'hypothèse d'uniformité de la distribution des cellules activées n'est
+      pas rejetée, ce qui indique l'absence de biais statistique détectable dans la distribution des chiffrés.
+    </p>
+
+    <!-- =============================================
+         9. ANALYSE DE SÉCURITÉ
+         ============================================= -->
+    <h2>Analyse de sécurité et propriétés observées</h2>
+
+    <h3>a) Réversibilité correcte</h3>
+    <p>
+      La propriété fondamentale du système est sa réversibilité exacte. Il a été vérifié formellement
+      et expérimentalement que :
+    </p>
+    <div class="vcg-formula">PS⁻¹(PS⁻¹(C) ⊕ IV) = P</div>
+    <p>
+      pour toute grille clair <span class="vcg-formula-inline">P</span>, toute clé
+      <span class="vcg-formula-inline">K</span> et tout vecteur d'initialisation
+      <span class="vcg-formula-inline">IV</span>. Cette propriété est une conséquence directe de la
+      bijectivité de <span class="vcg-formula-inline">PS</span> et de l'involutivité de l'opérateur XOR.
+    </p>
+
+    <h3>b) Uniformisation statistique</h3>
+    <p>
+      Le masquage XOR combiné à la double permutation vise à rendre les distributions observées
+      compatibles avec un comportement uniforme. Les tests statistiques montrent que les grilles chiffrées
+      produites par V3 présentent une distribution d'activation proche de la distribution attendue pour
+      un processus aléatoire uniforme (Bernoulli, <em>p</em> = 0.5).
+    </p>
+
+    <h3>c) Évaluation par pseudo-brute-force</h3>
+    <p>
+      Une procédure d'évaluation expérimentale a été mise en place : un couple
+      <span class="vcg-formula-inline">(C, IV)</span> est produit avec la vraie clé, puis on teste
+      un grand nombre de pseudo-clés aléatoires <span class="vcg-formula-inline">K'</span> tirées
+      uniformément dans <span class="vcg-formula-inline">S₂₆ × S₂₆</span>. Pour chaque fausse clé,
+      on déchiffre le chiffré et on obtient un pseudo-clair
+      <span class="vcg-formula-inline">P' = PS'⁻¹(PS'⁻¹(C) ⊕ IV)</span>. L'analyse des distributions
+      statistiques de ces pseudo-clairs ne révèle pas de structure exploitable, ce qui est cohérent
+      avec l'absence de biais détectable.
+    </p>
+
+    <h3>d) Limites et cadre expérimental</h3>
+    <div class="vcg-notice">
+      <strong>Important :</strong> les résultats présentés dans ce document constituent une
+      <strong>validation expérimentale et statistique</strong>, non une preuve formelle de sécurité
+      cryptographique. Les analyses montrent une compatibilité avec les propriétés d'indistinguabilité
+      dans le cadre des tests réalisés, mais ne permettent pas de conclure à une preuve IND-CPA au
+      sens formel du terme. Une telle preuve exigerait un cadre mathématique plus strict (réductibilité
+      computationnelle, modèle oracle, etc.) qui n'a pas été mis en place dans ce projet.
+      VCG doit être considéré comme une <strong>construction expérimentale</strong>, pas une
+      primitive cryptographique standardisée.
+    </div>
+
+    <!-- =============================================
+         10. IND-CPA / SHANNON
+         ============================================= -->
+    <h2>Analyse de type Shannon et validation statistique IND-CPA</h2>
+    <p>
+      Afin d'évaluer les propriétés de diffusion du système, une analyse statistique inspirée
+      des critères formulés par Claude Shannon a été implémentée. L'objectif est de vérifier si
+      un attaquant ayant accès à un couple <span class="vcg-formula-inline">(C, IV)</span> intercepté
+      peut extraire de l'information sur le message clair en analysant la distribution statistique
+      des déchiffrements produits par de nombreuses permutations aléatoires.
+    </p>
+
+    <h3>Protocole expérimental</h3>
+    <p>
+      L'expérience repose sur la construction de deux distributions empiriques et leur comparaison :
+    </p>
+    <ul>
+      <li><strong>P₀ — distribution de référence :</strong> 10 000 grilles claires construites à partir de textes naturels (distribution réelle des messages).</li>
+      <li><strong>P₁ — distribution reconstruite par l'attaquant :</strong> 10 000 pseudo-clairs produits en déchiffrant un couple <span class="vcg-formula-inline">(C, IV)</span> intercepté avec des permutations aléatoires tirées uniformément dans <span class="vcg-formula-inline">S₂₆ × S₂₆</span>.</li>
+    </ul>
+    <p>
+      Un <strong>test du χ²</strong> est ensuite appliqué pour comparer P₀ et P₁ sur les 675 degrés
+      de liberté (676 positions − 1) de la grille 26×26. La logique est la suivante :
+    </p>
+    <ul>
+      <li>Si P₁ diffère significativement de P₀, un attaquant peut distinguer le chiffré d'un chiffré aléatoire, ce qui constituerait une fuite d'information.</li>
+      <li>Si P₀ et P₁ sont <strong>statistiquement indistinguables</strong> (hypothèse H₀ non rejetée), les pseudo-clairs produits par de fausses clés ne révèlent pas d'information exploitable sur le message original.</li>
+    </ul>
+
+    <h3>Résultats obtenus</h3>
+    <table class="vcg-table">
+      <thead>
+        <tr>
+          <th>Paramètre</th>
+          <th>Valeur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Statistique χ² observée</td><td><code>189.73</code></td></tr>
+        <tr><td>Seuil χ²₀.₉₉ (675 degrés de liberté)</td><td><code>763.40</code></td></tr>
+        <tr><td>p-valeur</td><td><code>1.000</code></td></tr>
+        <tr><td>Décision statistique</td><td>H₀ non rejetée — distributions compatibles</td></tr>
+      </tbody>
+    </table>
+    <p>
+      La statistique χ² observée (189.73) est très largement inférieure au seuil critique à 99%
+      (763.40). L'hypothèse nulle n'est pas rejetée : les distributions P₀ et P₁ sont
+      <strong>statistiquement indistinguables</strong> dans le cadre de cette expérience.
+    </p>
+
+    <h3>Interprétation et lien avec IND-CPA</h3>
+    <p>
+      Ces résultats constituent une <strong>evidence expérimentale compatible avec la propriété
+      d'indistinguabilité sous attaque à clair choisi (IND-CPA)</strong> dans le modèle expérimental
+      étudié. En d'autres termes, l'attaque statistique implémentée ne révèle pas de fuite
+      d'information détectable sur le clair à partir d'un couple chiffré intercepté.
+    </p>
+    <p>
+      Ce résultat peut être mis en relation avec le critère de Shannon de <em>confusion</em> :
+      la transformation VCG V3 ne laisse pas apparaître de relation exploitable entre la structure
+      du clair et la distribution des chiffrés dans les conditions testées.
+    </p>
+    <div class="vcg-notice">
+      <strong>Nuance importante :</strong> il ne s'agit pas d'une <em>preuve formelle d'IND-CPA</em>.
+      Les résultats observés ne révèlent pas de fuite statistique détectable dans le cadre testé,
+      mais cela ne couvre pas l'ensemble des attaques possibles. Une vraie preuve de sécurité
+      IND-CPA nécessiterait une réduction formelle à un problème computationnel difficile, ce qui
+      n'est pas fourni ici. Il convient donc de parler de <strong>validation statistique expérimentale</strong>
+      et de <strong>compatibilité empirique avec l'indistinguabilité</strong>, et non de sécurité prouvée.
+    </div>
+
+    <!-- =============================================
+         11. ILLUSTRATIONS VISUELLES
+         ============================================= -->
+    <h2>Illustrations visuelles</h2>
+    <p>
+      Les figures ci-dessous illustrent les différentes étapes du pipeline VCG, les résultats
+      statistiques obtenus et les effets du chiffrement sur des données visuelles.
+    </p>
+
+    <div class="figures-grid">
+      <figure class="project-media">
+        <img src="../assets/images/cgrid_crypted.png" alt="Grille VCG chiffrée" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 1</strong> — Grille chiffrée produite par la transformation V3. Les motifs originaux
+          des caractères ne sont plus perceptibles ; les cellules activées sont distribuées de manière
+          visuellement uniforme.
+        </figcaption>
+      </figure>
+      <figure class="project-media">
+        <img src="../assets/images/cgrid_decrypted.png" alt="Grille VCG déchiffrée" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 2</strong> — Grille déchiffrée après application de PS⁻¹ et suppression du masque IV.
+          Le message original réapparaît exactement, confirmant la réversibilité correcte du système.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="figures-grid">
+      <figure class="project-media">
+        <img src="../assets/images/heatmap_probabilities_private.png" alt="Heatmap statistique VCG" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 3</strong> — Heatmap des probabilités d'activation par position (grille 26×26)
+          pour les chiffrés produits avec clé privée. La distribution est visuellement uniforme,
+          sans concentration spatiale exploitable.
+        </figcaption>
+      </figure>
+      <figure class="project-media">
+        <img src="../assets/images/bar_chart_probabilities_private.png" alt="Distribution statistique VCG" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 4</strong> — Histogramme des fréquences d'activation sur les 676 positions
+          de la grille. La distribution des chiffrés (courbe bleue) est nettement plus plate que celle
+          des grilles claires (courbe orange), confirmant l'uniformisation statistique.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="figures-grid">
+      <figure class="project-media">
+        <img src="../assets/images/vcg_document_encrypted_preview.jpg" alt="Document couleur chiffré par VCG" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 5</strong> — Aperçu d'un document couleur chiffré par VCG. L'image chiffrée
+          apparaît visuellement comme un bruit aléatoire ; aucune information sur le contenu original
+          n'est perceptible sans la clé.
+        </figcaption>
+      </figure>
+      <figure class="project-media">
+        <img src="../assets/images/vcg_document_decrypted_preview.jpg" alt="Document couleur déchiffré par VCG" onerror="this.style.display='none'">
+        <figcaption>
+          <strong>Fig. 6</strong> — Document couleur reconstruit après déchiffrement. Le contenu
+          original est intégralement restitué, confirmant la réversibilité du pipeline document.
+        </figcaption>
+      </figure>
+    </div>
+
     <figure class="project-media">
-      <img src="../assets/images/cgrid_comp.png" alt="Comparaison des performances C-grid vs AES" onerror="this.style.display='none'">
-      <figcaption>Comparaison des temps de chiffrement : C-grid est en moyenne 31x plus rapide qu’AES-ECB dans sa version Python, 
-      tout en restant d’un ordre de grandeur similaire aux autres modes AES.</figcaption>
+      <img src="../assets/images/shannon_summary.png" alt="Résumé attaque de Shannon VCG" onerror="this.style.display='none'">
+      <figcaption>
+        <strong>Fig. 7</strong> — Résumé visuel de l'analyse statistique inspirée de Shannon.
+        Comparaison des distributions P₀ (clairs naturels) et P₁ (pseudo-clairs produits par
+        l'attaquant), avec la statistique χ² et le seuil critique à 99%.
+      </figcaption>
     </figure>
 
+    <!-- =============================================
+         12. COMPARAISON AVEC LES STANDARDS
+         ============================================= -->
+    <h2>Comparaison avec les algorithmes standards</h2>
     <p>
-      Ces résultats mettent en évidence la rapidité du procédé : 
-      la méthode de C-grid se limite à des permutations de lignes et de colonnes, 
-      là où AES nécessite plusieurs tours de substitutions et de transformations.  
-      Ce gain de performance peut devenir significatif dans des contextes à forte volumétrie ou nécessitant des opérations répétées.
+      Des expérimentations de performance ont été réalisées en comparant VCG avec AES-128-CBC,
+      AES-256-CBC et ChaCha20-Poly1305 sur plusieurs types de fichiers. Cette comparaison doit
+      être interprétée avec prudence : AES et ChaCha20-Poly1305 opèrent directement sur les octets
+      du fichier, tandis que VCG applique un pipeline plus complexe impliquant une rasterisation,
+      un découpage en grilles et une transformation par blocs.
     </p>
 
-    <h2>Conclusion :</h2>
+    <table class="vcg-table">
+      <thead>
+        <tr>
+          <th>Algorithme</th>
+          <th>Type</th>
+          <th>Authentification</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>AES-128-CBC</td><td>Chiffrement par blocs</td><td>Non intégrée</td><td>Standardisé</td></tr>
+        <tr><td>AES-256-CBC</td><td>Chiffrement par blocs</td><td>Non intégrée</td><td>Standardisé</td></tr>
+        <tr><td>ChaCha20-Poly1305</td><td>Chiffrement de flux AEAD</td><td>Intégrée</td><td>Standardisé</td></tr>
+        <tr><td><strong>VCG</strong></td><td>Permutation + XOR sur grille</td><td>Non intégrée</td><td>Expérimental</td></tr>
+      </tbody>
+    </table>
+
     <p>
-      Cet algorithme propose une approche originale du chiffrement : le message est porté par la répartition des bigrammes
-      dans une grille et par les formes qu’ils dessinent, plutôt que par le texte en clair.
-      La clé de réarrangement garantit la confidentialité, tandis que les tests statistiques visent à confirmer sa résistance.  
-      Enfin, la comparaison avec AES permet de situer ses performances face à une référence standard.
+      En termes de débit, AES et ChaCha20-Poly1305 surclassent nettement VCG (plusieurs centaines
+      de MB/s contre quelques MB/s pour VCG). L'expansion des données est également très marquée
+      pour VCG sur les PDF (facteur ×849 dans un cas testé), là où les algorithmes standards
+      conservent une taille de sortie quasi identique à l'entrée.
+    </p>
+    <p>
+      Ces écarts s'expliquent par la nature fondamentalement différente des pipelines : VCG transforme
+      une représentation visuelle rasterisée par blocs, là où AES opère sur les octets bruts.
+      L'implémentation actuelle de VCG en Python n'a pas été optimisée ; une implémentation en C ou C++
+      permettrait vraisemblablement de réduire ces surcoûts, bien que cette hypothèse reste à valider.
     </p>
 
-    <div style="margin-top:30px;">
+    <!-- =============================================
+         12. CONCLUSION
+         ============================================= -->
+    <h2>Conclusion</h2>
+    <p>
+      VCG propose une approche originale du chiffrement symétrique, fondée sur l'encodage de
+      l'information dans une représentation bidimensionnelle de bigrammes, combinée à des permutations
+      secrètes de lignes et de colonnes et à un masquage XOR par vecteur d'initialisation aléatoire.
+    </p>
+    <p>
+      La version V3, qui constitue la version principale du système, associe une double permutation
+      secrète à un masquage intermédiaire. Les tests statistiques conduits sur 10 000 grilles, ainsi
+      que l'analyse inspirée des critères de Shannon, ne révèlent pas de fuite statistique détectable
+      dans le cadre expérimental étudié. La statistique χ² observée reste largement en deçà du seuil
+      critique, ce qui est compatible avec une distribution uniforme des chiffrés.
+    </p>
+    <p>
+      L'extension au traitement de documents couleur complets, via un pipeline de rasterisation et de
+      découpage en tuiles 26×26 avec chaînage de type CBC, démontre la capacité du concept à s'appliquer
+      à des cas d'usage pratiques au-delà du chiffrement textuel.
+    </p>
+    <p>
+      Le projet reste expérimental. VCG n'est pas une construction cryptographique standardisée, et les
+      propriétés de sécurité observées constituent une validation statistique, non une preuve formelle.
+      Il constitue néanmoins une base sérieuse de recherche et de développement, avec des pistes
+      d'amélioration identifiées : optimisation du pipeline de rasterisation, implémentation bas niveau,
+      parallélisation du traitement des blocs, et ajout d'un mécanisme d'authentification intégré.
+    </p>
+
+    <div style="margin-top:36px;">
       <a href="../index.html#projects" class="btn ghost">← Retour au portfolio</a>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container"><p>© 2025 Hugo FRANCOIS — Projet C-grid</p></div>
+    <div class="container"><p>© 2025 Hugo FRANCOIS — Projet VCG (Visual Cipher Grid)</p></div>
   </footer>
 
   <script src="../background.js"></script>
