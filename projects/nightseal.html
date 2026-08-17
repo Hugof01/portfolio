@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NightSeal PQC — Hugo FRANÇOIS</title>
+  <meta name="description" content="Projet personnel NightSeal PQC : plateforme Docker de preuve d’intégrité post-quantique pour sauvegardes RMAN / WriteOnce, Merkle proofs et signatures ML-DSA." />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+
+  <style>
+    .project-main { padding-top: 28px; padding-bottom: 60px; }
+    .project-nav { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+    .project-hero, .project-panel {
+      background: rgba(8, 12, 16, 0.82);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.30);
+      backdrop-filter: blur(8px);
+    }
+    .project-hero { padding: 34px; margin-bottom: 24px; }
+    .project-hero h1 { margin: 8px 0 14px; font-size: clamp(2rem, 5vw, 3.3rem); line-height: 1.05; }
+    .project-kicker { text-transform:uppercase; letter-spacing:.16em; font-size:.78rem; opacity:.72; font-weight:700; }
+    .project-lead { max-width: 920px; font-size: 1.08rem; line-height: 1.75; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .tag { border:1px solid rgba(255,255,255,.15); border-radius:999px; padding:7px 11px; font-size:.86rem; background:rgba(255,255,255,.05); }
+    .project-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:20px; margin:20px 0; }
+    .project-panel { padding:24px; }
+    .project-panel h2, .project-panel h3 { margin-top:0; }
+    .project-panel p, .project-panel li { line-height:1.7; }
+    .project-panel ul { padding-left:1.25rem; }
+    .wide { grid-column:1/-1; }
+    .flow { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; align-items:stretch; margin-top:18px; }
+    .flow-step { padding:15px 12px; border-radius:12px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); text-align:center; min-height:92px; display:flex; flex-direction:column; justify-content:center; }
+    .flow-step strong { display:block; margin-bottom:5px; }
+    .compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:16px; }
+    .compare > div { padding:18px; border-radius:12px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.10); }
+    .metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .metric { text-align:center; padding:18px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); }
+    .metric .value { font-size:1.55rem; font-weight:800; display:block; margin-bottom:5px; }
+    .codebox { overflow:auto; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:15px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:.9rem; line-height:1.55; white-space:pre; }
+    .gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .gallery figure { margin:0; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); }
+    .gallery img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
+    .gallery figcaption { padding:10px 12px; font-size:.82rem; opacity:.78; line-height:1.45; }
+    .note { padding:14px 16px; border-left:3px solid currentColor; background:rgba(255,255,255,.045); border-radius:0 10px 10px 0; }
+    .project-footer { text-align:center; opacity:.65; padding:20px 0 40px; }
+    @media(max-width:850px){ .project-grid,.compare { grid-template-columns:1fr; } .flow{grid-template-columns:1fr;} .gallery{grid-template-columns:1fr;} .metric-grid{grid-template-columns:1fr;} .wide{grid-column:auto;} .project-hero{padding:24px;} }
+  </style>
+
+</head>
+<body>
+  <canvas id="canvas">Votre navigateur ne supporte pas Canvas.</canvas>
+  <canvas id="canvas2">Votre navigateur ne supporte pas Canvas.</canvas>
+
+  <main class="container project-main">
+    <nav class="project-nav">
+      <a class="btn ghost" href="../home.html#projects">← Retour aux projets</a>
+    </nav>
+
+    <section class="project-hero">
+      <div class="project-kicker">Projet personnel · Post-quantum · Intégrité des sauvegardes</div>
+      <h1>NightSeal PQC</h1>
+      <p class="project-lead">
+        Plateforme de preuve d’intégrité post-quantique destinée à des environnements de sauvegarde de type Oracle RMAN / WriteOnce. NightSeal complète l’immutabilité du stockage par une chaîne de preuves cryptographiques vérifiables : inventaire, manifests chaînés, arbre de Merkle, signature ML-DSA, bundles de preuve, détection d’altération et rapports d’audit.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Docker Compose</span><span class="tag">FastAPI</span><span class="tag">React / Vite</span><span class="tag">Python</span><span class="tag">ML-DSA-65</span><span class="tag">pqcrypto</span><span class="tag">Merkle Tree</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span>
+      </div>
+    </section>
+
+    <div class="project-grid">
+      <section class="project-panel">
+        <h2>Problématique</h2>
+        <p>Un stockage WriteOnce peut empêcher ou limiter la réécriture, mais il ne suffit pas à fournir une preuve cryptographique autonome et facilement auditable de l’état d’un grand jeu de sauvegardes.</p>
+        <p>NightSeal construit une preuve exportable de l’intégrité des fichiers et de son évolution dans le temps, avec une couche de signature post-quantique.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Stack & déploiement</h2>
+        <ul>
+          <li>Frontend React/Vite pour le dashboard et les workflows.</li>
+          <li>Backend FastAPI exposant les opérations de preuve et de vérification.</li>
+          <li>Worker dédié aux traitements asynchrones.</li>
+          <li>PostgreSQL 16 et Redis 7.</li>
+          <li>Déploiement complet via Docker Compose.</li>
+        </ul>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Chaîne de preuve</h2>
+        <div class="flow">
+          <div class="flow-step"><strong>1. Inventory</strong><span>scan du dataset et volumétrie</span></div>
+          <div class="flow-step"><strong>2. Manifest</strong><span>empreintes + état des fichiers</span></div>
+          <div class="flow-step"><strong>3. Merkle</strong><span>racine compacte du dataset</span></div>
+          <div class="flow-step"><strong>4. ML-DSA</strong><span>signature post-quantique de la preuve</span></div>
+          <div class="flow-step"><strong>5. Bundle</strong><span>vérification, audit et reporting</span></div>
+        </div>
+        <p style="margin-top:18px">Les manifests peuvent être chaînés dans le temps afin qu’un état précédent fasse partie du contexte cryptographique du suivant. Le workflow complet génère ensuite la preuve, la signe et vérifie automatiquement le bundle produit.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Cryptographie</h2>
+        <p>Le moteur de signature propose un provider de démonstration HMAC et trois profils post-quantiques réels : ML-DSA-44, ML-DSA-65 et ML-DSA-87 via la bibliothèque <code>pqcrypto</code>. La configuration finale du projet utilise ML-DSA-65.</p>
+        <p>La vérification n’est pas déclarative : NightSeal vérifie cryptographiquement la dernière signature avant de considérer la chaîne de preuve comme prête.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Fonctionnalités développées</h2>
+        <ul>
+          <li>Inventory Scanner et scénarios de volumétrie RMAN-like.</li>
+          <li>Génération et chaîne temporelle de manifests.</li>
+          <li>Merkle proofs et signatures post-quantiques.</li>
+          <li>Proof bundles et vérification de bout en bout.</li>
+          <li>Tamper test, self-tests, historique d’exécution et timeline d’audit.</li>
+          <li>Benchmarks, rapports HTML/PDF et tableau de production readiness.</li>
+        </ul>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Architecture Docker</h2>
+        <div class="compare">
+          <div>
+            <h3>Interface & API</h3>
+            <p><strong>React/Vite</strong> fournit un dashboard couvrant l’inventaire, la chaîne de preuve, l’audit, les simulations et les rapports. Le <strong>backend FastAPI</strong> orchestre la génération et la vérification des artefacts.</p>
+          </div>
+          <div>
+            <h3>Services & données</h3>
+            <p>Un <strong>worker</strong>, <strong>PostgreSQL</strong> et <strong>Redis</strong> complètent l’architecture. Les jeux de données, manifests, signatures, rapports et historiques sont montés dans des volumes dédiés.</p>
+          </div>
+        </div>
+        <div class="codebox" style="margin-top:16px">docker compose up -d --build
+
+Frontend : http://localhost:5173
+Backend  : http://localhost:8000
+API docs : http://localhost:8000/docs</div>
+      </section>
+
+      <section class="project-panel">
+        <h2>Production readiness</h2>
+        <p>Le projet inclut son propre moteur d’évaluation : backend disponible, dataset accessible, chaîne de preuve fonctionnelle, manifest chain valide, provider ML-DSA actif et vérification de la dernière signature.</p>
+        <p>Cette logique permet de distinguer un prototype simplement démontrable d’un état dans lequel les contrôles cryptographiques critiques passent réellement.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Approche de falsification</h2>
+        <p>Le <em>Tamper Test</em> modifie volontairement un artefact ou un élément couvert par la preuve puis rejoue la vérification. La différence entre « stockage immuable » et « preuve cryptographique d’intégrité » devient ainsi directement démontrable.</p>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Limites actuelles assumées</h2>
+        <div class="compare">
+          <div>
+            <h3>Clés & contrôle d’accès</h3>
+            <p>Les clés ML-DSA sont encore stockées sous forme de fichiers. Il n’y a pas encore d’intégration HSM/KMS, ni d’authentification API ou de RBAC.</p>
+          </div>
+          <div>
+            <h3>Intégration entreprise</h3>
+            <p>Le projet travaille sur des datasets RMAN-like et ne dispose pas encore de connecteur Oracle RMAN réel ni d’export SIEM. Ces points constituent les prochaines étapes naturelles d’industrialisation.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="project-footer">© 2026 Hugo FRANCOIS — Projet personnel.</footer>
+  <script src="../background.js"></script>
+</body>
+</html>
