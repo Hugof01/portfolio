@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Antares | Hugo FRANCOIS</title>
+  <meta name="description" content="macOS-Verschlüsselungssoftware mit Touch ID, Secure Enclave, Argon2id und Integritätsprüfungen." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/antares.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/antares.html" hreflang="en" lang="en">EN</a><a href="antares.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Antares</h1><p class="subtitle">Sichere Verschlüsselungssoftware für macOS</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Überblick</h2><p>Antares ist bislang mein ausgereiftestes persönliches Softwareprojekt. Seit fast einem Jahr arbeite ich daran, ein macOS-Verschlüsselungswerkzeug zu entwickeln, das gleichzeitig zugänglich, zuverlässig und an modernen Sicherheitspraktiken ausgerichtet ist.</p><p>Ich habe die gesamte Anwendung selbst entwickelt: Oberfläche, Verschlüsselung, Secure-Enclave- und Touch-ID-Integration, Integritätsprüfungen, Logging und interne Architektur.</p><p>Der Ablauf bleibt bewusst einfach: Ordner auswählen, Authentifizierungsmethode wählen und ver- oder entschlüsseln. Hinter diesem einfachen Workflow steht eine vollständige Architektur für Robustheit, Konsistenz und Datenprüfung.</p></section><section class="detail"><h2>Hauptfunktionen</h2><ul><li>Auswahl eines Ordners zum Ver- oder Entschlüsseln.</li><li>Authentifizierung per Passwort oder Touch ID über die Secure Enclave.</li><li>Gehärtete Schlüsselableitung mit Argon2id.</li><li>AES-128 oder AES-256 abhängig von der gewählten Stufe.</li><li>Geschützter Header mit IV, Formatversion, Sicherheitsstufe und Integritäts-Tag.</li><li>Automatische Integritätsprüfung vor jeder Operation.</li></ul></section><section class="detail"><h2>Analyse- & Prüfwerkzeuge</h2><p>Ein wichtiger Teil von Antares beschäftigt sich mit der Sicherheit rund um die eigentliche Verschlüsselung. Ein Prüfmodul analysiert verschlüsselte Dateien und meldet verdächtige Änderungen.</p><ul><li>Anzeige interner Logs und Integritätsprüfung der Logs.</li><li>Integritätsprüfung der Mapping-Datei.</li><li>Ordneranalyse mit Prüfung jeder einzelnen Datei.</li><li>Gezielte Entschlüsselung einer bestimmten Datei.</li></ul></section><section class="detail"><h2>Debug-Modus</h2><p>Der Debug-Modus unterstützt Tests und macht das interne Verhalten der Software nachvollziehbarer. Verschlüsselte Dateien können untersucht, ihre Integrität geprüft und kontrollierte Entschlüsselungen für Entwicklungszwecke erzwungen werden.</p></section><section class="detail"><h2>Einstellungen & Wartung</h2><ul><li>Hell-/Dunkelmodus.</li><li>Zurücksetzen der Mapping-Datei.</li><li>Bereinigung verwaister Dateien.</li><li>Vollständiges Löschen der Logs.</li><li>Sechs Anwendungssprachen.</li></ul></section><section class="detail"><h2>Video-Demo</h2><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/antares_demo.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Die Demo zeigt Start, Ordnerauswahl, Authentifizierung, Ver-/Entschlüsselung, Einstellungen und Debug-Modus.</figcaption></figure></section><section class="detail"><h2>Ausblick</h2><p>Antares wird weiterentwickelt. Ich arbeite an Stabilität, stärkeren Sicherheitsmechanismen und einer besseren Nutzererfahrung. Langfristig soll eine öffentlich verteilbare Version entstehen, die einfach zu installieren und robust genug für den Alltag ist.</p><p><a href="mailto:hugo.francois@student-cs.fr" class="btn">Kontakt</a></p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Persönliches Projekt.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

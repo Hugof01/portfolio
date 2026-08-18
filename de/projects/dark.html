@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Archive (Dark Web) | Hugo FRANCOIS</title>
+  <meta name="description" content="Lehrprojekt zur Bereitstellung eines Tor Hidden Service und technische Archivierung." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/dark.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/dark.html" hreflang="en" lang="en">EN</a><a href="dark.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Archive (Dark Web)</h1><p class="subtitle">Tor Hidden Service und statische Website — 2023</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Projektkontext</h2><p>Im <strong>Oktober 2023</strong> stellte ich eine kleine persönliche Website als <strong>Tor Hidden Service</strong> im Dark Web bereit. Ziel war nicht die Veröffentlichung sensibler Inhalte, sondern das praktische Verständnis der Infrastruktur: Wie wird ein <code>.onion</code>-Dienst exponiert, wie wird er mit einem klassischen Nginx-Server verbunden und welche Auswirkungen hat dies auf Anonymität?</p><p>Die Konfiguration erfolgte vollständig manuell über die Kommandozeile. Die Screenshots wurden anschließend offline für eine technische und verantwortungsvolle Archivierung gespeichert; aktive Links oder Weiterleitungen gibt es nicht.</p></section><section class="detail"><h2>1. Tor-Dienst & .onion-Adresse</h2><p>Ich konfigurierte und startete Tor, prüfte den Dienststatus und las den generierten Onion-Hostname aus dem Hidden-Service-Verzeichnis aus.</p><figure class="project-media"><img src="../../assets/images/darkweb_adresse_url_onion.png" alt="Tor-Status und Onion-Adresse"><figcaption>Prüfung des Tor-Dienstes und Auslesen der .onion-Adresse (20. Oktober 2023).</figcaption></figure></section><section class="detail"><h2>2. Nginx hinter Tor</h2><p>Nginx diente als lokaler HTTP-Server. Tor leitete den Datenverkehr des Hidden Service auf den lokalen Nginx-Port weiter. Dadurch wurden Webserver und Anonymisierungsschicht klar voneinander getrennt.</p><figure class="project-media"><img src="../../assets/images/darkweb_nginx_status.png" alt="Nginx-Status"><figcaption>Nginx hinter dem Tor Hidden Service.</figcaption></figure></section><section class="detail"><h2>3. Minimale statische Website</h2><p>Die Website selbst war bewusst minimal: eine statische HTML-Seite, direkt auf dem Host editiert, ohne Framework oder Site-Generator. So lag der Fokus auf Infrastruktur, Dienstexposition, Logging und Angriffsfläche.</p><figure class="project-media"><img src="../../assets/images/darkweb_index_html_de_base.png" alt="Statische Index-Seite"><figcaption>Bearbeitung der über den Hidden Service bereitgestellten index.html.</figcaption></figure></section><section class="detail"><h2>4. Lernerfahrungen</h2><p>Das Projekt vermittelte mir ein konkretes Verständnis von Tor Hidden Services, der Netzwerkkette Tor ↔ Nginx ↔ statische Website und den serverseitigen Anonymitätsaspekten. Es war ein rein lehrorientiertes Projekt ohne illegale Inhalte.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Dark-Web-Archivprojekt (2023).</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

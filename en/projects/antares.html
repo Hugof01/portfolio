@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Antares | Hugo FRANCOIS</title>
+  <meta name="description" content="macOS encryption software integrating Touch ID, Secure Enclave, Argon2id and integrity checks." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/antares.html" hreflang="fr" lang="fr">FR</a><a href="antares.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/antares.html" hreflang="de" lang="de">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Antares</h1><p class="subtitle">Secure macOS encryption software</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Overview</h2><p>Antares is the most mature personal software project I have built so far. I have worked on it for almost a year with a straightforward objective: build a macOS encryption tool that is accessible, reliable and aligned with modern security practices.</p><p>I developed the whole application myself: interface, encryption layer, Secure Enclave and Touch ID integration, integrity checks, logging system and internal architecture.</p><p>The user flow remains intentionally simple: select a folder, choose an authentication method, then encrypt or decrypt. Behind this simple workflow is a complete structure dedicated to robustness, consistency and data verification.</p></section><section class="detail"><h2>Core features</h2><ul><li>Select a folder to encrypt or decrypt.</li><li>Password or Touch ID authentication through Secure Enclave.</li><li>Hardened key derivation with Argon2id.</li><li>AES-128 or AES-256 depending on the selected level.</li><li>Protected header containing IV, format version, level and integrity tag.</li><li>Automatic integrity verification before each operation.</li></ul></section><section class="detail"><h2>Analysis & verification tools</h2><p>A significant part of Antares focuses on the security surrounding encryption itself. A verification module analyzes encrypted files and reports suspicious changes.</p><ul><li>Internal log viewer and log-integrity verification.</li><li>Mapping-file integrity verification.</li><li>Folder analysis with file-by-file checks.</li><li>Targeted decryption of a specific file.</li></ul></section><section class="detail"><h2>Debug mode</h2><p>Debug mode was designed to support testing and to make the software’s internal behavior easier to understand. It can inspect encrypted files, verify their integrity and force controlled decryption during development.</p></section><section class="detail"><h2>Settings & maintenance</h2><ul><li>Light/dark mode.</li><li>Reset the mapping file.</li><li>Clean orphan files.</li><li>Full log purge.</li><li>Six application languages.</li></ul></section><section class="detail"><h2>Video demo</h2><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/antares_demo.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>The demo shows startup, folder selection, authentication, encryption/decryption, settings and debug mode.</figcaption></figure></section><section class="detail"><h2>Roadmap</h2><p>Antares is still evolving. I continue to improve stability, strengthen security mechanisms and refine the user experience. My long-term objective is a public version that is easy to install and robust enough for everyday use.</p><p><a href="mailto:hugo.francois@student-cs.fr" class="btn">Contact me</a></p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Personal project.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

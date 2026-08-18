@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StegaGuard | Hugo FRANCOIS</title>
+  <meta name="description" content="Local URL analysis for invisible characters, Unicode homographs and mixed scripts." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/detect.html" hreflang="fr" lang="fr">FR</a><a href="detect.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/detect.html" hreflang="de" lang="de">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>StegaGuard</h1><p class="subtitle">Local steganography and Unicode analysis in URLs</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Overview</h2><p>StegaGuard is a small tool I developed to inspect URLs for invisible characters, Unicode homographs and mixed scripts that can be used to mislead users. The objective is not to claim perfect detection, but to experiment with a security area where very small character-level differences matter.</p></section><section class="detail"><h2>Local execution</h2><p>StegaGuard runs entirely <strong>locally</strong>: analyzed URLs are never sent to a remote service, and the application can be tested without a backend deployment.</p><figure class="project-media"><img src="../../assets/images/stega_lancement_app.png" alt="Launching StegaGuard locally"><figcaption>Local startup with <code>npm run start</code>.</figcaption></figure></section><section class="detail"><h2>How it works</h2><ul><li>Invisible characters such as zero-width spaces, separators and controls.</li><li>Unicode homographs: visually similar letters from different alphabets.</li><li>Mixed scripts such as Latin, Greek and Cyrillic.</li><li>Unusual symbols in otherwise conventional URLs.</li></ul><p>When suspicious behavior is found, the interface raises either a warning or an explicit alert to encourage the user to inspect the link before clicking.</p></section><section class="detail"><h2>Video demonstration</h2><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/stega_demo_video.mov" type="video/mp4">Your browser does not support video playback.</video><figcaption>Short video showing the interface and its behavior on several examples.</figcaption></figure></section><section class="detail"><h2>Interpreting the results</h2><p>The current test page displays a 33% precision score because warnings are counted neither as full successes nor as failures. In the test set documented by the project, no dangerous URL was missed and all suspicious characters were detected. The warnings represent gray areas rather than undetected cases.</p></section><section class="detail"><h2>What I learned</h2><p>This project deepened my understanding of homoglyph attacks, invisible characters and Unicode manipulation in URLs. It also gave me practical experience with local analysis, simple interfaces and communicating security results clearly to users.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Local URL-analysis web application.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

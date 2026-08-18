@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Linux Assistant | Hugo FRANCOIS</title>
+  <meta name="description" content="Interaktiver Linux-CLI-Assistent für Einsteiger." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  <style>.terminal-demo{margin-top:28px;background:#0b0c10;border:1px solid rgba(102,252,241,.15);border-radius:12px;overflow:hidden}.terminal-header{padding:10px 16px;border-bottom:1px solid rgba(102,252,241,.12);font-family:monospace;color:#66fcf1}.terminal-body{padding:18px;min-height:330px;font-family:monospace;color:#66fcf1}.terminal-body input{width:80%;background:transparent;border:0;border-bottom:1px solid rgba(102,252,241,.25);outline:0;color:#66fcf1;font-family:monospace}.line{margin:5px 0}.prompt{margin-right:8px}.green{color:#27c93f}.yellow{color:#ffbd2e}.cyan{color:#66fcf1}</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/assistant.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/assistant.html" hreflang="en" lang="en">EN</a><a href="assistant.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Linux Assistant</h1><p class="subtitle">CLI-Lernwerkzeug für Linux-Einsteiger</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Ziel</h2><p>Linux Assistant ist ein CLI-Lernwerkzeug für Einsteiger. Es vermittelt Linux über interaktive Befehle und Erklärungen. Das ursprüngliche Shell-Projekt kann nützliche Werkzeuge automatisiert installieren und den Nutzer Schritt für Schritt begleiten.</p><ul><li>Erklärende Skripte und Live-Demonstrationen.</li><li>Lernorientierter Ansatz für Studierende und Selbstlernende.</li></ul></section><section class="detail"><h2>Interaktive Demo</h2><p>Die Browser-Simulation kann direkt ausprobiert werden. Zum Start <strong>Yes</strong> eingeben. Da diese Seite nicht auf einem echten Linux-Host läuft, werden Systemoperationen wie Port-Scans, Ping, Traceroute oder Benutzerverwaltung bewusst nicht ausgeführt. Die simulierte CLI bleibt auf Englisch, wie im ursprünglichen Projekt.</p><div class="terminal-demo"><div class="terminal-header">terminal@linux-assistant</div><div class="terminal-body" id="terminal"><div class="line">Hello <span class="cyan">visitor</span>!</div><div class="line"><span class="yellow">Interactive browser simulation</span></div><div id="output"></div><div class="line"><span class="prompt">$</span><input type="text" id="userInput" autocomplete="off"></div></div></div>
+<script>
+const out=document.getElementById('output'), input=document.getElementById('userInput'); let state='initial';
+function line(t){const d=document.createElement('div');d.className='line';d.innerHTML=t;out.appendChild(d);document.getElementById('terminal').scrollTop=99999;}
+function initial(){line('<span class="green">Wanna some infos?</span> <span class="cyan">Yes/No</span>');state='initial';}
+function menu(){['<span class="green">What do you want to know?</span>','<span class="cyan">1</span> : Current shell used','<span class="cyan">2</span> : Files in this directory','<span class="cyan">3</span> : A random number','<span class="cyan">4</span> : Today\'s date','<span class="cyan">6</span> : Example IP information','<span class="cyan">9</span> : List of current users','<span class="cyan">12</span> : Generate a password','Choose a number:'].forEach(line);state='menu';}
+input.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const v=input.value.trim();line('<span class="prompt">$</span> '+v);input.value='';if(state==='initial'){if(v.toLowerCase()==='yes')menu();else if(v.toLowerCase()==='no')line('<span class="green">Goodbye!</span>');else initial();return;}if(state==='menu'){if(v==='1')line('The shell used is: /bin/bash');else if(v==='2')line('assistant.html<br>multitool.sh<br>style.css<br>background.js');else if(v==='3')line('Random number: '+Math.floor(Math.random()*32768));else if(v==='4')line(new Date().toString());else if(v==='6')line('Private example: 192.168.1.42');else if(v==='9')line('root<br>daemon<br>visitor<br>hugo<br>www-data');else if(v==='12'){line('Choose the password length:');state='pwlen';return;}else line('Option unavailable in the browser simulation.');setTimeout(()=>{line('');initial();},500);return;}if(state==='pwlen'){const n=parseInt(v);if(n>0){const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_';let p='';for(let i=0;i<n;i++)p+=chars[Math.floor(Math.random()*chars.length)];line('Generated password: '+p);setTimeout(()=>{line('');initial();},500);} }});initial();
+</script></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Linux Assistant.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

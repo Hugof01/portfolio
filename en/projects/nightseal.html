@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NightSeal PQC | Hugo FRANCOIS</title>
+  <meta name="description" content="Post-quantum integrity-proof platform for RMAN / WriteOnce backup environments." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/nightseal.html" hreflang="fr" lang="fr">FR</a><a href="nightseal.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/nightseal.html" hreflang="de" lang="de">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>NightSeal PQC</h1><p class="subtitle">Personal project · Post-quantum · Backup integrity</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Problem statement</h2><p>WriteOnce storage can prevent or restrict rewriting, but by itself it does not provide an autonomous, easily auditable cryptographic proof of the state of a large backup set.</p><p>NightSeal builds an exportable proof of file integrity and its evolution over time, with a post-quantum signature layer.</p></section><section class="detail"><h2>Stack & deployment</h2><ul><li>React/Vite frontend for the dashboard and workflows.</li><li>FastAPI backend exposing proof and verification operations.</li><li>Dedicated worker for asynchronous processing.</li><li>PostgreSQL 16 and Redis 7.</li><li>Complete deployment through Docker Compose.</li></ul></section><section class="detail"><h2>Proof chain</h2><p><strong>1. Inventory</strong> — dataset scanning and volume assessment → <strong>2. Manifest</strong> — fingerprints and file state → <strong>3. Merkle</strong> — compact dataset root → <strong>4. ML-DSA</strong> — post-quantum signature → <strong>5. Bundle</strong> — verification, audit and reporting.</p><p>Manifests can be chained over time so that a previous state becomes part of the cryptographic context of the next one. The end-to-end workflow then generates the proof, signs it and automatically verifies the resulting bundle.</p></section><section class="detail"><h2>Cryptography</h2><p>The signing engine includes a demonstration HMAC provider and three real post-quantum profiles: ML-DSA-44, ML-DSA-65 and ML-DSA-87 through <code>pqcrypto</code>. The final configuration uses ML-DSA-65.</p><p>Verification is not merely declarative: NightSeal cryptographically verifies the latest signature before considering the proof chain ready.</p></section><section class="detail"><h2>Implemented features</h2><ul><li>Inventory Scanner and RMAN-like volume scenarios.</li><li>Manifest generation and temporal chaining.</li><li>Merkle proofs and post-quantum signatures.</li><li>Proof bundles and end-to-end verification.</li><li>Tamper test, self-tests, execution history and audit timeline.</li><li>Benchmarks, HTML/PDF reports and a production-readiness dashboard.</li></ul></section><section class="detail"><h2>Docker architecture</h2><p><strong>React/Vite</strong> provides a dashboard for inventory, proof-chain management, audits, simulations and reports. The <strong>FastAPI backend</strong> orchestrates artifact generation and verification. A <strong>worker</strong>, <strong>PostgreSQL</strong> and <strong>Redis</strong> complete the architecture; datasets, manifests, signatures, reports and histories are mounted in dedicated volumes.</p><pre>docker compose up -d --build
+
+Frontend : http://localhost:5173
+Backend  : http://localhost:8000
+API docs : http://localhost:8000/docs</pre></section><section class="detail"><h2>Production readiness</h2><p>The project contains its own readiness checks: backend availability, accessible dataset, working proof chain, valid manifest chain, active ML-DSA provider and verification of the latest signature.</p><p>This separates a prototype that can merely be demonstrated from a state in which critical cryptographic controls actually pass.</p></section><section class="detail"><h2>Tamper approach</h2><p>The <em>Tamper Test</em> deliberately modifies an artifact or an element covered by the proof and then reruns verification. This makes the difference between “immutable storage” and “cryptographic integrity proof” directly demonstrable.</p></section><section class="detail"><h2>Current limitations</h2><p><strong>Keys & access control:</strong> ML-DSA keys are still stored as files. HSM/KMS integration, API authentication and RBAC are not implemented yet.</p><p><strong>Enterprise integration:</strong> the project currently works with RMAN-like datasets and does not yet include a real Oracle RMAN connector or SIEM export. These are natural next steps toward industrialization.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Personal project.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

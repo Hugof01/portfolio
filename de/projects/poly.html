@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Polymorphe Engines & PRNG | Hugo FRANCOIS</title>
+  <meta name="description" content="Experimentelle Forschung zu polymorphen Engines und Pseudozufallsgenerierung." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/poly.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/poly.html" hreflang="en" lang="en">EN</a><a href="poly.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Polymorphe Engines & PRNG</h1><p class="subtitle">Experimentelle Studie einer polymorphen Engine für Pseudozufall</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Einleitung</h2><p>Ausgangspunkt war eine einfache Frage: Lässt sich das Verhalten einer polymorphen Engine — eines Systems, das seine Form kontinuierlich verändert und dennoch eine interne Logik behält — visualisieren und als Grundlage eines Pseudozufallsgenerators verwenden? Ziel war kein klassischer PRNG, sondern eine geometrische und organische Sicht auf „Entropie“.</p></section><section class="detail"><h2>1. Modell der polymorphen Engine</h2><p>Zunächst wird das System als dynamisches Netzwerk dargestellt. Jeder Knoten steht für einen Punkt, jede Kante für eine Wechselwirkung. Der Graph verändert sich abhängig von den Eingabeparametern.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_moteur_poly.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Visualisierung der Engine als dynamisches Netzwerk.</figcaption></figure></section><section class="detail"><h2>2. Verformbare Kugel</h2><p>Anschließend wird das Netzwerk auf eine Kugel projiziert. Die Knoten liegen auf der Oberfläche und können sich leicht zum Zentrum hin oder davon weg bewegen. Dadurch entsteht geometrische Variabilität, die die erzeugten Zeichen beeinflusst.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_anim.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Die Knoten verändern ihre Position um einen Mittelwert und erzeugen räumliche Variabilität.</figcaption></figure></section><section class="detail"><h2>3. Rotation</h2><p>Eine kontinuierliche Rotation ergänzt eine zeitliche Dimension. Jeder Knoten folgt einer Bahn im Raum; dieser sich ändernde Zustand beeinflusst die Zeichenerzeugung.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_tournante.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Kontinuierliche Rotation ergänzt eine zeitabhängige Variable.</figcaption></figure></section><section class="detail"><h2>4. Kombination beider Effekte</h2><p>Verformung und Rotation werden kombiniert. Position, Geschwindigkeit, Richtung und Abstand der Knoten zum Zentrum bestimmen gemeinsam den nächsten Textwert.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_anim_tournante.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Kombinierte Verformung und Rotation.</figcaption></figure></section><section class="detail"><h2>5. Experimentelle Texterzeugung</h2><p>Im letzten Experiment wird der momentane Zustand der Engine auf pseudozufälligen Text abgebildet. Das Ergebnis wird nicht als kryptografisch zufällig beansprucht, sondern entsteht aus der internen Dynamik des geometrischen Systems.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_finale_texte.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Der Text verändert sich entsprechend den Transformationen der Engine.</figcaption></figure></section><section class="detail"><h2>Fazit & Perspektiven</h2><p>Das Projekt ermöglichte mir eine visuelle und intuitive Auseinandersetzung mit Pseudozufall. Derzeit betrachte ich die Engine eher als künstlerisch-experimentelles Modell denn als mathematisch validierte kryptografische Primitive. Offene Fragen betreffen unter anderem die Abbildung räumlicher Änderungen auf Zeichen, die Parametrisierung der Bewegungen und kontrollierte Sequenzen für definierte Ziele.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Persönliches Projekt.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

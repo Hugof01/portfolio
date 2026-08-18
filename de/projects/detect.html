@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StegaGuard | Hugo FRANCOIS</title>
+  <meta name="description" content="Lokale URL-Analyse auf unsichtbare Zeichen, Unicode-Homographen und gemischte Schriftsysteme." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/detect.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/detect.html" hreflang="en" lang="en">EN</a><a href="detect.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>StegaGuard</h1><p class="subtitle">Lokale Steganografie- und Unicode-Analyse in URLs</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Überblick</h2><p>StegaGuard ist ein kleines Werkzeug zur Analyse von URLs auf unsichtbare Zeichen, Unicode-Homographen und gemischte Schriftsysteme, die Nutzer täuschen können. Ziel ist nicht der Anspruch auf perfekte Erkennung, sondern das Experimentieren in einem Sicherheitsbereich, in dem kleinste Unterschiede auf Zeichenebene entscheidend sein können.</p></section><section class="detail"><h2>Lokale Ausführung</h2><p>StegaGuard läuft vollständig <strong>lokal</strong>: Analysierte URLs werden nicht an einen entfernten Dienst gesendet, und die Anwendung kann ohne Backend-Deployment getestet werden.</p><figure class="project-media"><img src="../../assets/images/stega_lancement_app.png" alt="Lokaler Start von StegaGuard"><figcaption>Lokaler Start über <code>npm run start</code>.</figcaption></figure></section><section class="detail"><h2>Funktionsweise</h2><ul><li>Unsichtbare Zeichen wie Zero-Width-Spaces, Separatoren und Steuerzeichen.</li><li>Unicode-Homographen: visuell ähnliche Buchstaben aus unterschiedlichen Alphabeten.</li><li>Gemischte Schriftsysteme wie Latein, Griechisch und Kyrillisch.</li><li>Ungewöhnliche Symbole in ansonsten normalen URLs.</li></ul><p>Bei verdächtigem Verhalten zeigt die Oberfläche entweder eine Warnung oder einen klaren Alarm, damit der Link vor dem Anklicken bewusst geprüft wird.</p></section><section class="detail"><h2>Video-Demonstration</h2><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/stega_demo_video.mov" type="video/mp4">Your browser does not support video playback.</video><figcaption>Kurzes Video mit Oberfläche und Reaktion auf verschiedene Beispiele.</figcaption></figure></section><section class="detail"><h2>Interpretation der Ergebnisse</h2><p>Die aktuelle Testseite zeigt 33 % „Precision“, weil Warnungen weder als vollständiger Erfolg noch als Fehler gezählt werden. Im im Projekt dokumentierten Testset wurde keine gefährliche URL übersehen und alle verdächtigen Zeichen wurden erkannt. Warnungen stellen Graubereiche dar, keine verpassten Fälle.</p></section><section class="detail"><h2>Lernerfahrungen</h2><p>Das Projekt vertiefte mein Verständnis von Homoglyph-Angriffen, unsichtbaren Zeichen und Unicode-Manipulation in URLs. Gleichzeitig sammelte ich Erfahrung mit lokaler Analyse, einfacher UI-Logik und der verständlichen Darstellung von Sicherheitsresultaten.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Lokale Webanwendung zur URL-Analyse.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

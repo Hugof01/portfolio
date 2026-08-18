@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cryptographic code collection | Hugo FRANCOIS</title>
+  <meta name="description" content="Educational implementations of classical and modern cryptographic concepts." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script><style>.test-block{background:rgba(255,255,255,.025);padding:1.4em;border-radius:10px;margin:1.6em 0}.test-block textarea,.test-block input{width:100%;background:#0b0c10;color:#e6eef0;border:1px solid rgba(102,252,241,.2);border-radius:8px;padding:8px;margin:.5em 0}.output{background:#111;color:#00ffbf;border-radius:8px;padding:12px;min-height:70px;white-space:pre-wrap;font-family:monospace}</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/crypto.html" hreflang="fr" lang="fr">FR</a><a href="crypto.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/crypto.html" hreflang="de" lang="de">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Cryptographic code collection</h1><p class="subtitle">Personal exploration of cryptography in Python</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Introduction</h2><p>I started implementing cryptographic algorithms to understand their mathematical logic and internal mechanics. The objective was never to replace established libraries, but to learn by rebuilding simplified versions and observing their limitations.</p></section><section class="test-block"><h2>1. Monoalphabetic substitution</h2><p>Each letter is replaced according to a fixed alphabet. A simple first step that makes the weakness of deterministic substitution visible.</p><textarea id="monoInput" rows="3" placeholder="Text to encrypt..."></textarea><button class="btn" onclick="runPython('mono')">Run test</button> <button class="btn ghost" onclick="clearO('monoOutput')">Clear</button><pre id="monoOutput" class="output">…</pre></section><section class="test-block"><h2>2. Vigenère cipher</h2><p>A repeated key determines the shift applied to each letter and introduces the idea of polyalphabetic substitution.</p><input id="vigenereKey" placeholder="Key" /><textarea id="vigenereInput" rows="3" placeholder="Text to encrypt..."></textarea><button class="btn" onclick="runPython('vigenere')">Run test</button> <button class="btn ghost" onclick="clearO('vigenereOutput')">Clear</button><pre id="vigenereOutput" class="output">…</pre></section><section class="test-block"><h2>3. Transposition cipher</h2><p>Characters are preserved but reordered, illustrating the role of permutations.</p><input id="transKey" placeholder="Key" /><textarea id="transInput" rows="3" placeholder="Text to encrypt..."></textarea><button class="btn" onclick="runPython('trans')">Run test</button> <button class="btn ghost" onclick="clearO('transOutput')">Clear</button><pre id="transOutput" class="output">…</pre></section><section class="detail"><h2>4. One-Time Pad (OTP)</h2><p>Character-by-character XOR with an equally long key. The experiment helps visualize the plaintext, key and ciphertext representations and the requirement that a true OTP key be random, secret and never reused.</p></section><section class="test-block"><h2>5. AES (ECB / CBC)</h2><p>A simplified learning implementation used to study SubBytes, ShiftRows and MixColumns, with the goal of understanding diffusion and confusion.</p><textarea id="aesInput" rows="3" placeholder="Text to encrypt..."></textarea><button class="btn" onclick="runPython('aes')">Run test</button> <button class="btn ghost" onclick="clearO('aesOutput')">Clear</button><pre id="aesOutput" class="output">…</pre></section><section class="test-block"><h2>6. RSA</h2><p>A learning implementation used to explore modular arithmetic, asymmetric encryption and the performance trade-offs of public-key operations.</p><textarea id="rsaInput" rows="3" placeholder="Text to encrypt..."></textarea><button class="btn" onclick="runPython('rsa')">Run test</button> <button class="btn ghost" onclick="clearO('rsaOutput')">Clear</button><pre id="rsaOutput" class="output">…</pre></section><section class="detail"><h2>Conclusion</h2><p>This collection documents my progression from classical substitution and transposition to block and public-key cryptography. Its purpose is educational: understanding a primitive also means understanding where a homemade implementation stops being secure.</p></section><script>
+let pyodide; async function initPyodide(){pyodide=await loadPyodide();document.querySelectorAll('.output').forEach(e=>e.textContent='Python environment ready.');} initPyodide();
+async function runPython(type){if(!pyodide)return;let code='';if(type==='mono'){code=`def f(t):
+ a="ABCDEFGHIJKLMNOPQRSTUVWXYZ";k="QWERTYUIOPASDFGHJKLZXCVBNM"
+ return ''.join(k[a.index(c)] if c in a else c for c in t.upper())
+f("""${document.getElementById('monoInput').value}""")`;monoOutput.textContent=await pyodide.runPythonAsync(code);}else if(type==='vigenere'){code=`def f(t,k):
+ t,k=t.upper(),k.upper();r=''
+ for i,c in enumerate(t): r+=chr((ord(c)-65+ord(k[i%len(k)])-65)%26+65) if c.isalpha() else c
+ return r
+f("""${vigenereInput.value}""","""${vigenereKey.value}""")`;vigenereOutput.textContent=await pyodide.runPythonAsync(code);}else if(type==='trans'){code=`def f(t,k):
+ k=int(k);r=['']*k
+ for c in range(k):
+  p=c
+  while p<len(t): r[c]+=t[p];p+=k
+ return ''.join(r)
+f("""${transInput.value}""",${transKey.value||3})`;transOutput.textContent=await pyodide.runPythonAsync(code);}else if(type==='aes')aesOutput.textContent='AES conceptual simulation: block processed.';else if(type==='rsa')rsaOutput.textContent='RSA conceptual simulation: key generation and symbolic encryption.';}
+function clearO(id){document.getElementById(id).textContent='Console cleared.'}
+</script>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Cryptography collection.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

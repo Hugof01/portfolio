@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Polymorphic engines & PRNG | Hugo FRANCOIS</title>
+  <meta name="description" content="Experimental research on polymorphic engines and pseudo-random generation." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/poly.html" hreflang="fr" lang="fr">FR</a><a href="poly.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/poly.html" hreflang="de" lang="de">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>Polymorphic engines & PRNG</h1><p class="subtitle">Experimental study of a polymorphic engine for pseudo-random generation</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Introduction</h2><p>This project started from a simple question: could the behavior of a polymorphic engine — a system that continuously changes form while preserving an internal logic — be represented visually and used as the basis of a pseudo-random generator? The objective was not to create a conventional PRNG, but to explore a more geometric and organic view of “entropy”.</p></section><section class="detail"><h2>1. Polymorphic engine model</h2><p>The first representation is a dynamic network. Each vertex represents a point in the system and each edge an interaction. The graph evolves according to input parameters.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_moteur_poly.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Visualization of the polymorphic engine as a dynamic network.</figcaption></figure></section><section class="detail"><h2>2. Deformable sphere</h2><p>The network is then projected onto a sphere. Vertices become points on the surface and can move slightly toward or away from the center, introducing a form of geometric variability. These movements influence the generated characters.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_anim.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>The vertices move around their average positions, creating spatial variability.</figcaption></figure></section><section class="detail"><h2>3. Rotation</h2><p>A continuous rotation adds a temporal dimension. Each vertex follows a trajectory through space, and the changing state contributes to character generation.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_tournante.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Continuous rotation adds a time-dependent variable.</figcaption></figure></section><section class="detail"><h2>4. Combining both sources</h2><p>Deformation and rotation are combined. The engine uses vertex position, speed, direction and distance from the center to determine the next textual value.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_anim_tournante.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Combined deformation and rotation.</figcaption></figure></section><section class="detail"><h2>5. Experimental text generation</h2><p>The final experiment maps the instantaneous state of the engine to pseudo-random text. The output is not claimed to be cryptographically random: it emerges from the internal dynamics of the geometric system.</p><figure class="project-media"><video controls width="70%"><source src="../../assets/videos/video_sphere_finale_texte.mp4" type="video/mp4">Your browser does not support video playback.</video><figcaption>Text evolves according to the transformations of the polymorphic engine.</figcaption></figure></section><section class="detail"><h2>Conclusion & perspective</h2><p>This project helped me explore pseudo-random generation visually and intuitively. At this stage I consider the engine more of an artistic and experimental model than a mathematical cryptographic primitive. Open questions include mapping spatial changes to characters, tuning rotation/deformation to balance distributions and studying whether controlled sequences can be produced for a defined objective.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Personal project.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>

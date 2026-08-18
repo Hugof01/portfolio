@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NightSeal PQC | Hugo FRANCOIS</title>
+  <meta name="description" content="Post-Quantum-Plattform für kryptografische Integritätsnachweise in RMAN-/WriteOnce-Backup-Umgebungen." />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+  
+</head>
+<body>
+  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/nightseal.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/nightseal.html" hreflang="en" lang="en">EN</a><a href="nightseal.html" hreflang="de" lang="de" class="active">DE</a></nav>
+  <header class="site-header"><div class="container header-inner"><div class="hero-text">
+    <h1>NightSeal PQC</h1><p class="subtitle">Persönliches Projekt · Post-Quantum · Backup-Integrität</p>
+  </div></div></header>
+  <main class="container section">
+    <section class="detail"><h2>Problemstellung</h2><p>WriteOnce-Speicher kann das Überschreiben verhindern oder einschränken, liefert allein jedoch keinen autonomen und leicht auditierbaren kryptografischen Nachweis über den Zustand großer Backup-Bestände.</p><p>NightSeal erstellt einen exportierbaren Integritätsnachweis über Dateien und deren Entwicklung im Zeitverlauf und ergänzt ihn um eine Post-Quantum-Signatur.</p></section><section class="detail"><h2>Stack & Deployment</h2><ul><li>React/Vite-Frontend für Dashboard und Workflows.</li><li>FastAPI-Backend für Nachweis- und Verifikationsoperationen.</li><li>Dedizierter Worker für asynchrone Verarbeitung.</li><li>PostgreSQL 16 und Redis 7.</li><li>Vollständiges Deployment mit Docker Compose.</li></ul></section><section class="detail"><h2>Nachweiskette</h2><p><strong>1. Inventory</strong> — Scan und Volumenanalyse → <strong>2. Manifest</strong> — Fingerprints und Dateistatus → <strong>3. Merkle</strong> — kompakte Dataset-Wurzel → <strong>4. ML-DSA</strong> — Post-Quantum-Signatur → <strong>5. Bundle</strong> — Verifikation, Audit und Reporting.</p><p>Manifeste können zeitlich verkettet werden, sodass ein vorheriger Zustand Teil des kryptografischen Kontexts des nächsten wird. Anschließend erzeugt der vollständige Workflow den Nachweis, signiert ihn und überprüft das erzeugte Bundle automatisch.</p></section><section class="detail"><h2>Kryptografie</h2><p>Die Signatur-Engine bietet einen HMAC-Demoprovider sowie drei reale Post-Quantum-Profile: ML-DSA-44, ML-DSA-65 und ML-DSA-87 über <code>pqcrypto</code>. Die finale Konfiguration nutzt ML-DSA-65.</p><p>Die Verifikation ist nicht nur deklarativ: NightSeal prüft die letzte Signatur kryptografisch, bevor die Nachweiskette als einsatzbereit gilt.</p></section><section class="detail"><h2>Entwickelte Funktionen</h2><ul><li>Inventory Scanner und RMAN-ähnliche Volumenszenarien.</li><li>Erzeugung und zeitliche Verkettung von Manifesten.</li><li>Merkle-Proofs und Post-Quantum-Signaturen.</li><li>Proof Bundles und Ende-zu-Ende-Verifikation.</li><li>Tamper Test, Self-Tests, Ausführungshistorie und Audit-Timeline.</li><li>Benchmarks, HTML/PDF-Berichte und Production-Readiness-Dashboard.</li></ul></section><section class="detail"><h2>Docker-Architektur</h2><p><strong>React/Vite</strong> stellt ein Dashboard für Inventar, Nachweiskette, Audits, Simulationen und Berichte bereit. Das <strong>FastAPI-Backend</strong> orchestriert die Erzeugung und Verifikation der Artefakte. Ein <strong>Worker</strong>, <strong>PostgreSQL</strong> und <strong>Redis</strong> ergänzen die Architektur; Datasets, Manifeste, Signaturen, Berichte und Historien liegen in dedizierten Volumes.</p><pre>docker compose up -d --build
+
+Frontend : http://localhost:5173
+Backend  : http://localhost:8000
+API docs : http://localhost:8000/docs</pre></section><section class="detail"><h2>Production Readiness</h2><p>Das Projekt enthält eigene Bereitschaftsprüfungen: verfügbares Backend, zugängliches Dataset, funktionierende Nachweiskette, gültige Manifest-Verkettung, aktiver ML-DSA-Provider und Verifikation der letzten Signatur.</p><p>Damit lässt sich ein nur demonstrierbarer Prototyp von einem Zustand unterscheiden, in dem die kritischen kryptografischen Kontrollen tatsächlich erfolgreich sind.</p></section><section class="detail"><h2>Manipulationstest</h2><p>Der <em>Tamper Test</em> verändert absichtlich ein Artefakt oder ein vom Nachweis erfasstes Element und führt anschließend die Verifikation erneut aus. So wird der Unterschied zwischen „unveränderlichem Speicher“ und „kryptografischem Integritätsnachweis“ direkt sichtbar.</p></section><section class="detail"><h2>Aktuelle Grenzen</h2><p><strong>Schlüssel & Zugriffskontrolle:</strong> ML-DSA-Schlüssel werden derzeit noch als Dateien gespeichert. HSM/KMS-Integration, API-Authentifizierung und RBAC fehlen noch.</p><p><strong>Enterprise-Integration:</strong> derzeit arbeitet das Projekt mit RMAN-ähnlichen Datasets; ein echter Oracle-RMAN-Connector und SIEM-Export sind noch nicht vorhanden.</p></section>
+    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Persönliches Projekt.</p></div></footer>
+  <script src="../../background.js"></script>
+</body>
+</html>
