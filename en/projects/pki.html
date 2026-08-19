@@ -3,25 +3,162 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PQC-OnionPKI | Hugo FRANCOIS</title>
-  <meta name="description" content="Post-quantum PKI on Raspberry Pi with Tor onion service, Postfix and ML-DSA-65 e-mail signatures." />
+  <title>PQC-OnionPKI — Hugo FRANCOIS</title>
+  <meta name="description" content="Personal PQC-OnionPKI project: post-quantum PKI on Raspberry Pi, Tor onion service, Postfix and ML-DSA-65 e-mail signatures." />
   <link rel="stylesheet" href="../../style.css" />
   <link rel="stylesheet" href="../../language-switcher.css" />
   <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
   <link rel="icon" type="image/png" href="../../assets/favicon.png" />
-  
+
+  <style>
+    .project-main { padding-top: 28px; padding-bottom: 60px; }
+    .project-nav { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+    .project-hero, .project-panel {
+      background: rgba(8, 12, 16, 0.82);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.30);
+      backdrop-filter: blur(8px);
+    }
+    .project-hero { padding: 34px; margin-bottom: 24px; }
+    .project-hero h1 { margin: 8px 0 14px; font-size: clamp(2rem, 5vw, 3.3rem); line-height: 1.05; }
+    .project-kicker { text-transform:uppercase; letter-spacing:.16em; font-size:.78rem; opacity:.72; font-weight:700; }
+    .project-lead { max-width: 920px; font-size: 1.08rem; line-height: 1.75; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .tag { border:1px solid rgba(255,255,255,.15); border-radius:999px; padding:7px 11px; font-size:.86rem; background:rgba(255,255,255,.05); }
+    .project-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:20px; margin:20px 0; }
+    .project-panel { padding:24px; }
+    .project-panel h2, .project-panel h3 { margin-top:0; }
+    .project-panel p, .project-panel li { line-height:1.7; }
+    .project-panel ul { padding-left:1.25rem; }
+    .wide { grid-column:1/-1; }
+    .flow { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; align-items:stretch; margin-top:18px; }
+    .flow-step { padding:15px 12px; border-radius:12px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); text-align:center; min-height:92px; display:flex; flex-direction:column; justify-content:center; }
+    .flow-step strong { display:block; margin-bottom:5px; }
+    .compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:16px; }
+    .compare > div { padding:18px; border-radius:12px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.10); }
+    .metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .metric { text-align:center; padding:18px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); }
+    .metric .value { font-size:1.55rem; font-weight:800; display:block; margin-bottom:5px; }
+    .codebox { overflow:auto; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:15px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:.9rem; line-height:1.55; white-space:pre; }
+    .gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .gallery figure { margin:0; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); }
+    .gallery img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
+    .gallery figcaption { padding:10px 12px; font-size:.82rem; opacity:.78; line-height:1.45; }
+    .note { padding:14px 16px; border-left:3px solid currentColor; background:rgba(255,255,255,.045); border-radius:0 10px 10px 0; }
+    .project-footer { text-align:center; opacity:.65; padding:20px 0 40px; }
+    @media(max-width:850px){ .project-grid,.compare { grid-template-columns:1fr; } .flow{grid-template-columns:1fr;} .gallery{grid-template-columns:1fr;} .metric-grid{grid-template-columns:1fr;} .wide{grid-column:auto;} .project-hero{padding:24px;} }
+  </style>
+
 </head>
 <body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/pki.html" hreflang="fr" lang="fr">FR</a><a href="pki.html" hreflang="en" lang="en" class="active">EN</a><a href="../../de/projects/pki.html" hreflang="de" lang="de">DE</a></nav>
-  <header class="site-header"><div class="container header-inner"><div class="hero-text">
-    <h1>PQC-OnionPKI</h1><p class="subtitle">Personal project · Applied cryptography · PKI</p>
-  </div></div></header>
-  <main class="container section">
-    <section class="detail"><h2>Objective</h2><p>The goal was to go beyond a simple demonstration of a post-quantum algorithm and test PQC as a real infrastructure service: key generation and protection, trust chain, signing, controlled network exposure and integration into an existing application.</p><p>E-mail was deliberately chosen as a constrained use case in order to observe the actual limitations of clients, MTAs and legacy formats.</p></section><section class="detail"><h2>Platform</h2><ul><li>Raspberry Pi 4 dedicated to the PKI and signing service.</li><li>Debian with SSH hardening, UFW/nftables and Fail2ban.</li><li>Administrative access through a Tor onion service, without direct public-IP exposure.</li><li>Private keys isolated from application directories with restrictive permissions.</li></ul></section><section class="detail"><h2>Trust architecture</h2><p><strong>100% post-quantum PKI — experimental:</strong> a complete Root CA → Mail CA → application-certificate chain was generated with post-quantum signatures through OpenSSL-OQS/liboqs. It is cryptographically functional, but current operating systems and mail clients do not yet natively support post-quantum X.509 certificates.</p><p><strong>Hybrid PKI — operational:</strong> the compatibility layer remains classical for certificates and SMTP/TLS authentication, while message integrity and authenticity are protected independently with an ML-DSA-65 signature. Existing clients therefore do not need native PQC support.</p></section><section class="detail"><h2>E-mail signing chain</h2><p><strong>1. Postfix</strong> receives the outgoing message → <strong>2. Canonicalization</strong> normalizes headers and the text/plain body → <strong>3. SHA-256</strong> fingerprint via OpenSSL → <strong>4. ML-DSA-65</strong> signature → <strong>5. SMTP reinjection</strong> with the proof attached before relaying.</p><p><code>pqc_sign_mail.py</code> is used as a Postfix <code>content_filter</code> and runs as an unprivileged user. The message representation is deterministic so that server-side verification can reproduce the same signed input.</p></section><section class="detail"><h2>Performance on Raspberry Pi</h2><p><strong>≈ 19 ms</strong> key generation · <strong>≈ 20 ms</strong> ML-DSA-65 signing · <strong>≈ 19 ms</strong> verification.</p><p>These measurements show that post-quantum signing remains compatible with synchronous e-mail processing even on inexpensive ARM hardware.</p></section><section class="detail"><h2>What the project highlighted</h2><ul><li>PQC X.509 certificates remain incompatible with a significant part of the current client ecosystem.</li><li>Custom <code>X-PQC-*</code> headers correctly generated server-side can be removed or hidden by Gmail, Apple Mail and Outlook.</li><li>The proof must therefore be designed at both system and application level, not only at the primitive level.</li><li>Moving from a proof carried in headers to a visible proof in the content illustrates this adaptation to real-world constraints.</li></ul></section><section class="detail"><h2>Prototype traces</h2><figure class="project-media"><img src="../../assets/images/pki/pqc-signature-cli.png" alt="ML-DSA command-line signature and verification"><figcaption>Cryptographic signing and verification on the Raspberry Pi.</figcaption></figure><figure class="project-media"><img src="../../assets/images/pki/device-certificate-keychain.png" alt="Device CA certificate in macOS Keychain"><figcaption>Classical Device CA certificate imported into macOS Keychain for compatibility.</figcaption></figure><figure class="project-media"><img src="../../assets/images/pki/pqc-certificate-import-error.png" alt="macOS error importing a post-quantum certificate"><figcaption>A concrete ecosystem limitation: macOS rejects the import of a PQC certificate.</figcaption></figure></section><section class="detail"><h2>Current intentional limits</h2><p>The prototype focuses on <code>text/plain</code> messages and deliberately exposes current client limitations. The goal is to document the gap between a cryptographically valid proof and its integration into a legacy ecosystem.</p><p><a class="btn" href="../../assets/docs/PQC_PKI_english.pdf" target="_blank">Full technical report</a></p></section>
-    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Back to projects</a></div>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache">
+    <a href="../../projects/pki.html" hreflang="fr" lang="fr">FR</a>
+    <a href="pki.html" hreflang="en" lang="en" class="active">EN</a>
+    <a href="../../de/projects/pki.html" hreflang="de" lang="de">DE</a>
+  </nav>
+  <canvas id="canvas">Votre navigateur ne supporte pas Canvas.</canvas>
+  <canvas id="canvas2">Votre navigateur ne supporte pas Canvas.</canvas>
+
+  <main class="container project-main">
+    <nav class="project-nav">
+      <a class="btn ghost" href="../home.html#projects">← Back to projects</a>
+      <a class="btn" href="../../assets/docs/PQC_PKI_english.pdf" target="_blank" rel="noreferrer">Full technical report</a>
+    </nav>
+
+    <section class="project-hero">
+      <div class="project-kicker">Personal project · Applied cryptography · PKI</div>
+      <h1>PQC-OnionPKI</h1>
+      <p class="project-lead">
+        Conception et déploiement d’une infrastructure de confiance post-quantique sur Raspberry Pi, durcie et exposée via un service Tor onion. Le projet explore une migration réaliste vers la PQC en combinant une PKI compatible avec l’écosystème actuel et une ML-DSA-65 signing appliquée automatiquement aux e-mails au niveau du relais SMTP.
+      </p>
+      <div class="tag-row">
+        <span class="tag">ML-DSA-65</span><span class="tag">OpenSSL-OQS / liboqs</span><span class="tag">X.509</span><span class="tag">Postfix</span><span class="tag">Tor Onion Service</span><span class="tag">Raspberry Pi 4</span><span class="tag">Python</span><span class="tag">Linux hardening</span>
+      </div>
+    </section>
+
+    <div class="project-grid">
+      <section class="project-panel">
+        <h2>Objective</h2>
+        <p>The goal was to go beyond a simple demonstration of a post-quantum algorithm and test PQC as a real infrastructure service: key generation and protection, trust chain, signing, controlled network exposure and integration into an existing application.</p>
+        <p>E-mail was deliberately chosen as a constrained use case in order to observe the actual limitations of clients, MTAs and legacy formats.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Platform</h2>
+        <ul>
+          <li>Raspberry Pi 4 dedicated to the PKI and signing service.</li>
+          <li>Debian with SSH hardening, UFW/nftables and Fail2ban.</li>
+          <li>Administrative access through a Tor onion service, without direct public-IP exposure.</li>
+          <li>Private keys isolated from application directories with restrictive permissions.</li>
+        </ul>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Trust architecture</h2>
+        <div class="compare">
+          <div>
+            <h3>100% post-quantum PKI — experimental</h3>
+            <p>A complete Root CA → Mail CA → application-certificate chain was generated with post-quantum signatures through OpenSSL-OQS/liboqs. Although cryptographically functional, it highlights a current limitation: major operating systems and mail clients do not yet natively support post-quantum X.509 certificates.</p>
+          </div>
+          <div>
+            <h3>Hybrid PKI — operational</h3>
+            <p>La couche de compatibilité reste classique pour les certificats et l’authentification SMTP/TLS, tandis que l’intégrité et l’authenticité du message sont protégées indépendamment par une ML-DSA-65 signing. Cette séparation permet de conserver les clients existants sans leur imposer de support PQC natif.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>E-mail signing chain</h2>
+        <div class="flow">
+          <div class="flow-step"><strong>1. Postfix</strong><span>outgoing message reception</span></div>
+          <div class="flow-step"><strong>2. Canonicalization</strong><span>normalized headers + text/plain body</span></div>
+          <div class="flow-step"><strong>3. Fingerprint</strong><span>SHA-256 via OpenSSL</span></div>
+          <div class="flow-step"><strong>4. PQC signature</strong><span>ML-DSA-65</span></div>
+          <div class="flow-step"><strong>5. SMTP reinjection</strong><span>proof attached, then relayed</span></div>
+        </div>
+        <p style="margin-top:18px">Le script <code>pqc_sign_mail.py</code> est utilisé comme <code>content_filter</code> Postfix et s’exécute sous un utilisateur non privilégié. La représentation du message est déterministe afin de pouvoir reproduire la verification côté serveur.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>Performance on Raspberry Pi</h2>
+        <div class="metric-grid">
+          <div class="metric"><span class="value">≈ 19 ms</span>key generation</div>
+          <div class="metric"><span class="value">≈ 20 ms</span>ML-DSA-65 signing</div>
+          <div class="metric"><span class="value">≈ 19 ms</span>verification</div>
+        </div>
+        <p>These measurements show that post-quantum signing remains compatible with synchronous e-mail processing even on inexpensive ARM hardware.</p>
+      </section>
+
+      <section class="project-panel">
+        <h2>What the project highlighted</h2>
+        <ul>
+          <li>PQC X.509 certificates remain incompatible with a significant part of the current client ecosystem.</li>
+          <li>Custom <code>X-PQC-*</code> headers correctly generated server-side can be removed or hidden by Gmail, Apple Mail and Outlook.</li>
+          <li>The proof must therefore be designed at both system and application level, not only at the cryptographic primitive level.</li>
+          <li>Moving from a proof carried in headers to a visible proof in the content illustrates this adaptation to real-world constraints.</li>
+        </ul>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Prototype traces</h2>
+        <div class="gallery">
+          <figure><img src="../../assets/images/pki/perso_cert.png" alt="Certificat personnel PKCS#12 généré pour le client macOS" /><figcaption>Personal certificate generated for the client and prepared for import into macOS.</figcaption></figure>
+          <figure><img src="../../assets/images/pki/trousseau_accès.png" alt="Certificat PQC-OnionPKI Device CA dans le trousseau macOS" /><figcaption>Device CA installed in macOS Keychain to establish the client-side trust chain.</figcaption></figure>
+          <figure><img src="../../assets/images/pki/trousseau_accès_cert.png" alt="Détails du certificat dans le trousseau macOS" /><figcaption>Certificate and metadata inspection directly in macOS Keychain.</figcaption></figure>
+          <figure><img src="../../assets/images/pki/smtp.png" alt="Configuration SMTP PQC-Pi sur macOS" /><figcaption>PQC-Pi SMTP relay configuration on the macOS client.</figcaption></figure>
+          <figure><img src="../../assets/images/pki/ufw.png" alt="Configuration UFW et test du port SMTP" /><figcaption>Network hardening with UFW and validation of SMTP service reachability.</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="project-panel wide">
+        <h2>Current intentional limits</h2>
+        <p class="note">The prototype focuses on <code>text/plain</code> messages and deliberately exposes current client limitations. The goal is precisely to document the gap between a cryptographically valid proof and its integration into a legacy ecosystem.</p>
+      </section>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Personal project.</p></div></footer>
+
+  <footer class="project-footer">© 2026 Hugo FRANCOIS — Personal project.</footer>
   <script src="../../background.js"></script>
 </body>
 </html>

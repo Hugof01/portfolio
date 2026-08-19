@@ -4,153 +4,941 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PQC-OnionPKI — Hugo FRANÇOIS</title>
-  <meta name="description" content="Projet personnel PQC-OnionPKI : PKI post-quantique sur Raspberry Pi, Tor onion service, Postfix et signatures ML-DSA-65 pour les e-mails." />
+  <meta name="description" content="PQC-OnionPKI : infrastructure PKI expérimentale et hybride sur Raspberry Pi, sécurisée via Tor, avec intégration SMTP/Postfix et signatures post-quantiques ML-DSA-65." />
+
   <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../language-switcher.css" />
+  <link rel="alternate" hreflang="fr" href="../projects/pki.html" />
+  <link rel="alternate" hreflang="en" href="../en/projects/pki.html" />
+  <link rel="alternate" hreflang="de" href="../de/projects/pki.html" />
   <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
   <link rel="icon" type="image/png" href="../assets/favicon.png" />
 
   <style>
-    .project-main { padding-top: 28px; padding-bottom: 60px; }
-    .project-nav { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
-    .project-hero, .project-panel {
-      background: rgba(8, 12, 16, 0.82);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.30);
+    html { scroll-behavior: smooth; }
+
+    .pki-page {
+      padding-top: 28px;
+      padding-bottom: 72px;
+    }
+
+    .pki-topbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .pki-hero,
+    .pki-section,
+    .pki-card,
+    .pki-shot {
+      background: linear-gradient(180deg, rgba(18,20,23,.94), rgba(8,11,14,.90));
+      border: 1px solid rgba(102,252,241,.10);
+      box-shadow: 0 14px 46px rgba(0,0,0,.30);
       backdrop-filter: blur(8px);
     }
-    .project-hero { padding: 34px; margin-bottom: 24px; }
-    .project-hero h1 { margin: 8px 0 14px; font-size: clamp(2rem, 5vw, 3.3rem); line-height: 1.05; }
-    .project-kicker { text-transform:uppercase; letter-spacing:.16em; font-size:.78rem; opacity:.72; font-weight:700; }
-    .project-lead { max-width: 920px; font-size: 1.08rem; line-height: 1.75; }
-    .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
-    .tag { border:1px solid rgba(255,255,255,.15); border-radius:999px; padding:7px 11px; font-size:.86rem; background:rgba(255,255,255,.05); }
-    .project-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:20px; margin:20px 0; }
-    .project-panel { padding:24px; }
-    .project-panel h2, .project-panel h3 { margin-top:0; }
-    .project-panel p, .project-panel li { line-height:1.7; }
-    .project-panel ul { padding-left:1.25rem; }
-    .wide { grid-column:1/-1; }
-    .flow { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; align-items:stretch; margin-top:18px; }
-    .flow-step { padding:15px 12px; border-radius:12px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); text-align:center; min-height:92px; display:flex; flex-direction:column; justify-content:center; }
-    .flow-step strong { display:block; margin-bottom:5px; }
-    .compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:16px; }
-    .compare > div { padding:18px; border-radius:12px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.10); }
-    .metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .metric { text-align:center; padding:18px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); }
-    .metric .value { font-size:1.55rem; font-weight:800; display:block; margin-bottom:5px; }
-    .codebox { overflow:auto; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:15px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:.9rem; line-height:1.55; white-space:pre; }
-    .gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .gallery figure { margin:0; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); }
-    .gallery img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
-    .gallery figcaption { padding:10px 12px; font-size:.82rem; opacity:.78; line-height:1.45; }
-    .note { padding:14px 16px; border-left:3px solid currentColor; background:rgba(255,255,255,.045); border-radius:0 10px 10px 0; }
-    .project-footer { text-align:center; opacity:.65; padding:20px 0 40px; }
-    @media(max-width:850px){ .project-grid,.compare { grid-template-columns:1fr; } .flow{grid-template-columns:1fr;} .gallery{grid-template-columns:1fr;} .metric-grid{grid-template-columns:1fr;} .wide{grid-column:auto;} .project-hero{padding:24px;} }
-  </style>
 
+    .pki-hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 42px;
+      margin-bottom: 24px;
+    }
+
+    .pki-hero::after {
+      content: "";
+      position: absolute;
+      right: -130px;
+      top: -140px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(102,252,241,.16), transparent 68%);
+      pointer-events: none;
+    }
+
+    .pki-kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-weight: 800;
+      font-size: .78rem;
+      margin-bottom: 10px;
+    }
+
+    .pki-hero h1 {
+      margin: 0 0 18px;
+      color: #fff;
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      line-height: 1;
+    }
+
+    .pki-hero h1 span { color: var(--accent); }
+
+    .pki-lead {
+      max-width: 930px;
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: #d8e8e9;
+    }
+
+    .pki-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .pki-tag {
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(102,252,241,.15);
+      background: rgba(102,252,241,.045);
+      color: #c8fffb;
+      font-size: .84rem;
+    }
+
+    .pki-highlights {
+      display: grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .pki-highlight {
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .pki-highlight strong {
+      display: block;
+      color: var(--accent);
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .pki-highlight span {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.4;
+    }
+
+    .pki-localnav {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px;
+      margin-bottom: 24px;
+      border-radius: 16px;
+      background: rgba(8,10,13,.87);
+      border: 1px solid rgba(102,252,241,.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.23);
+    }
+
+    .pki-localnav a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #dfecee;
+      font-size: .86rem;
+      border: 1px solid transparent;
+    }
+
+    .pki-localnav a:hover {
+      color: var(--accent);
+      border-color: rgba(102,252,241,.16);
+      background: rgba(102,252,241,.05);
+      opacity: 1;
+    }
+
+    .pki-section {
+      border-radius: 18px;
+      padding: 30px;
+      margin-bottom: 22px;
+      scroll-margin-top: 90px;
+    }
+
+    .pki-section h2 {
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-size: 1.65rem;
+    }
+
+    .pki-section h3 {
+      margin-top: 0;
+      color: #d2fffb;
+    }
+
+    .pki-section p,
+    .pki-section li {
+      line-height: 1.75;
+    }
+
+    .pki-intro {
+      max-width: 920px;
+      color: #d7e4e6;
+      margin-bottom: 22px;
+    }
+
+    .pki-grid-2,
+    .pki-grid-3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .pki-grid-2 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .pki-grid-3 { grid-template-columns: repeat(3,minmax(0,1fr)); }
+
+    .pki-card {
+      padding: 20px;
+      border-radius: 14px;
+    }
+
+    .pki-card p:last-child,
+    .pki-card ul:last-child { margin-bottom: 0; }
+
+    .pki-callout {
+      border-left: 3px solid var(--accent);
+      background: rgba(102,252,241,.045);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 18px 0;
+      line-height: 1.7;
+    }
+
+    .pki-timeline {
+      position: relative;
+      margin: 24px 0 0;
+      padding-left: 28px;
+    }
+
+    .pki-timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(var(--accent), rgba(102,252,241,.12));
+    }
+
+    .pki-event {
+      position: relative;
+      padding: 0 0 24px 18px;
+    }
+
+    .pki-event:last-child { padding-bottom: 0; }
+
+    .pki-event::before {
+      content: "";
+      position: absolute;
+      left: -27px;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(102,252,241,.6);
+    }
+
+    .pki-event .phase {
+      display: inline-block;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      margin-bottom: 5px;
+    }
+
+    .pki-event strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 5px;
+    }
+
+    .pki-event p { margin: 0; }
+
+    .pki-flow {
+      display: grid;
+      grid-template-columns: repeat(5,minmax(0,1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pki-step {
+      min-height: 125px;
+      padding: 17px 13px;
+      border-radius: 14px;
+      border: 1px solid rgba(102,252,241,.10);
+      background: rgba(255,255,255,.035);
+    }
+
+    .pki-step .num {
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+    }
+
+    .pki-step strong {
+      display: block;
+      margin: 8px 0 6px;
+      color: #fff;
+    }
+
+    .pki-step span {
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.45;
+    }
+
+    .pki-metrics {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .pki-metric {
+      text-align: center;
+      padding: 19px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(102,252,241,.09);
+    }
+
+    .pki-metric strong {
+      display: block;
+      color: var(--accent);
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .pki-metric span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .pki-gallery {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .pki-shot {
+      margin: 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .pki-shot .image-wrap {
+      background: #eef1f4;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+    }
+
+    .pki-shot img {
+      display: block;
+      width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      cursor: zoom-in;
+      border-radius: 9px;
+      transition: transform .25s ease;
+    }
+
+    .pki-shot:hover img { transform: scale(1.01); }
+
+    .pki-shot figcaption {
+      padding: 13px 16px;
+      color: #aebfc2;
+      font-size: .86rem;
+      line-height: 1.5;
+    }
+
+    .pki-shot.wide {
+      grid-column: 1 / -1;
+    }
+
+    .pki-arch {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .pki-node {
+      padding: 18px;
+      border-radius: 14px;
+      text-align: center;
+      border: 1px solid rgba(102,252,241,.11);
+      background: rgba(255,255,255,.035);
+    }
+
+    .pki-node strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .pki-node span {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .pki-arrow {
+      color: var(--accent);
+      font-size: 1.45rem;
+      text-align: center;
+    }
+
+    .pki-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,.92);
+    }
+
+    .pki-lightbox.open { display: flex; }
+
+    .pki-lightbox img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(102,252,241,.16);
+    }
+
+    .pki-lightbox button {
+      position: absolute;
+      right: 22px;
+      top: 18px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .pki-footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: .88rem;
+      padding-top: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .pki-highlights { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .pki-grid-3 { grid-template-columns: 1fr; }
+      .pki-flow { grid-template-columns: 1fr; }
+      .pki-arch { grid-template-columns: 1fr; }
+      .pki-arrow { transform: rotate(90deg); }
+    }
+
+    @media (max-width: 720px) {
+      .pki-hero { padding: 28px 22px; }
+      .pki-section { padding: 22px 18px; }
+      .pki-grid-2, .pki-gallery, .pki-metrics { grid-template-columns: 1fr; }
+      .pki-highlights { grid-template-columns: 1fr; }
+      .pki-localnav { position: static; }
+      .pki-shot.wide { grid-column: auto; }
+    }
+  </style>
 </head>
+
 <body>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache">
+    <a href="../projects/pki.html" hreflang="fr" lang="fr" class="active">FR</a>
+    <a href="../en/projects/pki.html" hreflang="en" lang="en">EN</a>
+    <a href="../de/projects/pki.html" hreflang="de" lang="de">DE</a>
+  </nav>
+
   <canvas id="canvas">Votre navigateur ne supporte pas Canvas.</canvas>
   <canvas id="canvas2">Votre navigateur ne supporte pas Canvas.</canvas>
 
-  <main class="container project-main">
-    <nav class="project-nav">
+  <main class="container pki-page">
+    <div class="pki-topbar">
       <a class="btn ghost" href="../home.html#projects">← Retour aux projets</a>
-      <a class="btn" href="../assets/docs/PQC_PKI_english.pdf" target="_blank" rel="noreferrer">Rapport technique complet</a>
-    </nav>
+      <a class="btn" href="../assets/docs/PQC_PKI_english.pdf" target="_blank" rel="noopener noreferrer">Rapport technique complet</a>
+    </div>
 
-    <section class="project-hero">
-      <div class="project-kicker">Projet personnel · Cryptographie appliquée · PKI</div>
-      <h1>PQC-OnionPKI</h1>
-      <p class="project-lead">
-        Conception et déploiement d’une infrastructure de confiance post-quantique sur Raspberry Pi, durcie et exposée via un service Tor onion. Le projet explore une migration réaliste vers la PQC en combinant une PKI compatible avec l’écosystème actuel et une signature ML-DSA-65 appliquée automatiquement aux e-mails au niveau du relais SMTP.
+    <section class="pki-hero">
+      <div class="pki-kicker">Projet personnel · PKI · Cryptographie post-quantique · Infrastructure</div>
+      <h1>PQC-<span>OnionPKI</span></h1>
+      <p class="pki-lead">
+        PQC-OnionPKI est un projet d’ingénierie appliquée autour d’une question très concrète : jusqu’où peut-on intégrer
+        aujourd’hui une infrastructure de confiance post-quantique dans un environnement réel sans modifier les clients
+        classiques ? Pour y répondre, j’ai construit une PKI sur Raspberry Pi, durci l’hôte, ajouté un accès d’administration
+        via Tor, expérimenté une chaîne X.509 entièrement post-quantique, puis adapté l’architecture face aux limites réelles
+        de macOS et des clients mail. La solution opérationnelle conserve ainsi une couche de confiance classique pour
+        l’interopérabilité, tout en ajoutant une signature ML-DSA-65 indépendante sur les e-mails sortants.
       </p>
-      <div class="tag-row">
-        <span class="tag">ML-DSA-65</span><span class="tag">OpenSSL-OQS / liboqs</span><span class="tag">X.509</span><span class="tag">Postfix</span><span class="tag">Tor Onion Service</span><span class="tag">Raspberry Pi 4</span><span class="tag">Python</span><span class="tag">Linux hardening</span>
+
+      <div class="pki-tags">
+        <span class="pki-tag">Raspberry Pi 4</span>
+        <span class="pki-tag">Debian</span>
+        <span class="pki-tag">OpenSSL</span>
+        <span class="pki-tag">OpenSSL-OQS / liboqs</span>
+        <span class="pki-tag">X.509</span>
+        <span class="pki-tag">ML-DSA-65</span>
+        <span class="pki-tag">Postfix</span>
+        <span class="pki-tag">Tor Onion Service</span>
+        <span class="pki-tag">Python</span>
+        <span class="pki-tag">UFW / nftables</span>
+      </div>
+
+      <div class="pki-highlights">
+        <div class="pki-highlight"><strong>2 modèles de PKI</strong><span>une chaîne PQC expérimentale et une architecture hybride opérationnelle</span></div>
+        <div class="pki-highlight"><strong>ML-DSA-65</strong><span>signature post-quantique appliquée au contenu des e-mails</span></div>
+        <div class="pki-highlight"><strong>≈ 20 ms</strong><span>ordre de grandeur mesuré pour signer ou vérifier sur Raspberry Pi</span></div>
+        <div class="pki-highlight"><strong>Tor + hardening</strong><span>administration distante contrôlée et réduction de la surface d’exposition</span></div>
       </div>
     </section>
 
-    <div class="project-grid">
-      <section class="project-panel">
-        <h2>Objectif</h2>
-        <p>Le but était de dépasser la simple démonstration d’un algorithme post-quantique et de tester la PQC comme un véritable service d’infrastructure : génération et protection des clés, chaîne de confiance, signature, exposition réseau contrôlée et intégration dans une application existante.</p>
-        <p>L’e-mail a été choisi comme cas d’usage volontairement contraignant afin d’observer les limites réelles des clients, des MTA et des formats historiques.</p>
-      </section>
+    <nav class="pki-localnav" aria-label="Navigation PQC-OnionPKI">
+      <a href="#context">Contexte</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#certificates">Histoire des certificats</a>
+      <a href="#mail">E-mails & ML-DSA</a>
+      <a href="#security">Durcissement</a>
+      <a href="#evidence">Captures</a>
+      <a href="#lessons">Enseignements</a>
+    </nav>
 
-      <section class="project-panel">
-        <h2>Plateforme</h2>
-        <ul>
-          <li>Raspberry Pi 4 dédié à la PKI et au service de signature.</li>
-          <li>Debian, durcissement SSH, UFW/nftables et Fail2ban.</li>
-          <li>Accès d’administration via un service Tor onion, sans exposition directe d’une IP publique.</li>
-          <li>Clés privées isolées des répertoires applicatifs et permissions restrictives.</li>
-        </ul>
-      </section>
+    <section id="context" class="pki-section">
+      <h2>1. Pourquoi ce projet ?</h2>
+      <p class="pki-intro">
+        La disponibilité d’algorithmes post-quantiques ne signifie pas qu’ils peuvent être déployés immédiatement dans
+        les systèmes existants. Une PKI ne se limite pas à générer une paire de clés : elle doit faire fonctionner des
+        formats de certificats, des chaînes de confiance, des clients, des systèmes d’exploitation, des protocoles réseau
+        et des mécanismes d’authentification déjà largement déployés.
+      </p>
 
-      <section class="project-panel wide">
-        <h2>Architecture de confiance</h2>
-        <div class="compare">
-          <div>
-            <h3>PKI 100 % post-quantique — expérimentale</h3>
-            <p>Une chaîne complète Root CA → Mail CA → certificats applicatifs a été générée avec des signatures post-quantiques via OpenSSL-OQS/liboqs. Cryptographiquement fonctionnelle, elle met en évidence une limite actuelle : les principaux OS et clients mail ne savent pas encore exploiter nativement des certificats X.509 post-quantiques.</p>
+      <div class="pki-grid-2">
+        <div class="pki-card">
+          <h3>Le véritable problème</h3>
+          <p>
+            Le projet vise donc moins à démontrer que « ML-DSA fonctionne » qu’à étudier le passage entre une primitive
+            cryptographique moderne et un service d’infrastructure utilisable. Le cas d’usage choisi — l’e-mail — est
+            volontairement difficile : il traverse des relais, des politiques anti-spam, des transformations de métadonnées
+            et des clients qui n’exposent pas toujours les informations transportées.
+          </p>
+        </div>
+
+        <div class="pki-card">
+          <h3>Une approche expérimentale</h3>
+          <p>
+            Les incompatibilités rencontrées ne sont pas masquées : elles font partie du résultat. Lorsqu’une architecture
+            théoriquement correcte ne peut pas être exploitée par macOS ou un client mail classique, l’objectif est de
+            comprendre précisément pourquoi, puis de faire évoluer l’architecture sans perdre la propriété de sécurité recherchée.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="pki-section">
+      <h2>2. Architecture générale</h2>
+      <p class="pki-intro">
+        Le Raspberry Pi constitue un hôte dédié à la PKI et aux services associés. Cette séparation volontaire évite
+        d’y héberger des applications sans rapport avec la fonction de confiance et simplifie à la fois le durcissement,
+        l’audit et la compréhension du périmètre.
+      </p>
+
+      <div class="pki-arch">
+        <div class="pki-node">
+          <strong>Client macOS</strong>
+          <span>certificat compatible, configuration SMTP, accès utilisateur</span>
+        </div>
+        <div class="pki-arrow">→</div>
+        <div class="pki-node">
+          <strong>Raspberry Pi / PKI</strong>
+          <span>CA, clés, OpenSSL-OQS, Postfix, scripts de signature</span>
+        </div>
+        <div class="pki-arrow">→</div>
+        <div class="pki-node">
+          <strong>Écosystème mail</strong>
+          <span>relais SMTP, fournisseurs, clients finaux</span>
+        </div>
+      </div>
+
+      <div class="pki-grid-2" style="margin-top:16px;">
+        <div class="pki-card">
+          <h3>Couche système</h3>
+          <ul>
+            <li>Raspberry Pi 4 sous Debian.</li>
+            <li>SSH dédié et durci, avec accès distant via Tor onion service.</li>
+            <li>Filtrage réseau avec UFW reposant sur nftables/iptables-nft.</li>
+            <li>Fail2ban et paramètres de durcissement système.</li>
+            <li>Répertoires et permissions séparant les secrets cryptographiques des composants applicatifs.</li>
+          </ul>
+        </div>
+
+        <div class="pki-card">
+          <h3>Couche cryptographique</h3>
+          <ul>
+            <li>OpenSSL pour les opérations PKI classiques, CSR, certificats et TLS.</li>
+            <li>liboqs / OpenSSL-OQS pour tester les algorithmes post-quantiques dans des workflows proches de X.509.</li>
+            <li>ML-DSA-65 pour la signature post-quantique des messages.</li>
+            <li>Deux architectures de confiance distinctes afin de séparer faisabilité cryptographique et compatibilité opérationnelle.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="certificates" class="pki-section">
+      <h2>3. L’histoire des certificats : du « tout PQC » à une architecture hybride</h2>
+      <p class="pki-intro">
+        C’est probablement la partie la plus importante du projet. La première idée était de pousser l’expérience jusqu’au bout :
+        construire une chaîne de certificats entièrement post-quantique. Cryptographiquement, l’expérience fonctionne. C’est
+        l’écosystème autour qui impose ensuite une adaptation.
+      </p>
+
+      <div class="pki-timeline">
+        <div class="pki-event">
+          <span class="phase">Phase 1</span>
+          <strong>Construction d’une PKI entièrement post-quantique</strong>
+          <p>
+            Une hiérarchie minimale de type <strong>Root CA → Mail CA → certificats applicatifs</strong> est générée avec
+            des signatures post-quantiques via OpenSSL-OQS/liboqs. La génération de clés, l’émission des certificats et
+            les vérifications cryptographiques sont fonctionnelles.
+          </p>
+        </div>
+
+        <div class="pki-event">
+          <span class="phase">Phase 2</span>
+          <strong>Le premier blocage n’est pas cryptographique, mais logiciel</strong>
+          <p>
+            Une fois les certificats produits, l’objectif est de les utiliser sur un client classique. C’est là que la limite
+            devient concrète : le trousseau macOS et les principaux clients mail ne savent pas exploiter nativement cette
+            chaîne X.509 post-quantique. Le certificat peut être valable d’un point de vue cryptographique tout en restant
+            inutilisable par l’application qui doit lui faire confiance.
+          </p>
+        </div>
+
+        <div class="pki-event">
+          <span class="phase">Phase 3</span>
+          <strong>Séparation entre compatibilité et preuve post-quantique</strong>
+          <p>
+            Plutôt que de forcer une chaîne non supportée, l’architecture est séparée en deux fonctions : les certificats
+            classiques restent responsables de l’interopérabilité et de l’authentification avec l’écosystème existant,
+            tandis que la signature post-quantique devient une preuve indépendante appliquée au message lui-même.
+          </p>
+        </div>
+
+        <div class="pki-event">
+          <span class="phase">Phase 4</span>
+          <strong>Provisionnement côté macOS</strong>
+          <p>
+            Un certificat client compatible est exporté dans un conteneur personnel de type PKCS#12 puis importé dans macOS.
+            La CA de confiance est installée dans le trousseau afin que le client puisse établir correctement la chaîne.
+            Cette étape permet de conserver une expérience utilisateur standard pour la configuration SMTP.
+          </p>
+        </div>
+
+        <div class="pki-event">
+          <span class="phase">Résultat</span>
+          <strong>Une PKI hybride réellement exploitable aujourd’hui</strong>
+          <p>
+            La PKI « tout PQC » reste un artefact de recherche démontrant la faisabilité cryptographique. La variante hybride
+            est celle utilisée pour le fonctionnement concret : certificats classiques là où les clients l’imposent,
+            ML-DSA-65 là où une propriété post-quantique peut être ajoutée sans casser l’interopérabilité.
+          </p>
+        </div>
+      </div>
+
+      <div class="pki-callout">
+        <strong>Ce point est central :</strong> le choix hybride n’est pas un abandon de la PQC. Il matérialise au contraire
+        une stratégie de transition réaliste : ne pas demander à un client existant de comprendre un format qu’il ne sait
+        pas encore traiter, tout en déplaçant la propriété post-quantique vers une couche que je maîtrise de bout en bout.
+      </div>
+
+      <div class="pki-gallery">
+        <figure class="pki-shot">
+          <div class="image-wrap">
+            <img src="../assets/images/pki/perso_cert.png" alt="Certificat personnel PKCS#12 généré pour le client macOS" class="zoomable" loading="lazy">
           </div>
-          <div>
-            <h3>PKI hybride — opérationnelle</h3>
-            <p>La couche de compatibilité reste classique pour les certificats et l’authentification SMTP/TLS, tandis que l’intégrité et l’authenticité du message sont protégées indépendamment par une signature ML-DSA-65. Cette séparation permet de conserver les clients existants sans leur imposer de support PQC natif.</p>
+          <figcaption>
+            Certificat personnel exporté pour le client macOS. Cette étape matérialise le passage de la PKI côté serveur
+            vers un objet réellement utilisable par le poste client.
+          </figcaption>
+        </figure>
+
+        <figure class="pki-shot">
+          <div class="image-wrap">
+            <img src="../assets/images/pki/trousseau_accès.png" alt="Device CA installée dans le trousseau macOS" class="zoomable" loading="lazy">
           </div>
+          <figcaption>
+            Installation de la Device CA dans le trousseau macOS afin d’établir la confiance nécessaire au client.
+          </figcaption>
+        </figure>
+
+        <figure class="pki-shot wide">
+          <div class="image-wrap">
+            <img src="../assets/images/pki/trousseau_accès_cert.png" alt="Détails du certificat PQC-OnionPKI dans le trousseau macOS" class="zoomable" loading="lazy">
+          </div>
+          <figcaption>
+            Vérification de la présence du certificat et inspection de ses informations dans le trousseau.
+            Cette partie permet de valider concrètement la chaîne de confiance compatible utilisée côté macOS.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="mail" class="pki-section">
+      <h2>4. Ajouter une signature post-quantique aux e-mails sans modifier le client</h2>
+      <p class="pki-intro">
+        Une fois le problème de compatibilité des certificats isolé, le projet se concentre sur la propriété réellement
+        recherchée : fournir une preuve post-quantique de l’intégrité et de l’authenticité du message. L’intégration est
+        réalisée au niveau du relais Postfix afin que le client mail n’ait aucune logique PQC spécifique à implémenter.
+      </p>
+
+      <div class="pki-flow">
+        <div class="pki-step"><span class="num">Étape 1</span><strong>Postfix</strong><span>Réception du message sortant sur le relais.</span></div>
+        <div class="pki-step"><span class="num">Étape 2</span><strong>Canonicalisation</strong><span>Normalisation déterministe des éléments du message à signer.</span></div>
+        <div class="pki-step"><span class="num">Étape 3</span><strong>SHA-256</strong><span>Calcul d’une empreinte stable de la représentation canonique.</span></div>
+        <div class="pki-step"><span class="num">Étape 4</span><strong>ML-DSA-65</strong><span>Génération de la signature post-quantique sur la preuve.</span></div>
+        <div class="pki-step"><span class="num">Étape 5</span><strong>Réinjection SMTP</strong><span>Le message enrichi est réinjecté puis poursuit son acheminement.</span></div>
+      </div>
+
+      <div class="pki-grid-2" style="margin-top:16px;">
+        <div class="pki-card">
+          <h3>Pourquoi une canonicalisation ?</h3>
+          <p>
+            Un message mail peut subir des variations de représentation entre son émission et son traitement. Pour pouvoir
+            vérifier une signature de façon reproductible, le système définit donc une représentation déterministe des éléments
+            couverts. Le même contenu doit conduire au même payload de vérification.
+          </p>
         </div>
-      </section>
 
-      <section class="project-panel wide">
-        <h2>Chaîne de signature des e-mails</h2>
-        <div class="flow">
-          <div class="flow-step"><strong>1. Postfix</strong><span>réception du message sortant</span></div>
-          <div class="flow-step"><strong>2. Canonicalisation</strong><span>headers + corps text/plain normalisés</span></div>
-          <div class="flow-step"><strong>3. Empreinte</strong><span>SHA-256 via OpenSSL</span></div>
-          <div class="flow-step"><strong>4. Signature PQC</strong><span>ML-DSA-65</span></div>
-          <div class="flow-step"><strong>5. Réinjection SMTP</strong><span>preuve jointe puis relais</span></div>
+        <div class="pki-card">
+          <h3>Intégration Postfix</h3>
+          <p>
+            Le script de signature est intégré au pipeline Postfix comme filtre de contenu et s’exécute sous un utilisateur
+            non privilégié. L’idée est de déplacer la cryptographie vers l’infrastructure plutôt que d’imposer un plugin ou
+            une modification à Apple Mail, Gmail ou Outlook.
+          </p>
         </div>
-        <p style="margin-top:18px">Le script <code>pqc_sign_mail.py</code> est utilisé comme <code>content_filter</code> Postfix et s’exécute sous un utilisateur non privilégié. La représentation du message est déterministe afin de pouvoir reproduire la vérification côté serveur.</p>
-      </section>
+      </div>
 
-      <section class="project-panel">
-        <h2>Performance sur Raspberry Pi</h2>
-        <div class="metric-grid">
-          <div class="metric"><span class="value">≈ 19 ms</span>génération de clé</div>
-          <div class="metric"><span class="value">≈ 20 ms</span>signature ML-DSA-65</div>
-          <div class="metric"><span class="value">≈ 19 ms</span>vérification</div>
+      <div class="pki-metrics">
+        <div class="pki-metric"><strong>≈ 19 ms</strong><span>génération de clé</span></div>
+        <div class="pki-metric"><strong>≈ 20 ms</strong><span>signature ML-DSA-65</span></div>
+        <div class="pki-metric"><strong>≈ 19 ms</strong><span>vérification</span></div>
+      </div>
+
+      <p style="margin-top:18px;">
+        Ces mesures obtenues sur Raspberry Pi 4 montrent qu’au niveau de ce prototype, le coût de la signature ne constitue
+        pas le principal obstacle opérationnel. Les difficultés les plus structurantes viennent davantage de l’intégration
+        dans les formats et comportements des clients existants.
+      </p>
+
+      <figure class="pki-shot" style="margin-top:18px;">
+        <div class="image-wrap">
+          <img src="../assets/images/pki/smtp.png" alt="Configuration du serveur SMTP PQC-Pi dans macOS" class="zoomable" loading="lazy">
         </div>
-        <p>Ces mesures montrent que la signature post-quantique reste compatible avec un traitement synchrone d’e-mails, même sur du matériel ARM peu coûteux.</p>
-      </section>
+        <figcaption>
+          Configuration du relais SMTP « PQC-Pi » sur le client macOS. Le poste utilise une configuration classique,
+          tandis que la couche post-quantique est appliquée côté infrastructure.
+        </figcaption>
+      </figure>
+    </section>
 
-      <section class="project-panel">
-        <h2>Ce que le projet a mis en évidence</h2>
-        <ul>
-          <li>Les certificats PQC X.509 restent incompatibles avec une partie importante de l’écosystème client actuel.</li>
-          <li>Des headers personnalisés <code>X-PQC-*</code> correctement générés côté serveur peuvent être supprimés ou rendus invisibles par Gmail, Apple Mail et Outlook.</li>
-          <li>La preuve doit donc être pensée au niveau système et applicatif, pas uniquement au niveau de la primitive cryptographique.</li>
-          <li>Le passage d’une preuve dans les headers à une preuve visible dans le contenu illustre cette adaptation aux contraintes réelles.</li>
-        </ul>
-      </section>
+    <section id="security" class="pki-section">
+      <h2>5. Durcir l’hôte qui porte la confiance</h2>
+      <p class="pki-intro">
+        Héberger une PKI sur un Raspberry Pi ne suffit pas : le système qui contient les clés et exécute les opérations
+        cryptographiques devient lui-même une partie de la chaîne de confiance. Le projet inclut donc un travail de
+        réduction de surface d’attaque et de contrôle des accès.
+      </p>
 
-      <section class="project-panel wide">
-        <h2>Quelques traces du prototype</h2>
-        <div class="gallery">
-          <figure><img src="../assets/images/pki/pqc-signature-cli.png" alt="Signature et vérification ML-DSA en ligne de commande" /><figcaption>Signature et vérification cryptographique sur le Raspberry Pi.</figcaption></figure>
-          <figure><img src="../assets/images/pki/device-certificate-keychain.png" alt="Certificat de la Device CA dans le trousseau macOS" /><figcaption>Certificat classique de la Device CA importé dans le trousseau macOS pour assurer la compatibilité.</figcaption></figure>
-          <figure><img src="../assets/images/pki/pqc-certificate-import-error.png" alt="Erreur macOS lors de l’import d’un certificat post-quantique" /><figcaption>Exemple concret de limite d’écosystème : import d’un certificat PQC refusé par macOS.</figcaption></figure>
+      <div class="pki-grid-3">
+        <div class="pki-card">
+          <h3>Accès SSH</h3>
+          <p>
+            L’administration utilise SSH avec une configuration dédiée et des clés client. L’accès distant est également
+            rendu possible via un service Tor onion afin d’éviter l’exposition directe d’une interface d’administration
+            sur une adresse IP publique.
+          </p>
         </div>
-      </section>
 
-      <section class="project-panel wide">
-        <h2>Points encore volontairement limités</h2>
-        <p class="note">Le prototype se concentre sur des messages <code>text/plain</code> et n’essaie pas de masquer les limitations des clients actuels. L’objectif est précisément de documenter l’écart entre une preuve cryptographique valide et son intégration dans un écosystème historique.</p>
-      </section>
+        <div class="pki-card">
+          <h3>Filtrage réseau</h3>
+          <p>
+            UFW est utilisé comme couche de gestion du filtrage réseau, avec contrôle des ports nécessaires au fonctionnement.
+            Les services réellement à l’écoute sont vérifiés afin de limiter le périmètre exposé.
+          </p>
+        </div>
+
+        <div class="pki-card">
+          <h3>Défense en profondeur</h3>
+          <p>
+            Fail2ban, paramètres de durcissement système, séparation des permissions, inspection des journaux et revue des
+            services complètent la protection. Le projet ne prétend toutefois pas reproduire les garanties d’un HSM certifié.
+          </p>
+        </div>
+      </div>
+
+      <figure class="pki-shot" style="margin-top:18px;">
+        <div class="image-wrap">
+          <img src="../assets/images/pki/ufw.png" alt="Configuration UFW et vérification des ports sur le Raspberry Pi" class="zoomable" loading="lazy">
+        </div>
+        <figcaption>
+          Exemple de contrôle du filtrage réseau et de vérification d’un port de service. L’objectif est de conserver
+          uniquement les flux nécessaires au fonctionnement du prototype.
+        </figcaption>
+      </figure>
+
+      <div class="pki-callout">
+        L’accès via Tor ne remplace pas le durcissement local. Il modifie surtout le modèle d’exposition :
+        l’administration peut être accessible à distance sans publier directement l’IP du service, tandis que les contrôles
+        SSH, les permissions et la protection de l’hôte restent indispensables.
+      </div>
+    </section>
+
+    <section id="evidence" class="pki-section">
+      <h2>6. Ce que les tests sur les clients mail ont montré</h2>
+      <p class="pki-intro">
+        Après avoir obtenu une signature correcte côté serveur, une seconde difficulté apparaît : une preuve transportée
+        dans un e-mail n’est utile que si elle survit à la chaîne de livraison et peut être retrouvée ou vérifiée.
+      </p>
+
+      <div class="pki-grid-2">
+        <div class="pki-card">
+          <h3>Les headers personnalisés ne sont pas une interface fiable</h3>
+          <p>
+            Des métadonnées de type <code>X-PQC-*</code> peuvent être correctement injectées côté serveur mais devenir
+            invisibles, être normalisées ou ne pas être présentées par Gmail, Apple Mail ou Outlook. La justesse cryptographique
+            côté relais ne garantit donc pas la visibilité côté utilisateur.
+          </p>
+        </div>
+
+        <div class="pki-card">
+          <h3>L’architecture doit s’adapter au système réel</h3>
+          <p>
+            Cette observation conduit à distinguer la preuve transportée techniquement de la preuve exposée à l’utilisateur.
+            Le passage d’une approche centrée sur des headers à une preuve pouvant être rendue visible dans le contenu est
+            une conséquence directe des tests d’intégration.
+          </p>
+        </div>
+      </div>
+
+      <p>
+        C’est l’un des enseignements les plus intéressants du projet : un mécanisme peut être valide au niveau de la primitive,
+        correctement exécuté sur le serveur et pourtant échouer à devenir une fonctionnalité réellement utilisable à cause
+        d’un comportement intermédiaire du protocole ou du client.
+      </p>
+    </section>
+
+    <section id="lessons" class="pki-section">
+      <h2>7. Ce que ce projet m’a appris</h2>
+
+      <div class="pki-grid-3">
+        <div class="pki-card">
+          <h3>La migration PQC est un problème de système</h3>
+          <p>
+            L’algorithme n’est qu’une partie du sujet. Les certificats, les magasins de confiance, les clients,
+            les protocoles et les opérations de déploiement déterminent souvent ce qui est réellement possible.
+          </p>
+        </div>
+
+        <div class="pki-card">
+          <h3>Une architecture hybride peut être plus réaliste</h3>
+          <p>
+            La coexistence classique / post-quantique permet de conserver les dépendances héritées là où elles sont
+            encore obligatoires, tout en introduisant progressivement de nouvelles garanties cryptographiques.
+          </p>
+        </div>
+
+        <div class="pki-card">
+          <h3>Les échecs d’intégration sont utiles</h3>
+          <p>
+            Le refus d’un certificat ou la disparition d’un header ne sont pas seulement des bugs à contourner :
+            ils renseignent directement sur la maturité de l’écosystème et influencent la conception cible.
+          </p>
+        </div>
+      </div>
+
+      <div class="pki-callout">
+        <strong>Limites assumées :</strong> il s’agit d’un prototype et d’un environnement de recherche appliquée.
+        Les clés ne sont pas protégées par un HSM certifié, la sécurité physique du Raspberry Pi n’est pas assimilable
+        à celle d’une appliance PKI industrielle, et l’objectif n’est pas de présenter l’ensemble comme une solution
+        prête à remplacer une infrastructure de messagerie d’entreprise.
+      </div>
+
+      <p>
+        Le rapport technique complet documente le projet de manière reproductible : installation de l’hôte,
+        durcissement, configuration Tor, environnement OpenSSL / liboqs, architectures de PKI, tests de signature,
+        intégration Postfix et comportements observés dans les clients mail.
+      </p>
+
+      <a class="btn" href="../assets/docs/PQC_PKI_english.pdf" target="_blank" rel="noopener noreferrer">
+        Ouvrir le rapport technique complet
+      </a>
+    </section>
+
+    <div class="pki-footer-note">
+      © 2026 Hugo FRANCOIS — PQC-OnionPKI, projet personnel de recherche appliquée.
     </div>
   </main>
 
-  <footer class="project-footer">© 2026 Hugo FRANCOIS — Projet personnel.</footer>
+  <div class="pki-lightbox" id="pki-lightbox" aria-hidden="true">
+    <button type="button" aria-label="Fermer">×</button>
+    <img src="" alt="">
+  </div>
+
   <script src="../background.js"></script>
+  <script>
+    (() => {
+      const lightbox = document.getElementById('pki-lightbox');
+      const lightboxImg = lightbox.querySelector('img');
+      const closeBtn = lightbox.querySelector('button');
+
+      document.querySelectorAll('.zoomable').forEach(img => {
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.classList.add('open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', e => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+      });
+    })();
+  </script>
 </body>
 </html>
