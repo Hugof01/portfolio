@@ -3,29 +3,745 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NightSeal PQC | Hugo FRANCOIS</title>
-  <meta name="description" content="Post-Quantum-Plattform für kryptografische Integritätsnachweise in RMAN-/WriteOnce-Backup-Umgebungen." />
+  <title>NightSeal PQC — Hugo FRANÇOIS</title>
+  <meta name="description" content="NightSeal PQC: Docker-basierte Plattform für Post-Quanten-Integritätsnachweise bei RMAN-/WriteOnce-Backups mit verketteten Manifesten, Merkle-Proofs, ML-DSA-Signaturen, Manipulationserkennung und Reporting." />
+
   <link rel="stylesheet" href="../../style.css" />
   <link rel="stylesheet" href="../../language-switcher.css" />
+  <link rel="alternate" hreflang="fr" href="../../projects/nightseal.html" />
+  <link rel="alternate" hreflang="en" href="../../en/projects/nightseal.html" />
+  <link rel="alternate" hreflang="de" href="nightseal.html" />
   <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
   <link rel="icon" type="image/png" href="../../assets/favicon.png" />
-  
-</head>
-<body>
-  <canvas id="canvas"></canvas><canvas id="canvas2"></canvas>
-  <nav class="lang-switcher" aria-label="Language / Langue / Sprache"><a href="../../projects/nightseal.html" hreflang="fr" lang="fr">FR</a><a href="../../en/projects/nightseal.html" hreflang="en" lang="en">EN</a><a href="nightseal.html" hreflang="de" lang="de" class="active">DE</a></nav>
-  <header class="site-header"><div class="container header-inner"><div class="hero-text">
-    <h1>NightSeal PQC</h1><p class="subtitle">Persönliches Projekt · Post-Quantum · Backup-Integrität</p>
-  </div></div></header>
-  <main class="container section">
-    <section class="detail"><h2>Problemstellung</h2><p>WriteOnce-Speicher kann das Überschreiben verhindern oder einschränken, liefert allein jedoch keinen autonomen und leicht auditierbaren kryptografischen Nachweis über den Zustand großer Backup-Bestände.</p><p>NightSeal erstellt einen exportierbaren Integritätsnachweis über Dateien und deren Entwicklung im Zeitverlauf und ergänzt ihn um eine Post-Quantum-Signatur.</p></section><section class="detail"><h2>Stack & Deployment</h2><ul><li>React/Vite-Frontend für Dashboard und Workflows.</li><li>FastAPI-Backend für Nachweis- und Verifikationsoperationen.</li><li>Dedizierter Worker für asynchrone Verarbeitung.</li><li>PostgreSQL 16 und Redis 7.</li><li>Vollständiges Deployment mit Docker Compose.</li></ul></section><section class="detail"><h2>Nachweiskette</h2><p><strong>1. Inventory</strong> — Scan und Volumenanalyse → <strong>2. Manifest</strong> — Fingerprints und Dateistatus → <strong>3. Merkle</strong> — kompakte Dataset-Wurzel → <strong>4. ML-DSA</strong> — Post-Quantum-Signatur → <strong>5. Bundle</strong> — Verifikation, Audit und Reporting.</p><p>Manifeste können zeitlich verkettet werden, sodass ein vorheriger Zustand Teil des kryptografischen Kontexts des nächsten wird. Anschließend erzeugt der vollständige Workflow den Nachweis, signiert ihn und überprüft das erzeugte Bundle automatisch.</p></section><section class="detail"><h2>Kryptografie</h2><p>Die Signatur-Engine bietet einen HMAC-Demoprovider sowie drei reale Post-Quantum-Profile: ML-DSA-44, ML-DSA-65 und ML-DSA-87 über <code>pqcrypto</code>. Die finale Konfiguration nutzt ML-DSA-65.</p><p>Die Verifikation ist nicht nur deklarativ: NightSeal prüft die letzte Signatur kryptografisch, bevor die Nachweiskette als einsatzbereit gilt.</p></section><section class="detail"><h2>Entwickelte Funktionen</h2><ul><li>Inventory Scanner und RMAN-ähnliche Volumenszenarien.</li><li>Erzeugung und zeitliche Verkettung von Manifesten.</li><li>Merkle-Proofs und Post-Quantum-Signaturen.</li><li>Proof Bundles und Ende-zu-Ende-Verifikation.</li><li>Tamper Test, Self-Tests, Ausführungshistorie und Audit-Timeline.</li><li>Benchmarks, HTML/PDF-Berichte und Production-Readiness-Dashboard.</li></ul></section><section class="detail"><h2>Docker-Architektur</h2><p><strong>React/Vite</strong> stellt ein Dashboard für Inventar, Nachweiskette, Audits, Simulationen und Berichte bereit. Das <strong>FastAPI-Backend</strong> orchestriert die Erzeugung und Verifikation der Artefakte. Ein <strong>Worker</strong>, <strong>PostgreSQL</strong> und <strong>Redis</strong> ergänzen die Architektur; Datasets, Manifeste, Signaturen, Berichte und Historien liegen in dedizierten Volumes.</p><pre>docker compose up -d --build
 
-Frontend : http://localhost:5173
-Backend  : http://localhost:8000
-API docs : http://localhost:8000/docs</pre></section><section class="detail"><h2>Production Readiness</h2><p>Das Projekt enthält eigene Bereitschaftsprüfungen: verfügbares Backend, zugängliches Dataset, funktionierende Nachweiskette, gültige Manifest-Verkettung, aktiver ML-DSA-Provider und Verifikation der letzten Signatur.</p><p>Damit lässt sich ein nur demonstrierbarer Prototyp von einem Zustand unterscheiden, in dem die kritischen kryptografischen Kontrollen tatsächlich erfolgreich sind.</p></section><section class="detail"><h2>Manipulationstest</h2><p>Der <em>Tamper Test</em> verändert absichtlich ein Artefakt oder ein vom Nachweis erfasstes Element und führt anschließend die Verifikation erneut aus. So wird der Unterschied zwischen „unveränderlichem Speicher“ und „kryptografischem Integritätsnachweis“ direkt sichtbar.</p></section><section class="detail"><h2>Aktuelle Grenzen</h2><p><strong>Schlüssel & Zugriffskontrolle:</strong> ML-DSA-Schlüssel werden derzeit noch als Dateien gespeichert. HSM/KMS-Integration, API-Authentifizierung und RBAC fehlen noch.</p><p><strong>Enterprise-Integration:</strong> derzeit arbeitet das Projekt mit RMAN-ähnlichen Datasets; ein echter Oracle-RMAN-Connector und SIEM-Export sind noch nicht vorhanden.</p></section>
-    <div style="margin-top:36px;"><a href="../home.html#projects" class="btn ghost">← Zurück zu den Projekten</a></div>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .ns-page {
+      padding-top: 28px;
+      padding-bottom: 72px;
+    }
+
+    .ns-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .ns-hero,
+    .ns-section,
+    .ns-shot,
+    .ns-mini-card {
+      background: linear-gradient(180deg, rgba(18,20,23,.94), rgba(10,12,15,.90));
+      border: 1px solid rgba(102,252,241,.10);
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .ns-hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 42px;
+      margin-bottom: 24px;
+    }
+
+    .ns-hero::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      right: -120px;
+      top: -120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(102,252,241,.16), transparent 68%);
+      pointer-events: none;
+    }
+
+    .ns-kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-weight: 800;
+      font-size: .78rem;
+      margin-bottom: 10px;
+    }
+
+    .ns-hero h1 {
+      color: #fff;
+      font-size: clamp(2.4rem, 7vw, 4.6rem);
+      line-height: .98;
+      margin: 0 0 18px;
+      max-width: 840px;
+    }
+
+    .ns-hero h1 span { color: var(--accent); }
+
+    .ns-lead {
+      max-width: 900px;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: #d9e7e8;
+      margin-bottom: 20px;
+    }
+
+    .ns-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .ns-tag {
+      padding: 7px 11px;
+      border: 1px solid rgba(102,252,241,.15);
+      border-radius: 999px;
+      background: rgba(102,252,241,.045);
+      color: #c7fffb;
+      font-size: .84rem;
+    }
+
+    .ns-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .ns-stat {
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .ns-stat strong {
+      display: block;
+      color: var(--accent);
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+
+    .ns-stat span {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .ns-localnav {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px;
+      margin: 0 0 24px;
+      border-radius: 16px;
+      background: rgba(8,10,13,.86);
+      border: 1px solid rgba(102,252,241,.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    }
+
+    .ns-localnav a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #dfecee;
+      font-size: .86rem;
+      border: 1px solid transparent;
+    }
+
+    .ns-localnav a:hover {
+      color: var(--accent);
+      border-color: rgba(102,252,241,.16);
+      background: rgba(102,252,241,.05);
+      opacity: 1;
+    }
+
+    .ns-section {
+      border-radius: 18px;
+      padding: 30px;
+      margin: 0 0 22px;
+      scroll-margin-top: 90px;
+    }
+
+    .ns-section h2 {
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-size: 1.65rem;
+    }
+
+    .ns-section h3 {
+      color: #d5fffc;
+      margin-top: 0;
+    }
+
+    .ns-section p,
+    .ns-section li {
+      line-height: 1.75;
+    }
+
+    .ns-section .intro {
+      max-width: 900px;
+      color: #d7e5e6;
+      margin-bottom: 22px;
+    }
+
+    .ns-grid-2,
+    .ns-grid-3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .ns-grid-2 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .ns-grid-3 { grid-template-columns: repeat(3,minmax(0,1fr)); }
+
+    .ns-mini-card {
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .ns-mini-card p:last-child,
+    .ns-mini-card ul:last-child { margin-bottom: 0; }
+
+    .ns-workflow {
+      display: grid;
+      grid-template-columns: repeat(5,minmax(0,1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .ns-step {
+      position: relative;
+      min-height: 125px;
+      padding: 18px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(102,252,241,.10);
+      background: rgba(255,255,255,.035);
+    }
+
+    .ns-step .n {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .ns-step strong {
+      display: block;
+      margin: 8px 0 6px;
+      color: #fff;
+    }
+
+    .ns-step span {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    .ns-shot {
+      overflow: hidden;
+      border-radius: 16px;
+      margin-top: 18px;
+    }
+
+    .ns-shot img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: transform .25s ease, filter .25s ease;
+    }
+
+    .ns-shot:hover img {
+      transform: scale(1.008);
+      filter: brightness(1.04);
+    }
+
+    .ns-shot figcaption {
+      padding: 13px 16px;
+      color: #aebfc2;
+      font-size: .86rem;
+      border-top: 1px solid rgba(255,255,255,.04);
+      line-height: 1.5;
+    }
+
+    .ns-callout {
+      border-left: 3px solid var(--accent);
+      background: rgba(102,252,241,.045);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 18px 0;
+    }
+
+    .ns-policy-row {
+      display: grid;
+      grid-template-columns: repeat(6,minmax(0,1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .ns-policy {
+      text-align: center;
+      border-radius: 12px;
+      padding: 14px 8px;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+    }
+
+    .ns-policy strong {
+      color: var(--accent);
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .ns-policy span {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .ns-gallery {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .ns-gallery .ns-shot { margin: 0; }
+
+    .ns-details {
+      margin-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 14px;
+    }
+
+    .ns-details summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .ns-report-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ns-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.92);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .ns-lightbox.open { display: flex; }
+
+    .ns-lightbox img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(102,252,241,.14);
+    }
+
+    .ns-lightbox button {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .ns-footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: .88rem;
+      padding-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .ns-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .ns-grid-3 { grid-template-columns: 1fr; }
+      .ns-workflow { grid-template-columns: 1fr; }
+      .ns-policy-row { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .ns-hero { padding: 28px 22px; }
+      .ns-section { padding: 22px 18px; }
+      .ns-grid-2, .ns-gallery { grid-template-columns: 1fr; }
+      .ns-summary { grid-template-columns: 1fr; }
+      .ns-policy-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .ns-localnav { position: static; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="lang-switcher" aria-label="Language / Langue / Sprache">
+    <a href="../../projects/nightseal.html" hreflang="fr" lang="fr">FR</a>
+    <a href="../../en/projects/nightseal.html" hreflang="en" lang="en">EN</a>
+    <a href="nightseal.html" hreflang="de" lang="de" class="active">DE</a>
+  </nav>
+
+  <canvas id="canvas">Ihr Browser unterstützt Canvas nicht.</canvas>
+  <canvas id="canvas2">Ihr Browser unterstützt Canvas nicht.</canvas>
+
+  <main class="container ns-page">
+    <div class="ns-topbar">
+      <a class="btn ghost" href="../home.html#projects">← Zurück zu den Projekten</a>
+    </div>
+
+    <section class="ns-hero">
+      <div class="ns-kicker">Persönliches Projekt · Docker · Post-Quanten-Kryptografie</div>
+      <h1>NightSeal <span>PQC</span></h1>
+      <p class="ns-lead">
+        NightSeal PQC ist eine containerisierte Plattform zur Simulation und Demonstration einer vollständigen
+        Integritätsnachweiskette für Backups nach dem Oracle-RMAN-/WriteOnce-Prinzip. Das Projekt kombiniert
+        Inventarisierung, verkettete Manifeste, Merkle-Bäume, ML-DSA-Signaturen, Manipulationserkennung, Auditierung und
+        Berichtserstellung.
+      </p>
+
+      <div class="ns-tags">
+        <span class="ns-tag">Docker Compose</span>
+        <span class="ns-tag">FastAPI</span>
+        <span class="ns-tag">React / Vite</span>
+        <span class="ns-tag">Python</span>
+        <span class="ns-tag">ML-DSA-65</span>
+        <span class="ns-tag">Merkle Tree</span>
+        <span class="ns-tag">SHA-256</span>
+        <span class="ns-tag">PostgreSQL</span>
+        <span class="ns-tag">Redis</span>
+      </div>
+
+      <div class="ns-summary">
+        <div class="ns-stat"><strong>15 To</strong><span>simuliertes RMAN-Szenario</span></div>
+        <div class="ns-stat"><strong>8 h</strong><span>nächtliches Zielfenster</span></div>
+        <div class="ns-stat"><strong>ML-DSA-65</strong><span>Post-Quanten-Signatur</span></div>
+        <div class="ns-stat"><strong>P0 → P5</strong><span>verglichene Richtlinien</span></div>
+      </div>
+    </section>
+
+    <nav class="ns-localnav" aria-label="Navigation NightSeal">
+      <a href="#overview">Überblick</a>
+      <a href="#workflow">Nachweiskette</a>
+      <a href="#tamper">Manipulationstest</a>
+      <a href="#simulation">Simulation</a>
+      <a href="#crypto">Krypto-Agilität</a>
+      <a href="#audit">Audit & Berichte</a>
+      <a href="#limits">Grenzen</a>
+    </nav>
+
+    <section id="overview" class="ns-section">
+      <h2>1. Überblick</h2>
+      <p class="intro">
+        Der Ausgangspunkt ist einfach: Speicher-Unveränderlichkeit und kryptografischer Nachweis
+        erfüllen nicht exakt denselben Zweck. NightSeal ergänzt eine überprüfbare und exportierbare Nachweisschicht
+        oberhalb einer großvolumigen Backup-Umgebung.
+      </p>
+
+      <div class="ns-grid-2">
+        <div class="ns-mini-card">
+          <h3>Ziel</h3>
+          <p>
+            Einen unabhängigen Nachweis über den Zustand eines Backup-Datensatzes erzeugen und anschließend
+            überprüfen können, dass Dateien, Manifest und Nachweiskette nicht verändert wurden.
+          </p>
+        </div>
+        <div class="ns-mini-card">
+          <h3>Ansatz</h3>
+          <p>
+            Das System versucht nicht, mehrere Terabyte direkt zu signieren. Stattdessen reduziert es
+            den Umfang schrittweise auf einen kompakten Nachweis: Hashes → Manifest → Merkle-Wurzel → PQC-Signatur → Bundle.
+          </p>
+        </div>
+      </div>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/dashboard_global.png" alt="Gesamtansicht der NightSeal-PQC-Oberfläche" class="zoomable" loading="lazy">
+        <figcaption>
+          Gesamtansicht von NightSeal PQC: Navigation zwischen Überwachung, Nachweiskette, Audit, Simulation und Konfiguration.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="workflow" class="ns-section">
+      <h2>2. Nachweiskette de bout en bout</h2>
+      <p class="intro">
+        NightSeal kann jeden Schritt einzeln ausführen oder den vollständigen Workflow in einem einzigen Vorgang starten.
+        Ziel ist eine verständliche, überprüfbare und exportierbare Nachweiskette.
+      </p>
+
+      <div class="ns-workflow">
+        <div class="ns-step"><span class="n">Schritt 1</span><strong>Inventory</strong><span>Scan des Datensatzes und Datei-Inventarisierung.</span></div>
+        <div class="ns-step"><span class="n">Schritt 2</span><strong>Manifest</strong><span>SHA-256, Größe, Pfad und Kontext.</span></div>
+        <div class="ns-step"><span class="n">Schritt 3</span><strong>Merkle proof</strong><span>Reduktion aller Hashes auf eine einzige Wurzel.</span></div>
+        <div class="ns-step"><span class="n">Schritt 4</span><strong>ML-DSA</strong><span>Post-Quanten-Signatur des Nachweis-Payloads.</span></div>
+        <div class="ns-step"><span class="n">Schritt 5</span><strong>Proof bundle</strong><span>Zusammenstellung, Prüfung, Audit und Export.</span></div>
+      </div>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/full_proof_workflow.png" alt="Vollständiger NightSeal-PQC-Workflow" class="zoomable" loading="lazy">
+        <figcaption>
+          One-Click-Ausführung: Manifest, Merkle-Proof, ML-DSA-Signatur, finales Bundle und Verifikation.
+        </figcaption>
+      </figure>
+
+      <div class="ns-grid-2">
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/manifest_generation.png" alt="Erzeugung eines SHA-256-Manifests" class="zoomable" loading="lazy">
+          <figcaption>Tatsächliche Manifest-Erzeugung aus dem in Docker eingebundenen Datensatz.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/proof_control.png" alt="Erzeugung eines Merkle-Proofs" class="zoomable" loading="lazy">
+          <figcaption>Aufbau der Merkle-Wurzel und des minimal zu signierenden Payloads.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/proof_generation.png" alt="Verifikation einer ML-DSA-Signatur" class="zoomable" loading="lazy">
+          <figcaption>Erzeugung und anschließende Verifikation des Signaturnachweises.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/final_proof_bundle.png" alt="Finales NightSeal-PQC-Proof-Bundle" class="zoomable" loading="lazy">
+          <figcaption>Das finale Bundle verknüpft Manifest, Merkle-Proof und kryptografische Signatur.</figcaption>
+        </figure>
+      </div>
+
+      <div class="ns-callout">
+        <strong>Wichtiger Punkt:</strong> Die Manifeste werden zusätzlich zeitlich verkettet. Die Plattform kann daher
+        prüfen, ob die Manifest-Historie konsistent bleibt und ob der erwartete Hash des vorherigen Manifests
+        mit dem tatsächlich vorhandenen übereinstimmt.
+      </div>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/chain_control.png" alt="Prüfung der Manifest-Kette" class="zoomable" loading="lazy">
+        <figcaption>Konsistenzprüfung der zeitlich verketteten Manifeste.</figcaption>
+      </figure>
+    </section>
+
+    <section id="tamper" class="ns-section">
+      <h2>3. Manipulationsdemonstration</h2>
+      <p class="intro">
+        Der Manipulationstest ist einer der anschaulichsten Teile des Projekts: NightSeal prüft zunächst einen gültigen Nachweis,
+        verändert anschließend absichtlich das Manifest, erkennt den kryptografischen Fehler, stellt das Artefakt wieder her und prüft erneut.
+      </p>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/proof_tampering_demo.png" alt="NightSeal-PQC-Manipulationsdemonstration" class="zoomable" loading="lazy">
+        <figcaption>
+          Automatisierte Sequenz: <strong>gültig → ungültig → gültig</strong>. Eine Änderung am Manifest bricht den Nachweis,
+          anschließend stellt die Wiederherstellung die Konsistenz wieder her.
+        </figcaption>
+      </figure>
+
+      <div class="ns-callout">
+        Diese Demonstration macht den Unterschied sichtbar zwischen „ein Überschreiben verhindern“ und
+        „kryptografisch beweisen können, dass ein Zustand nicht manipuliert wurde“.
+      </div>
+    </section>
+
+    <section id="simulation" class="ns-section">
+      <h2>4. Simulations-Engine und Richtlinienauswahl</h2>
+      <p class="intro">
+        NightSeal erzeugt nicht nur eine Signatur. Die Plattform vergleicht mehrere Integritätsstrategien anhand von
+        Datenvolumen, Dateianzahl, verfügbarem Durchsatz, Verarbeitungsfenster und gewünschtem Sicherheitsniveau.
+      </p>
+
+      <div class="ns-policy-row">
+        <div class="ns-policy"><strong>P0</strong><span>Hash only</span></div>
+        <div class="ns-policy"><strong>P1</strong><span>Global manifest</span></div>
+        <div class="ns-policy"><strong>P2</strong><span>Dataset manifest</span></div>
+        <div class="ns-policy"><strong>P3</strong><span>Merkle root</span></div>
+        <div class="ns-policy"><strong>P4</strong><span>Per-file signature</span></div>
+        <div class="ns-policy"><strong>P5</strong><span>Block-level integrity</span></div>
+      </div>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/dynamic_simulation.png" alt="Dynamischer Vergleich der Richtlinien P0 bis P5" class="zoomable" loading="lazy">
+        <figcaption>
+          Für das dargestellte Szenario — 15 TB, 8 Stunden, 5.000 Dateien und 600 MB/s — empfiehlt die Engine P3,
+          basierend auf der Signatur einer Merkle-Wurzel.
+        </figcaption>
+      </figure>
+
+      <div class="ns-grid-2">
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/crypto_policies.png" alt="Darstellung der Richtlinien P0 und P1" class="zoomable" loading="lazy">
+          <figcaption>Didaktische Darstellung der ersten Integritätsrichtlinien.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/policies.png" alt="Darstellung der Richtlinien P2 bis P5" class="zoomable" loading="lazy">
+          <figcaption>Feingranularere Richtlinien: Datensatz, Merkle, Signatur pro Datei und Integrität auf Blockebene.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="crypto" class="ns-section">
+      <h2>5. Krypto-Agilität</h2>
+      <p class="intro">
+        Die Engine ist nicht auf einen einzigen Algorithmus ausgelegt. Hashfunktionen und Signaturen können
+        verglichen oder ausgetauscht werden, um unterschiedliche Kompromisse bei Performance, Sicherheit und Nachweisgröße zu untersuchen.
+      </p>
+
+      <div class="ns-grid-2">
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/algo_catalog.png" alt="Katalog der Hashfunktionen" class="zoomable" loading="lazy">
+          <figcaption>SHA-256, SHA-512, SHA3-256, SHAKE256 und BLAKE3 in der krypto-agilen Schicht.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/algos.png" alt="Weitere Algorithmen im Katalog" class="zoomable" loading="lazy">
+          <figcaption>Vergleich von Profilen, Stärken, Grenzen und Einsatzbereichen der Hashfunktionen.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="ns-shot">
+        <img src="../../assets/images/nightseal/mldsa.png" alt="Vergleich von ML-DSA und SLH-DSA" class="zoomable" loading="lazy">
+        <figcaption>
+          Das Projekt nutzt ML-DSA-65 als allgemeinen Kompromiss und dokumentiert zugleich ML-DSA-44, ML-DSA-87 sowie SLH-DSA-Varianten.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="audit" class="ns-section">
+      <h2>6. Audit, Historie und Reporting</h2>
+      <p class="intro">
+        Jede Ausführung hinterlässt überprüfbare Artefakte. NightSeal speichert die Workflow-Historie,
+        die Timeline der Manifeste, Merkle-Proofs, Signaturen und Bundles und erstellt anschließend einen nutzbaren Bericht.
+      </p>
+
+      <div class="ns-grid-2">
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/workflow_history.png" alt="NightSeal-Workflow-Historie" class="zoomable" loading="lazy">
+          <figcaption>Historie vollständiger Workflows und Status ihrer Verifikation.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/proof_timeline.png" alt="Timeline der NightSeal-Artefakte" class="zoomable" loading="lazy">
+          <figcaption>Timeline der erzeugten Manifeste, Merkle-Proofs, Signaturen und Bundles.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/reports.png" alt="Erzeugung von Kundenberichten" class="zoomable" loading="lazy">
+          <figcaption>Erzeugung und Speicherung von HTML-Berichten aus den Proof-Bundles.</figcaption>
+        </figure>
+        <figure class="ns-shot">
+          <img src="../../assets/images/nightseal/client_reports.png" alt="NightSeal-PQC-Kundenbericht" class="zoomable" loading="lazy">
+          <figcaption>Kundenorientierte Zusammenfassung des aktuellen Szenarios und der empfohlenen Richtlinie.</figcaption>
+        </figure>
+      </div>
+
+      <div class="ns-callout">
+        Der Abschlussbericht konsolidiert unter anderem den Production-Readiness-Status, den aktiven ML-DSA-Provider,
+        die letzte kryptografische Verifikation, die Manifest-Kette und den Inhalt des Proof-Bundles.
+      </div>
+
+      <a class="btn ns-report-link"
+         href="../../assets/docs/nightseal/client-report-20260518T194621Z.pdf"
+         target="_blank"
+         rel="noopener noreferrer">
+        Kundenbericht als PDF anzeigen
+      </a>
+    </section>
+
+    <section id="limits" class="ns-section">
+      <h2>7. Was ich aus diesem Projekt gelernt habe</h2>
+      <div class="ns-grid-3">
+        <div class="ns-mini-card">
+          <h3>Kryptografisches Design</h3>
+          <p>
+            Integritätsnachweise im großen Maßstab zu entwerfen bedeutet, zwischen den Daten selbst, ihrem Hash,
+            dem kompakten Nachweis und dem tatsächlich zu signierenden Inhalt zu unterscheiden.
+          </p>
+        </div>
+        <div class="ns-mini-card">
+          <h3>Architecture</h3>
+          <p>
+            Das Projekt hat mir ermöglicht, Frontend, API, asynchrone Verarbeitung, Speicher,
+            Docker-Volumes und Artefakterzeugung in einem konsistenten Workflow zu verbinden.
+          </p>
+        </div>
+        <div class="ns-mini-card">
+          <h3>Operative Kompromisse</h3>
+          <p>
+            Eine feingranularere Richtlinie ist nicht immer besser: Sie kann das Backup-Fenster überschreiten,
+            die Anzahl der Signaturen vervielfachen oder zu viele Metadaten erzeugen.
+          </p>
+        </div>
+      </div>
+
+      <div class="ns-callout">
+        NightSeal bleibt ein persönliches Demonstrations- und angewandtes Forschungsprojekt. Allein ersetzt es weder
+        eine Enterprise-Backup-Architektur noch ein HSM/KMS, eine vollständige Zugriffskontrolle oder einen echten Oracle-RMAN-Connector.
+      </div>
+
+      <details class="ns-details">
+        <summary>Weitere technische Screenshots anzeigen</summary>
+        <div class="ns-gallery">
+          <figure class="ns-shot">
+            <img src="../../assets/images/nightseal/dashboard.png" alt="Dashboard NightSeal" class="zoomable" loading="lazy">
+            <figcaption>Dashboard und Status der Dienste / kryptografischen Provider.</figcaption>
+          </figure>
+          <figure class="ns-shot">
+            <img src="../../assets/images/nightseal/final_proof_bundle.png" alt="Bundle final" class="zoomable" loading="lazy">
+            <figcaption>Finales Bundle und zugehörige kryptografische Komponenten.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </section>
+
+    <div class="ns-footer-note">
+      © 2026 Hugo FRANÇOIS — NightSeal PQC, persönliches Projekt.
+    </div>
   </main>
-  <footer class="site-footer"><div class="container"><p>© 2026 Hugo FRANCOIS — Persönliches Projekt.</p></div></footer>
+
+  <div class="ns-lightbox" id="ns-lightbox" aria-hidden="true">
+    <button type="button" aria-label="Schließen">×</button>
+    <img src="" alt="">
+  </div>
+
   <script src="../../background.js"></script>
+  <script>
+    (() => {
+      const lightbox = document.getElementById('ns-lightbox');
+      const lightboxImg = lightbox.querySelector('img');
+      const closeBtn = lightbox.querySelector('button');
+
+      document.querySelectorAll('.zoomable').forEach(img => {
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.classList.add('open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+      });
+    })();
+  </script>
 </body>
 </html>
