@@ -4,13 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NightSeal PQC — Hugo FRANÇOIS</title>
-  <meta name="description" content="NightSeal PQC: Docker-basierte Plattform für Post-Quanten-Integritätsnachweise bei RMAN-/WriteOnce-Backups mit verketteten Manifesten, Merkle-Proofs, ML-DSA-Signaturen, Manipulationserkennung und Reporting." />
+  <meta name="description" content="NightSeal PQC: Docker-basierte Plattform für Post-Quantum-Integritätsnachweise für RMAN-/WriteOnce-Backups, verkettete Manifeste, Merkle-Proofs, ML-DSA-Signaturen, Manipulationserkennung und Reporting." />
 
   <link rel="stylesheet" href="../../style.css" />
   <link rel="stylesheet" href="../../language-switcher.css" />
-  <link rel="alternate" hreflang="fr" href="../../projects/nightseal.html" />
+  <link rel="alternate" hreflang="de" href="../../projects/nightseal.html" />
   <link rel="alternate" hreflang="en" href="../../en/projects/nightseal.html" />
-  <link rel="alternate" hreflang="de" href="nightseal.html" />
+  <link rel="alternate" hreflang="de" href="../../de/projects/nightseal.html" />
   <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
   <link rel="icon" type="image/png" href="../../assets/favicon.png" />
 
@@ -392,9 +392,9 @@
 
 <body>
   <nav class="lang-switcher" aria-label="Language / Langue / Sprache">
-    <a href="../../projects/nightseal.html" hreflang="fr" lang="fr">FR</a>
+    <a href="../../projects/nightseal.html" hreflang="de" lang="de" class="active">FR</a>
     <a href="../../en/projects/nightseal.html" hreflang="en" lang="en">EN</a>
-    <a href="nightseal.html" hreflang="de" lang="de" class="active">DE</a>
+    <a href="../../de/projects/nightseal.html" hreflang="de" lang="de" class="active">DE</a>
   </nav>
 
   <canvas id="canvas">Ihr Browser unterstützt Canvas nicht.</canvas>
@@ -406,13 +406,13 @@
     </div>
 
     <section class="ns-hero">
-      <div class="ns-kicker">Persönliches Projekt · Docker · Post-Quanten-Kryptografie</div>
+      <div class="ns-kicker">Persönliches Projekt · Docker · Post-Quantum-Kryptografie</div>
       <h1>NightSeal <span>PQC</span></h1>
       <p class="ns-lead">
         NightSeal PQC ist eine containerisierte Plattform zur Simulation und Demonstration einer vollständigen
         Integritätsnachweiskette für Backups nach dem Oracle-RMAN-/WriteOnce-Prinzip. Das Projekt kombiniert
-        Inventarisierung, verkettete Manifeste, Merkle-Bäume, ML-DSA-Signaturen, Manipulationserkennung, Auditierung und
-        Berichtserstellung.
+        Inventarisierung, verkettete Manifeste, Merkle-Bäume, ML-DSA-Signaturen, Manipulationserkennung,
+        Auditierung und Berichtserstellung.
       </p>
 
       <div class="ns-tags">
@@ -429,8 +429,8 @@
 
       <div class="ns-summary">
         <div class="ns-stat"><strong>15 To</strong><span>simuliertes RMAN-Szenario</span></div>
-        <div class="ns-stat"><strong>8 h</strong><span>nächtliches Zielfenster</span></div>
-        <div class="ns-stat"><strong>ML-DSA-65</strong><span>Post-Quanten-Signatur</span></div>
+        <div class="ns-stat"><strong>8 h</strong><span>angestrebtes Nachtfenster</span></div>
+        <div class="ns-stat"><strong>ML-DSA-65</strong><span>Post-Quantum-Signatur</span></div>
         <div class="ns-stat"><strong>P0 → P5</strong><span>verglichene Richtlinien</span></div>
       </div>
     </section>
@@ -438,34 +438,34 @@
     <nav class="ns-localnav" aria-label="Navigation NightSeal">
       <a href="#overview">Überblick</a>
       <a href="#workflow">Nachweiskette</a>
-      <a href="#tamper">Manipulationstest</a>
+      <a href="#tamper">Tamper test</a>
       <a href="#simulation">Simulation</a>
       <a href="#crypto">Krypto-Agilität</a>
       <a href="#audit">Audit & Berichte</a>
-      <a href="#limits">Grenzen</a>
+      <a href="#limits">Erkenntnisse & Grenzen</a>
     </nav>
 
     <section id="overview" class="ns-section">
       <h2>1. Überblick</h2>
       <p class="intro">
-        Der Ausgangspunkt ist einfach: Speicher-Unveränderlichkeit und kryptografischer Nachweis
-        erfüllen nicht exakt denselben Zweck. NightSeal ergänzt eine überprüfbare und exportierbare Nachweisschicht
-        oberhalb einer großvolumigen Backup-Umgebung.
+        Der Ausgangspunkt des Projekts ist einfach: Speicher-Immutabilität und kryptografische Nachweise erfüllen
+        nicht exakt denselben Zweck. NightSeal ergänzt eine überprüfbare und exportierbare Nachweisschicht
+        über einer großvolumigen Backup-Umgebung.
       </p>
 
       <div class="ns-grid-2">
         <div class="ns-mini-card">
           <h3>Ziel</h3>
           <p>
-            Einen unabhängigen Nachweis über den Zustand eines Backup-Datensatzes erzeugen und anschließend
-            überprüfen können, dass Dateien, Manifest und Nachweiskette nicht verändert wurden.
+            Einen unabhängigen Nachweis über den Zustand eines Backup-Satzes erzeugen und später überprüfen können,
+            dass Dateien, Manifest und Nachweiskette nicht verändert wurden.
           </p>
         </div>
         <div class="ns-mini-card">
           <h3>Ansatz</h3>
           <p>
-            Das System versucht nicht, mehrere Terabyte direkt zu signieren. Stattdessen reduziert es
-            den Umfang schrittweise auf einen kompakten Nachweis: Hashes → Manifest → Merkle-Wurzel → PQC-Signatur → Bundle.
+            Das System versucht nicht, mehrere Terabyte direkt zu signieren. Stattdessen reduziert es den Umfang
+            schrittweise auf einen kompakten Nachweis: Hashes → Manifest → Merkle-Root → PQC-Signatur → Bundle.
           </p>
         </div>
       </div>
@@ -473,7 +473,7 @@
       <figure class="ns-shot">
         <img src="../../assets/images/nightseal/dashboard_global.png" alt="Gesamtansicht der NightSeal-PQC-Oberfläche" class="zoomable" loading="lazy">
         <figcaption>
-          Gesamtansicht von NightSeal PQC: Navigation zwischen Überwachung, Nachweiskette, Audit, Simulation und Konfiguration.
+          Gesamtansicht von NightSeal PQC: Navigation zwischen Steuerung, Nachweiskette, Audit, Simulation und Konfiguration.
         </figcaption>
       </figure>
     </section>
@@ -486,11 +486,11 @@
       </p>
 
       <div class="ns-workflow">
-        <div class="ns-step"><span class="n">Schritt 1</span><strong>Inventory</strong><span>Scan des Datensatzes und Datei-Inventarisierung.</span></div>
+        <div class="ns-step"><span class="n">Schritt 1</span><strong>Inventory</strong><span>Scan des Datensatzes und Dateiinventarisierung.</span></div>
         <div class="ns-step"><span class="n">Schritt 2</span><strong>Manifest</strong><span>SHA-256, Größe, Pfad und Kontext.</span></div>
-        <div class="ns-step"><span class="n">Schritt 3</span><strong>Merkle proof</strong><span>Reduktion aller Hashes auf eine einzige Wurzel.</span></div>
-        <div class="ns-step"><span class="n">Schritt 4</span><strong>ML-DSA</strong><span>Post-Quanten-Signatur des Nachweis-Payloads.</span></div>
-        <div class="ns-step"><span class="n">Schritt 5</span><strong>Proof bundle</strong><span>Zusammenstellung, Prüfung, Audit und Export.</span></div>
+        <div class="ns-step"><span class="n">Schritt 3</span><strong>Merkle proof</strong><span>Reduktion aller Hashes auf einen einzigen Root.</span></div>
+        <div class="ns-step"><span class="n">Schritt 4</span><strong>ML-DSA</strong><span>Post-Quantum-Signatur des Nachweis-Payloads.</span></div>
+        <div class="ns-step"><span class="n">Schritt 5</span><strong>Proof bundle</strong><span>Zusammenführung, Verifikation, Audit und Export.</span></div>
       </div>
 
       <figure class="ns-shot">
@@ -506,57 +506,58 @@
           <figcaption>Tatsächliche Manifest-Erzeugung aus dem in Docker eingebundenen Datensatz.</figcaption>
         </figure>
         <figure class="ns-shot">
-          <img src="../../assets/images/nightseal/proof_control.png" alt="Erzeugung eines Merkle-Proofs" class="zoomable" loading="lazy">
-          <figcaption>Aufbau der Merkle-Wurzel und des minimal zu signierenden Payloads.</figcaption>
+          <img src="../../assets/images/nightseal/proof_control.png" alt="Erzeugung des Merkle-Proofs" class="zoomable" loading="lazy">
+          <figcaption>Erzeugung des Merkle-Roots und des minimal zu signierenden Payloads.</figcaption>
         </figure>
         <figure class="ns-shot">
           <img src="../../assets/images/nightseal/proof_generation.png" alt="Verifikation einer ML-DSA-Signatur" class="zoomable" loading="lazy">
           <figcaption>Erzeugung und anschließende Verifikation des Signaturnachweises.</figcaption>
         </figure>
         <figure class="ns-shot">
-          <img src="../../assets/images/nightseal/final_proof_bundle.png" alt="Finales NightSeal-PQC-Proof-Bundle" class="zoomable" loading="lazy">
-          <figcaption>Das finale Bundle verknüpft Manifest, Merkle-Proof und kryptografische Signatur.</figcaption>
+          <img src="../../assets/images/nightseal/final_proof_bundle.png" alt="Finales NightSeal-PQC-Nachweis-Bundle" class="zoomable" loading="lazy">
+          <figcaption>Das finale Bundle verbindet Manifest, Merkle-Proof und kryptografische Signatur.</figcaption>
         </figure>
       </div>
 
       <div class="ns-callout">
-        <strong>Wichtiger Punkt:</strong> Die Manifeste werden zusätzlich zeitlich verkettet. Die Plattform kann daher
-        prüfen, ob die Manifest-Historie konsistent bleibt und ob der erwartete Hash des vorherigen Manifests
-        mit dem tatsächlich vorhandenen übereinstimmt.
+        <strong>Wichtiger Punkt:</strong> Die Manifeste werden zusätzlich über die Zeit verkettet. Die Plattform kann somit prüfen,
+        ob die Manifest-Historie konsistent bleibt und ob der erwartete Hash des vorherigen Manifests
+        tatsächlich mit dem vorhandenen übereinstimmt.
       </div>
 
       <figure class="ns-shot">
         <img src="../../assets/images/nightseal/chain_control.png" alt="Prüfung der Manifest-Kette" class="zoomable" loading="lazy">
-        <figcaption>Konsistenzprüfung der zeitlich verketteten Manifeste.</figcaption>
+        <figcaption>Konsistenzprüfung der zeitlichen Manifest-Kette.</figcaption>
       </figure>
     </section>
 
     <section id="tamper" class="ns-section">
-      <h2>3. Manipulationsdemonstration</h2>
+      <h2>3. Manipulationstest</h2>
       <p class="intro">
-        Der Manipulationstest ist einer der anschaulichsten Teile des Projekts: NightSeal prüft zunächst einen gültigen Nachweis,
-        verändert anschließend absichtlich das Manifest, erkennt den kryptografischen Fehler, stellt das Artefakt wieder her und prüft erneut.
+        Der Tamper Test ist einer der anschaulichsten Teile des Projekts: NightSeal verifiziert zunächst einen gültigen
+        Nachweis, verändert absichtlich das Manifest, erkennt das kryptografische Scheitern, stellt das Artefakt
+        wieder her und verifiziert erneut.
       </p>
 
       <figure class="ns-shot">
         <img src="../../assets/images/nightseal/proof_tampering_demo.png" alt="NightSeal-PQC-Manipulationsdemonstration" class="zoomable" loading="lazy">
         <figcaption>
-          Automatisierte Sequenz: <strong>gültig → ungültig → gültig</strong>. Eine Änderung am Manifest bricht den Nachweis,
-          anschließend stellt die Wiederherstellung die Konsistenz wieder her.
+          Automatisierte Sequenz: <strong>valid → invalid → valid</strong>. Eine Änderung am Manifest bricht den Nachweis;
+          die Wiederherstellung stellt die Konsistenz wieder her.
         </figcaption>
       </figure>
 
       <div class="ns-callout">
-        Diese Demonstration macht den Unterschied sichtbar zwischen „ein Überschreiben verhindern“ und
-        „kryptografisch beweisen können, dass ein Zustand nicht manipuliert wurde“.
+        Diese Demonstration verdeutlicht den Unterschied zwischen „Überschreiben verhindern“ und
+        „kryptografisch nachweisen können, dass ein Zustand nicht verändert wurde“.
       </div>
     </section>
 
     <section id="simulation" class="ns-section">
       <h2>4. Simulations-Engine und Richtlinienauswahl</h2>
       <p class="intro">
-        NightSeal erzeugt nicht nur eine Signatur. Die Plattform vergleicht mehrere Integritätsstrategien anhand von
-        Datenvolumen, Dateianzahl, verfügbarem Durchsatz, Verarbeitungsfenster und gewünschtem Sicherheitsniveau.
+        NightSeal erzeugt nicht nur eine Signatur. Die Plattform vergleicht mehrere Integritätsstrategien anhand
+        von Datenvolumen, Dateianzahl, verfügbarem Durchsatz, Verarbeitungsfenster und gewünschtem Sicherheitsniveau.
       </p>
 
       <div class="ns-policy-row">
@@ -572,18 +573,18 @@
         <img src="../../assets/images/nightseal/dynamic_simulation.png" alt="Dynamischer Vergleich der Richtlinien P0 bis P5" class="zoomable" loading="lazy">
         <figcaption>
           Für das dargestellte Szenario — 15 TB, 8 Stunden, 5.000 Dateien und 600 MB/s — empfiehlt die Engine P3,
-          basierend auf der Signatur einer Merkle-Wurzel.
+          basierend auf der Signatur eines Merkle-Roots.
         </figcaption>
       </figure>
 
       <div class="ns-grid-2">
         <figure class="ns-shot">
           <img src="../../assets/images/nightseal/crypto_policies.png" alt="Darstellung der Richtlinien P0 und P1" class="zoomable" loading="lazy">
-          <figcaption>Didaktische Darstellung der ersten Integritätsrichtlinien.</figcaption>
+          <figcaption>Anschauliche Darstellung der ersten Integritätsrichtlinien.</figcaption>
         </figure>
         <figure class="ns-shot">
           <img src="../../assets/images/nightseal/policies.png" alt="Darstellung der Richtlinien P2 bis P5" class="zoomable" loading="lazy">
-          <figcaption>Feingranularere Richtlinien: Datensatz, Merkle, Signatur pro Datei und Integrität auf Blockebene.</figcaption>
+          <figcaption>Granularere Richtlinien: Datensatz, Merkle, Signatur pro Datei und Integrität auf Blockebene.</figcaption>
         </figure>
       </div>
     </section>
@@ -591,8 +592,8 @@
     <section id="crypto" class="ns-section">
       <h2>5. Krypto-Agilität</h2>
       <p class="intro">
-        Die Engine ist nicht auf einen einzigen Algorithmus ausgelegt. Hashfunktionen und Signaturen können
-        verglichen oder ausgetauscht werden, um unterschiedliche Kompromisse bei Performance, Sicherheit und Nachweisgröße zu untersuchen.
+        Die Engine ist nicht auf einen einzigen Algorithmus ausgelegt. Hashfunktionen und Signaturen können verglichen
+        oder ausgetauscht werden, um unterschiedliche Kompromisse zwischen Performance, Sicherheit und Nachweisgröße zu untersuchen.
       </p>
 
       <div class="ns-grid-2">
@@ -601,7 +602,7 @@
           <figcaption>SHA-256, SHA-512, SHA3-256, SHAKE256 und BLAKE3 in der krypto-agilen Schicht.</figcaption>
         </figure>
         <figure class="ns-shot">
-          <img src="../../assets/images/nightseal/algos.png" alt="Weitere Algorithmen im Katalog" class="zoomable" loading="lazy">
+          <img src="../../assets/images/nightseal/algos.png" alt="Fortsetzung des Algorithmuskatalogs" class="zoomable" loading="lazy">
           <figcaption>Vergleich von Profilen, Stärken, Grenzen und Einsatzbereichen der Hashfunktionen.</figcaption>
         </figure>
       </div>
@@ -609,7 +610,7 @@
       <figure class="ns-shot">
         <img src="../../assets/images/nightseal/mldsa.png" alt="Vergleich von ML-DSA und SLH-DSA" class="zoomable" loading="lazy">
         <figcaption>
-          Das Projekt nutzt ML-DSA-65 als allgemeinen Kompromiss und dokumentiert zugleich ML-DSA-44, ML-DSA-87 sowie SLH-DSA-Varianten.
+          Das Projekt verwendet ML-DSA-65 als allgemeinen Kompromiss und dokumentiert zugleich ML-DSA-44, ML-DSA-87 sowie SLH-DSA-Varianten.
         </figcaption>
       </figure>
     </section>
@@ -617,8 +618,8 @@
     <section id="audit" class="ns-section">
       <h2>6. Audit, Historie und Reporting</h2>
       <p class="intro">
-        Jede Ausführung hinterlässt überprüfbare Artefakte. NightSeal speichert die Workflow-Historie,
-        die Timeline der Manifeste, Merkle-Proofs, Signaturen und Bundles und erstellt anschließend einen nutzbaren Bericht.
+        Jede Ausführung hinterlässt überprüfbare Artefakte. NightSeal speichert die Workflow-Historie sowie die
+        Timeline von Manifesten, Merkle-Proofs, Signaturen und Bundles und erzeugt anschließend einen nutzbaren Bericht.
       </p>
 
       <div class="ns-grid-2">
@@ -632,24 +633,24 @@
         </figure>
         <figure class="ns-shot">
           <img src="../../assets/images/nightseal/reports.png" alt="Erzeugung von Kundenberichten" class="zoomable" loading="lazy">
-          <figcaption>Erzeugung und Speicherung von HTML-Berichten aus den Proof-Bundles.</figcaption>
+          <figcaption>Erzeugung und Speicherung von HTML-Berichten aus Proof Bundles.</figcaption>
         </figure>
         <figure class="ns-shot">
           <img src="../../assets/images/nightseal/client_reports.png" alt="NightSeal-PQC-Kundenbericht" class="zoomable" loading="lazy">
-          <figcaption>Kundenorientierte Zusammenfassung des aktuellen Szenarios und der empfohlenen Richtlinie.</figcaption>
+          <figcaption>Kundenzusammenfassung des aktuellen Szenarios und der empfohlenen Richtlinie.</figcaption>
         </figure>
       </div>
 
       <div class="ns-callout">
         Der Abschlussbericht konsolidiert unter anderem den Production-Readiness-Status, den aktiven ML-DSA-Provider,
-        die letzte kryptografische Verifikation, die Manifest-Kette und den Inhalt des Proof-Bundles.
+        die letzte kryptografische Verifikation, die Manifest-Kette und den Inhalt des Proof Bundles.
       </div>
 
       <a class="btn ns-report-link"
          href="../../assets/docs/nightseal/client-report-20260518T194621Z.pdf"
          target="_blank"
          rel="noopener noreferrer">
-        Kundenbericht als PDF anzeigen
+        PDF-Kundenbericht ansehen
       </a>
     </section>
 
@@ -659,28 +660,28 @@
         <div class="ns-mini-card">
           <h3>Kryptografisches Design</h3>
           <p>
-            Integritätsnachweise im großen Maßstab zu entwerfen bedeutet, zwischen den Daten selbst, ihrem Hash,
-            dem kompakten Nachweis und dem tatsächlich zu signierenden Inhalt zu unterscheiden.
+            Bei Integritätsnachweisen im großen Maßstab müssen die eigentlichen Daten, ihr Hash,
+            der kompakte Nachweis und die tatsächlich zu signierenden Informationen klar getrennt werden.
           </p>
         </div>
         <div class="ns-mini-card">
-          <h3>Architecture</h3>
+          <h3>Architektur</h3>
           <p>
             Das Projekt hat mir ermöglicht, Frontend, API, asynchrone Verarbeitung, Speicher,
-            Docker-Volumes und Artefakterzeugung in einem konsistenten Workflow zu verbinden.
+            Docker-Volumes und Artefakterzeugung in einem kohärenten Workflow zu verbinden.
           </p>
         </div>
         <div class="ns-mini-card">
           <h3>Operative Kompromisse</h3>
           <p>
-            Eine feingranularere Richtlinie ist nicht immer besser: Sie kann das Backup-Fenster überschreiten,
+            Eine granularere Richtlinie ist nicht automatisch besser: Sie kann das Backup-Fenster überschreiten,
             die Anzahl der Signaturen vervielfachen oder zu viele Metadaten erzeugen.
           </p>
         </div>
       </div>
 
       <div class="ns-callout">
-        NightSeal bleibt ein persönliches Demonstrations- und angewandtes Forschungsprojekt. Allein ersetzt es weder
+        NightSeal bleibt ein persönliches Demonstrations- und angewandtes Forschungsprojekt. Es ersetzt allein weder
         eine Enterprise-Backup-Architektur noch ein HSM/KMS, eine vollständige Zugriffskontrolle oder einen echten Oracle-RMAN-Connector.
       </div>
 
